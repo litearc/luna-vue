@@ -34,7 +34,7 @@ export default {
 
   methods: {
     on_icon_click(){
-      this.$message()
+      this.$message('Annotations saved successfully')
     }
   }
   

@@ -1,6 +1,7 @@
 <template lang='pug'>
 transition(
   name='fade'
+  @enter='on_enter'
   @after-leave='on_afterleave'
 )
   div(
@@ -9,7 +10,7 @@ transition(
     v-show='visible'
   )
     slot
-      span Enter message here
+      span {{ this.message }}
 </template>
 
 <script>
@@ -21,6 +22,7 @@ export default
   data()
   {
     return {
+      message: '',
       duration: 2000,
       on_close: null,
       visible: false,
@@ -42,6 +44,9 @@ export default
 
   methods:
   {
+    on_enter(){
+      this.width = this.$el.scrollWidth
+    },
     on_afterleave(){
       this.$destroy(true)
       this.$el.parentNode.removeChild(this.$el)
