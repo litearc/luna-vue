@@ -37,7 +37,7 @@ export default
       return {
         'top': `${ this.ypos }px`,
         'left': `50%`,
-        'margin-left': `-${ this.width/2 }px`
+        // 'margin-left': `-${ this.width/2 }px`
       }
     }
   }, // computed
