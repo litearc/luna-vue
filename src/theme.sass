@@ -1,0 +1,133 @@
+// color palette - defines *all* the colors used in the app
+$cA: #141515
+$cB: #1b1c1c
+$cC: #1d1e1f
+$cD: #262829
+$cE: #2e3031
+$cF: #262829
+$cG: #2b2d2e
+$cH: #323435
+$cI: #343536
+$cJ: #37393a
+$cK: #393b3d
+$cL: #3b3d3d
+$cM: #424445
+$cN: #454849
+$cO: #494b4d
+$cP: #4a4e50
+$cQ: #5d6062
+$cR: #7e8184
+$cS: #94989a
+$cT: #9ba2a8
+$cU: #ebf0f5
+$c-prim: #2a96ff
+
+// define colors for various elements from palette
+$c-text: $cS
+$c-dim: $cP
+$c-bright: $cU
+$c-pane: $cD
+$c-border: $cM
+$c-viewer: $cB
+$c-input: $cC
+
+$font-size: 12px
+@font-face
+  font-family: main
+  src: url(../fonts/regular.ttf)
+
+@font-face
+  font-family: main
+  font-weight: bold
+  src: url(../fonts/bold.ttf)
+
+.bold
+  font-weight: bold
+
+// useful commonly used options for flexbox
+.flex-col
+  display: flex
+  flex-direction: column
+
+.flex-row
+  display: flex
+  flex-direction: row
+  align-items: baseline
+
+.flex-col
+  display: flex
+  flex-direction: column
+
+.fix-sz
+  flex-grow: 0
+  flex-shrink: 1
+
+.expand
+  flex-grow: 1
+  flex-shrink: 1
+
+.v-sep
+  border-top: 1px solid $c-border
+
+// adds space to the left of all non-first items in a flex row,
+// or top of all non-first items in a flex col
+.flex-row > :not(*:first-child)
+  margin-left: 8px
+
+.flex-col > :not(*:first-child)
+  margin-top: 8px
+
+@mixin global
+  font-family: main
+  font-size: $font-size
+  font-variant-numeric: tabular-nums
+  color: $c-text
+
+@mixin input
+  @include global
+
+  background-color: $c-input
+  border: 1px solid $c-pane
+  border-radius: 2px
+  color: $c-bright
+  padding-left: 4px
+  padding-right: 4px
+  padding-top: 2px
+  padding-bottom: 2px
+
+  &.invisible
+    background-color: $c-pane
+
+  &::placeholder
+    color: $c-dim
+
+  &:hover
+    background-color: $c-input
+
+  &:focus
+    outline: none
+    background-color: $c-input
+    border: 1px solid $c-prim
+
+// for some reason, can't select faicon directly, so all faicon have a .icon
+// class, which we use to select them
+.icon
+  &.clickable:hover
+    color: $c-bright
+
+  &.selected
+    color: $c-prim
+
+.ui-message
+  @include global
+
+  position: fixed
+  text-align: center
+  transition: all .5s
+
+.fade-enter-active, .fade-leave-active
+  transition: all .5s
+
+.fade-enter, .fade-leave-to
+  opacity: 0
+  transform: translateY(-30px)
