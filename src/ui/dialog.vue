@@ -20,7 +20,7 @@
         button.fix-sz(
           v-for='(opt, i) in options'
           :key='i'
-          @click='on_click'
+          @click='on_click(i)'
         ) {{ opt }}
 
 </template>
@@ -36,9 +36,11 @@ export default
     return {
       message: '<no message provided>',
       options: ['Cancel', 'Ok'],
+      choice: null,
+      callback: null,
       highlight: null,
       visible: false,
-      destroyed: false
+      destroyed: false,
     }
   }, // data
 
@@ -46,13 +48,15 @@ export default
   {
     on_afterleave(el){
       if (!this.destroyed){
-        this.$emit('done')
         this.destroyed = true
         this.$destroy(true)
         this.$el.parentNode.removeChild(this.$el)
+        if (typeof this.callback === 'function')
+          this.callback(this.choice, this.options[this.choice])
       }
     },
-    on_click(){
+    on_click(i){
+      this.choice = i
       this.visible = false
     }
   } // methods

@@ -45,8 +45,14 @@ export default {
       })
     },
     on_button_click(){
-      this.$dialog(`There are unsaved annotations for this series that you are
-        editing. Are you sure that you want to continue without saving?`)
+      this.$dialog({
+        message: `There are unsaved annotations for this series that you are
+          editing. Are you sure that you want to continue without saving?`,
+        options: ['Cancel', 'Ok'],
+        callback: (i, opt) => {
+          console.log(`dialog closed ${i} ${opt}`)
+        }
+      })
     },
   } // methods
   
