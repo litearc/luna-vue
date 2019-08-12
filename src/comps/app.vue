@@ -29,13 +29,13 @@ export default {
 
   components: {
     
-  },
+  }, // components
 
   data(){
     return {
       input: '',
     }
-  },
+  }, // data
 
   methods: {
     on_icon_click(){
@@ -45,9 +45,10 @@ export default {
       })
     },
     on_button_click(){
-      this.$dialog('This is a test dialog')
-    }
-  }
+      this.$dialog(`There are unsaved annotations for this series that you are
+        editing. Are you sure that you want to continue without saving?`)
+    },
+  } // methods
   
 }
 </script>

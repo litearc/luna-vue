@@ -2,23 +2,26 @@
 #dialog
   transition(
     name='bg-fade'
-    @after-leave='on_bg_afterleave'
+    @after-leave='on_afterleave'
   )
     .bg(
       v-show='visible'
     )
   transition(
     name='dialog-fade'
-    @after-leave='on_dialog_afterleave'
+    @after-leave='on_afterleave'
   )
     .dialog-box.flex-col(
       v-show='visible'
     )
-      .fix-sz {{ message }}
+      .fix-sz.pg(style='margin-bottom: 8px') {{ message }}
       .flex-row
         .expand
-        button.fix-sz hello
-        button.fix-sz world
+        button.fix-sz(
+          v-for='(opt, i) in options'
+          :key='i'
+          @click='on_click'
+        ) {{ opt }}
 
 </template>
 
@@ -32,19 +35,25 @@ export default
   {
     return {
       message: '<no message provided>',
-      option: ['Cancel', 'Ok'],
+      options: ['Cancel', 'Ok'],
       highlight: null,
-      visible: false
+      visible: false,
+      destroyed: false
     }
   }, // data
 
   methods:
   {
-    on_bg_afterleave(){
-
+    on_afterleave(el){
+      if (!this.destroyed){
+        this.$emit('done')
+        this.destroyed = true
+        this.$destroy(true)
+        this.$el.parentNode.removeChild(this.$el)
+      }
     },
-    on_dialog_afterleave(){
-
+    on_click(){
+      this.visible = false
     }
   } // methods
 

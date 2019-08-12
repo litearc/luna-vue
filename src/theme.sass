@@ -99,11 +99,16 @@ $font-size: 12px
 
 // adds space to the left of all non-first items in a flex row,
 // or top of all non-first items in a flex col
-.flex-row > :not(*:first-child)
+.flex-row > :not(.expand) ~ :not(*:first-child)
   margin-left: 8px
 
-.flex-col > :not(*:first-child)
+.flex-col > :not(.expand) ~ :not(*:first-child)
   margin-top: 8px
+
+
+// for paragraphs
+.pg
+  line-height: 1.5
 
 
 @mixin global
@@ -209,7 +214,8 @@ button
   top: 50%
   left: 50%
   transform: translate(-50%, -50%)
-  // min-width: 180px
+  min-width: 160px
+  max-width: 320px
 
   background-color: $c-pane
   border-radius: 4px
