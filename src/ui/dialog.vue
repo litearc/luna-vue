@@ -20,6 +20,7 @@
         button.fix-sz(
           v-for='(opt, i) in options'
           :key='i'
+          :class='{ highlighted: highlight === i }'
           @click='on_click(i)'
         ) {{ opt }}
 

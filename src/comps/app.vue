@@ -49,6 +49,7 @@ export default {
         message: `There are unsaved annotations for this series that you are
           editing. Are you sure that you want to continue without saving?`,
         options: ['Cancel', 'Ok'],
+        highlight: 1,
         callback: (i, opt) => {
           console.log(`dialog closed ${i} ${opt}`)
         }
