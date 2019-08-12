@@ -20,7 +20,16 @@ $cR: #7e8184
 $cS: #94989a
 $cT: #9ba2a8
 $cU: #ebf0f5
-$c-prim: #2a96ff
+
+// this was the original blue, but is a little too bright
+// $c-prim: #2a96ff
+
+$c-blue: hsl(210, 60%, 60%)
+$c-green: hsl(130, 60%, 60%)
+$c-red: hsl(0, 60%, 60%)
+$c-gold: hsl(45, 60%, 60%)
+  
+$c-prim: $c-blue // #2a96ff
 
 // define colors for various elements from palette
 $c-text: $cS
@@ -30,11 +39,12 @@ $c-pane: $cD
 $c-border: $cM
 $c-viewer: $cB
 $c-input: $cC
+$c-messsage-bg: $cE
 
 // constants
 $dur-fade: .2s
 
-$font-size: 12px
+$font-size: 13px
 @font-face
   font-family: main
   src: url(../fonts/regular.ttf)
@@ -46,6 +56,18 @@ $font-size: 12px
 
 .bold
   font-weight: bold
+
+.color-blue
+  color: $c-blue
+
+.color-green
+  color: $c-green
+
+.color-red
+  color: $c-red
+
+.color-gold
+  color: $c-gold
 
 // useful commonly used options for flexbox
 .flex-col
@@ -97,6 +119,7 @@ $font-size: 12px
   padding-right: 4px
   padding-top: 2px
   padding-bottom: 2px
+  transition: border .1s
 
   &.invisible
     background-color: $c-pane
@@ -115,6 +138,9 @@ $font-size: 12px
 // for some reason, can't select faicon directly, so all faicon have a .icon
 // class, which we use to select them
 .icon
+  position: relative
+  top: 1px // font-awesome icons are a little high by default
+
   &.clickable:hover
     color: $c-bright
 
@@ -126,12 +152,23 @@ $font-size: 12px
 
   position: fixed
   text-align: center
-  transform: translateX(-50%)
+  transform: translateX(-50%) // centers div on screen
+  transition: all $dur-fade
+  padding: 8px
+  background-color: $c-messsage-bg
+  border: 1px solid $c-messsage-bg
+  border-radius: 4px
+
+.fade-top-enter-active, .fade-top-leave-active, .fade-bottom-enter-active, .fade-bottom-leave-active
   transition: all $dur-fade
 
-.fade-enter-active, .fade-leave-active
-  transition: all $dur-fade
-
-.fade-enter, .fade-leave-to
+.fade-top-enter, .fade-top-leave-to
   opacity: 0
-  transform: translate(-50%, -30px)
+  transform: translate(-50%, -30px) // the -50% needed to keep div centered
+
+.fade-bottom-enter, .fade-bottom-leave-to
+  opacity: 0
+  transform: translate(-50%, +30px) // the -50% needed to keep div centered
+
+.align-baseline
+  align-items: baseline

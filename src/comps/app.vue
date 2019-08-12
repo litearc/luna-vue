@@ -34,7 +34,10 @@ export default {
 
   methods: {
     on_icon_click(){
-      this.$message('Annotations saved successfully')
+      this.$message({
+        message: 'Annotations saved successfully',
+        type: 'success',
+      })
     }
   }
   
@@ -45,6 +48,7 @@ export default {
 @import ../theme
 *
   box-sizing: border-box
+  user-select: none
 
 #app
   width: 100vw

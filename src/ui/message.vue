@@ -1,6 +1,6 @@
 <template lang='pug'>
 transition(
-  name='fade'
+  :name='fade_name'
   @enter='on_enter'
   @after-leave='on_afterleave'
 )
@@ -9,8 +9,13 @@ transition(
     :style='style'
     v-show='visible'
   )
-    slot
-      span {{ this.message }}
+    .flex-row
+      faicon.icon.fix-sz(
+        v-if='type !== ""'
+        :class='get_color()'
+        :icon='get_icon()'
+      )
+      span.fix-sz {{ this.message }}
 </template>
 
 <script>
@@ -23,11 +28,13 @@ export default
   {
     return {
       message: '',
+      type: '', // '' (none), 'success', 'warning', or 'failure'
+      position: 'bottom', // 'top' or 'bottom'
       duration: 2000,
       on_close: null,
       visible: false,
       width: 0,
-      ypos: 0
+      ypos: 0,
     }
   }, // data
   
@@ -37,8 +44,12 @@ export default
       return {
         'top': `${ this.ypos }px`,
         'left': `50%`,
-        // 'margin-left': `-${ this.width/2 }px`
       }
+    },
+
+    fade_name(){
+      if (['top', 'bottom'].includes(this.position)) return `fade-${ this.position }`
+      return "" // error
     }
   }, // computed
 
@@ -50,6 +61,20 @@ export default
     on_afterleave(){
       this.$destroy(true)
       this.$el.parentNode.removeChild(this.$el)
+    },
+    get_icon(){
+      return {
+        'success': 'check-circle',
+        'warning': 'exclamation-circle',
+        'failure': 'times-circle',
+      }[this.type]
+    },
+    get_color(){
+      return {
+        'success': 'color-green',
+        'warning': 'color-gold',
+        'failure': 'color-red',
+      }[this.type]
     }
   }, // methods
 
