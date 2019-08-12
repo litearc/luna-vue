@@ -10,9 +10,14 @@
         span.fix-sz user
         .expand
         faicon.icon.fix-sz.clickable(
-          icon='user-secret'
+          icon='cog'
           @click='on_icon_click'
         )
+      .flex-row
+        .span.fix-sz this is a button
+        button.fix-sz(
+          @click='on_button_click'
+        ) button
       .expand
       span.fix-sz bottom of page
     #viewer.expand
@@ -38,6 +43,9 @@ export default {
         message: 'Annotations saved successfully',
         type: 'success',
       })
+    },
+    on_button_click(){
+      this.$dialog('This is a test dialog')
     }
   }
   

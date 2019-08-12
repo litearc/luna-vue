@@ -21,15 +21,14 @@ $cS: #94989a
 $cT: #9ba2a8
 $cU: #ebf0f5
 
-// this was the original blue, but is a little too bright
-// $c-prim: #2a96ff
-
 $c-blue: hsl(210, 60%, 60%)
 $c-green: hsl(130, 60%, 60%)
 $c-red: hsl(0, 60%, 60%)
 $c-gold: hsl(45, 60%, 60%)
-  
-$c-prim: $c-blue // #2a96ff
+$c-prim: $c-blue
+
+$c-trans: rgb(0, 0, 0, 0)
+$c-semitrans: rgb(0, 0, 0, .5)
 
 // define colors for various elements from palette
 $c-text: $cS
@@ -41,10 +40,11 @@ $c-viewer: $cB
 $c-input: $cC
 $c-messsage-bg: $cE
 
+
 // constants
 $dur-fade: .2s
 
-$font-size: 13px
+$font-size: 12px
 @font-face
   font-family: main
   src: url(../fonts/regular.ttf)
@@ -54,6 +54,8 @@ $font-size: 13px
   font-weight: bold
   src: url(../fonts/bold.ttf)
 
+
+// font options
 .bold
   font-weight: bold
 
@@ -69,7 +71,8 @@ $font-size: 13px
 .color-gold
   color: $c-gold
 
-// useful commonly used options for flexbox
+
+// flexbox
 .flex-col
   display: flex
   flex-direction: column
@@ -102,11 +105,13 @@ $font-size: 13px
 .flex-col > :not(*:first-child)
   margin-top: 8px
 
+
 @mixin global
   font-family: main
   font-size: $font-size
   font-variant-numeric: tabular-nums
   color: $c-text
+
 
 @mixin input
   @include global
@@ -135,8 +140,9 @@ $font-size: 13px
     background-color: $c-input
     border: 1px solid $c-prim
 
-// for some reason, can't select faicon directly, so all faicon have a .icon
-// class, which we use to select them
+
+// icons. for some reason, can't select faicon directly, so all faicon have a
+// .icon class, which we use to select them
 .icon
   position: relative
   top: 1px // font-awesome icons are a little high by default
@@ -147,6 +153,8 @@ $font-size: 13px
   &.selected
     color: $c-prim
 
+
+// message (pops up from below or above page)
 .ui-message
   @include global
 
@@ -172,3 +180,54 @@ $font-size: 13px
 
 .align-baseline
   align-items: baseline
+
+
+// button
+button
+  @include global
+
+  background-color: $cM
+  border: none
+  color: $cU
+  padding: 3px 12px
+  text-align: center
+  text-decoration: none
+  display: inline-block
+  border-radius: 3px
+  cursor: pointer
+  outline: none
+
+  &:hover
+    background-color: $cO
+
+
+// dialog (dialog box with message and options, e.g. 'Cancel' and 'Ok')
+.dialog-box
+  @include global
+  
+  position: fixed
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  // min-width: 180px
+
+  background-color: $c-pane
+  border-radius: 4px
+  padding: 16px
+
+.bg
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  background-color: $c-semitrans
+
+.bg-fade-enter-active, .bg-fade-leave-active, .dialog-fade-enter-active, .dialog-fade-leave-active
+  transition: all $dur-fade
+
+.bg-fade-enter, .bg-fade-leave-to
+  background-color: $c-trans
+
+.dialog-fade-enter, .dialog-fade-leave-to
+  opacity: 0

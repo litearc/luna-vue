@@ -1,7 +1,6 @@
 <template lang='pug'>
 transition(
   :name='fade_name'
-  @enter='on_enter'
   @after-leave='on_afterleave'
 )
   div(
@@ -33,7 +32,6 @@ export default
       duration: 2000,
       on_close: null,
       visible: false,
-      width: 0,
       ypos: 0,
     }
   }, // data
@@ -55,9 +53,6 @@ export default
 
   methods:
   {
-    on_enter(){
-      this.width = this.$el.scrollWidth
-    },
     on_afterleave(){
       this.$destroy(true)
       this.$el.parentNode.removeChild(this.$el)

@@ -44,7 +44,6 @@ const message = function(opts)
     els.forEach(el => { ypos -= el.$el.offsetHeight + 16 })
   }
     
-  el.width = el.$el.scrollWidth
   el.ypos = ypos
   el.visible = true
   els.push(el)

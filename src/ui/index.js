@@ -1,6 +1,7 @@
 import ui_input from './input.vue'
 import ui_textarea from './textarea.vue'
 
+import dialog from './dialog.js'
 import message from './message.js'
 
 const comps = [
@@ -13,6 +14,7 @@ const install = function(Vue, opts = {}){
     Vue.component(comp.name, comp)
   })
 
+  Vue.prototype.$dialog = dialog
   Vue.prototype.$message = message
 }
 
