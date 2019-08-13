@@ -5,7 +5,7 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	0.0.0	/f76ed53/
-$message	src/ui/index.js	/^  Vue.prototype.$message = message$/;"	m	class:comps.forEach
+$dialog	src/ui/index.js	/^  Vue.prototype.$dialog = dialog$/;"	m	class:comps.forEach
 0	package.json	/^    "> 1%",$/;"	s	array:browserslist
 1	package.json	/^    "last 2 versions"$/;"	s	array:browserslist
 @babel/code-frame	package-lock.json	/^            "@babel\/code-frame": "^7.0.0",$/;"	s	object:dependencies.read-pkg.dependencies.parse-json.requires
@@ -279,10 +279,16 @@ $message	src/ui/index.js	/^  Vue.prototype.$message = message$/;"	m	class:comps.
 @babel/types	package-lock.json	/^        "@babel\/types": "^7.5.5",$/;"	s	object:dependencies.@babel/traverse.requires
 @babel/types	package-lock.json	/^    "@babel\/types": {$/;"	o	object:dependencies
 @fortawesome/fontawesome-common-types	package-lock.json	/^        "@fortawesome\/fontawesome-common-types": "^0.2.21"$/;"	s	object:dependencies.@fortawesome/fontawesome-svg-core.requires
+@fortawesome/fontawesome-common-types	package-lock.json	/^        "@fortawesome\/fontawesome-common-types": "^0.2.21"$/;"	s	object:dependencies.@fortawesome/free-brands-svg-icons.requires
+@fortawesome/fontawesome-common-types	package-lock.json	/^        "@fortawesome\/fontawesome-common-types": "^0.2.21"$/;"	s	object:dependencies.@fortawesome/free-regular-svg-icons.requires
 @fortawesome/fontawesome-common-types	package-lock.json	/^        "@fortawesome\/fontawesome-common-types": "^0.2.21"$/;"	s	object:dependencies.@fortawesome/free-solid-svg-icons.requires
 @fortawesome/fontawesome-common-types	package-lock.json	/^    "@fortawesome\/fontawesome-common-types": {$/;"	o	object:dependencies
 @fortawesome/fontawesome-svg-core	package-lock.json	/^    "@fortawesome\/fontawesome-svg-core": {$/;"	o	object:dependencies
 @fortawesome/fontawesome-svg-core	package.json	/^    "@fortawesome\/fontawesome-svg-core": "^1.2.21",$/;"	s	object:dependencies
+@fortawesome/free-brands-svg-icons	package-lock.json	/^    "@fortawesome\/free-brands-svg-icons": {$/;"	o	object:dependencies
+@fortawesome/free-brands-svg-icons	package.json	/^    "@fortawesome\/free-brands-svg-icons": "^5.10.1",$/;"	s	object:dependencies
+@fortawesome/free-regular-svg-icons	package-lock.json	/^    "@fortawesome\/free-regular-svg-icons": {$/;"	o	object:dependencies
+@fortawesome/free-regular-svg-icons	package.json	/^    "@fortawesome\/free-regular-svg-icons": "^5.10.1",$/;"	s	object:dependencies
 @fortawesome/free-solid-svg-icons	package-lock.json	/^    "@fortawesome\/free-solid-svg-icons": {$/;"	o	object:dependencies
 @fortawesome/free-solid-svg-icons	package.json	/^    "@fortawesome\/free-solid-svg-icons": "^5.10.1",$/;"	s	object:dependencies
 @fortawesome/vue-fontawesome	package-lock.json	/^    "@fortawesome\/vue-fontawesome": {$/;"	o	object:dependencies
@@ -1445,6 +1451,17 @@ dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.express.
 dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.express.dependencies.qs
 dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.finalhandler.dependencies.ms
 dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.find-babel-config.dependencies.json5
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.ansi-regex
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.balanced-match
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.code-point-at
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.concat-map
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.console-control-strings
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.inherits
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.minimist
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.number-is-nan
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.safe-buffer
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.wrappy
+dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.fsevents.dependencies.yallist
 dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.gauge.dependencies.ansi-regex
 dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.globby.dependencies.pify
 dev	package-lock.json	/^          "dev": true$/;"	b	object:dependencies.has-ansi.dependencies.ansi-regex
@@ -1586,15 +1603,10 @@ dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fill-ra
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.finalhandler.dependencies.debug
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.follow-redirects.dependencies.debug
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.abbrev
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.ansi-regex
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.aproba
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.are-we-there-yet
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.balanced-match
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.brace-expansion
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.chownr
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.code-point-at
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.concat-map
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.console-control-strings
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.core-util-is
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.debug
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.deep-extend
@@ -1608,12 +1620,10 @@ dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevent
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.iconv-lite
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.ignore-walk
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.inflight
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.inherits
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.ini
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.is-fullwidth-code-point
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.isarray
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.minimatch
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.minimist
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.minipass
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.minizlib
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.mkdirp
@@ -1624,7 +1634,6 @@ dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevent
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.npm-bundled
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.npm-packlist
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.npmlog
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.number-is-nan
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.object-assign
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.once
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.os-homedir
@@ -1635,7 +1644,6 @@ dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevent
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.rc
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.readable-stream
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.rimraf
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.safe-buffer
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.safer-buffer
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.sax
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.semver
@@ -1648,8 +1656,6 @@ dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevent
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.tar
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.util-deprecate
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.wide-align
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.wrappy
-dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.fsevents.dependencies.yallist
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.gauge.dependencies.is-fullwidth-code-point
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.gauge.dependencies.string-width
 dev	package-lock.json	/^          "dev": true,$/;"	b	object:dependencies.gauge.dependencies.strip-ansi
@@ -2763,6 +2769,8 @@ dev	package-lock.json	/^      "dev": true,$/;"	b	object:dependencies.ws
 dev	package-lock.json	/^      "dev": true,$/;"	b	object:dependencies.yargs
 dev	package-lock.json	/^      "dev": true,$/;"	b	object:dependencies.yargs-parser
 devDependencies	package.json	/^  "devDependencies": {$/;"	o
+dialog	src/ui/dialog.js	/^const dialog = function(opts)$/;"	f
+dialog_ctor	src/ui/dialog.js	/^let dialog_ctor = Vue.extend(dialog_vue)$/;"	v
 diff	package-lock.json	/^        "diff": "3.5.0",$/;"	s	object:dependencies.mocha.requires
 diff	package-lock.json	/^    "diff": {$/;"	o	object:dependencies
 diffie-hellman	package-lock.json	/^        "diffie-hellman": "^5.0.0",$/;"	s	object:dependencies.crypto-browserify.requires
@@ -4042,6 +4050,7 @@ integrity	package-lock.json	/^      "integrity": "sha512-2fCObh5UanxvSxeXrtLtlwV
 integrity	package-lock.json	/^      "integrity": "sha512-2mwqfYMK8weA0g0uBKOt4FE3iEodiHy9\/CW0b+nWXcbL+pGzLx8ESYc+j9IIxr6LTDHW/;"	s	object:dependencies.@babel/preset-env
 integrity	package-lock.json	/^      "integrity": "sha512-2pzOUxWcLlXWtn+Jd6js3o12TysNOOVes\/aQfg+MT\/35vrxWzedHlLwyoJpXjsFKWm9/;"	s	object:dependencies.clipboardy
 integrity	package-lock.json	/^      "integrity": "sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpR/;"	s	object:dependencies.pn
+integrity	package-lock.json	/^      "integrity": "sha512-2qU3IE4PeqZjMrVuHsE5sjgK64HlpijMhBv66TEhFEGCLpB2bwRdGvies6vpUvmTRRHhU/;"	s	object:dependencies.@fortawesome/free-regular-svg-icons
 integrity	package-lock.json	/^      "integrity": "sha512-2uUqazuKlTaSI\/dC8AzicUck7+IrEaOnN\/e0jd3Xtt1KcGpwx30v50mL7oPyr\/h9bL/;"	s	object:dependencies.npmlog
 integrity	package-lock.json	/^      "integrity": "sha512-37GeVSIJ3kn1JgKyjiYNmSLP1yzbpb29jdmwBSgkD9h40\/hyrR\/OifpVUndji3tmwGg/;"	s	object:dependencies.whatwg-url
 integrity	package-lock.json	/^      "integrity": "sha512-38QdqVoXdHUQfTpZo3rQwqQdWtCn5tMv4uV6r2RMfTqNBuv4ZBhz79SfaQWKTVmxHjeFv/;"	s	object:dependencies.@babel/plugin-syntax-decorators
@@ -4640,6 +4649,7 @@ integrity	package-lock.json	/^      "integrity": "sha512-xYL0AMZJ4gFzJQsHUKa5jiW
 integrity	package-lock.json	/^      "integrity": "sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU\/Jxzk629Brsab\/mM/;"	s	object:dependencies.json-schema-traverse
 integrity	package-lock.json	/^      "integrity": "sha512-xitP+WxNPcTTOgnTJcrhM0xvdPepipPSf3I8EIpGKeFLjt3PlJLIDG3u8EX53ZIubkb+5/;"	s	object:dependencies.md5.js
 integrity	package-lock.json	/^      "integrity": "sha512-xmHq0B+ytyrWJvQTc5OWAC4ii6Dhr0s22STOoydokG51JjWhyYo5mRPXoi+ZmtHQhZZwu/;"	s	object:dependencies.@babel/plugin-transform-modules-commonjs
+integrity	package-lock.json	/^      "integrity": "sha512-xrq2+coLZUGcQsmbdoyyp5O5X4a6FhEQj3cGdlM14\/bZ6lHCeKlZElsvr\/ETtFtD8w2/;"	s	object:dependencies.@fortawesome/free-brands-svg-icons
 integrity	package-lock.json	/^      "integrity": "sha512-y3b8Kpd8OAN444hxfBbFfj1FY\/RjtTd8tzYwhUqNYXx0fXx2iX4maP4Qr6qhIKbQXI02/;"	s	object:dependencies.p-map
 integrity	package-lock.json	/^      "integrity": "sha512-yHYTgWMQO8VvwNS22eLLloAkvungsKdKTLO8AJlftYIKNfJr3GK3zK0ZCfzDDGUBttdGc/;"	s	object:dependencies.http-proxy-middleware
 integrity	package-lock.json	/^      "integrity": "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfa/;"	s	object:dependencies.function-bind
@@ -5388,32 +5398,23 @@ opn	package-lock.json	/^    "opn": {$/;"	o	object:dependencies
 optional	package-lock.json	/^              "optional": true$/;"	b	object:dependencies.fsevents.dependencies.rc.dependencies.minimist
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.escodegen.dependencies.source-map
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.abbrev
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.ansi-regex
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.aproba
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.balanced-match
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.chownr
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.code-point-at
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.concat-map
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.console-control-strings
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.core-util-is
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.deep-extend
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.delegates
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.detect-libc
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.fs.realpath
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.has-unicode
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.inherits
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.ini
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.isarray
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.minimist
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.ms
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.npm-bundled
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.number-is-nan
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.object-assign
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.os-homedir
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.os-tmpdir
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.path-is-absolute
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.process-nextick-args
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.safe-buffer
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.safer-buffer
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.sax
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.semver
@@ -5421,10 +5422,7 @@ optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencie
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.signal-exit
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.strip-json-comments
 optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.util-deprecate
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.wrappy
-optional	package-lock.json	/^          "optional": true$/;"	b	object:dependencies.fsevents.dependencies.yallist
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.are-we-there-yet
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.brace-expansion
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.debug
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.fs-minipass
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.gauge
@@ -5432,24 +5430,17 @@ optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependenci
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.iconv-lite
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.ignore-walk
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.inflight
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.is-fullwidth-code-point
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.minimatch
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.minipass
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.minizlib
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.mkdirp
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.needle
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.node-pre-gyp
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.nopt
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.npm-packlist
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.npmlog
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.once
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.osenv
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.rc
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.readable-stream
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.rimraf
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.string-width
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.string_decoder
-optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.strip-ansi
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.tar
 optional	package-lock.json	/^          "optional": true,$/;"	b	object:dependencies.fsevents.dependencies.wide-align
 optional	package-lock.json	/^      "optional": true$/;"	b	object:dependencies.uglify-to-browserify
@@ -6278,6 +6269,8 @@ requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@babe
 requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@babel/traverse
 requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@babel/types
 requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@fortawesome/fontawesome-svg-core
+requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@fortawesome/free-brands-svg-icons
+requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@fortawesome/free-regular-svg-icons
 requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@fortawesome/free-solid-svg-icons
 requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@hapi/joi
 requires	package-lock.json	/^      "requires": {$/;"	o	object:dependencies.@hapi/topo
@@ -7168,6 +7161,8 @@ resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@b
 resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@babel\/types\/-\/types-7.5.5.tgz",$/;"	s	object:dependencies.@babel/types
 resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@fortawesome\/fontawesome-common-types\/-\/font/;"	s	object:dependencies.@fortawesome/fontawesome-common-types
 resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@fortawesome\/fontawesome-svg-core\/-\/fontawes/;"	s	object:dependencies.@fortawesome/fontawesome-svg-core
+resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@fortawesome\/free-brands-svg-icons\/-\/free-br/;"	s	object:dependencies.@fortawesome/free-brands-svg-icons
+resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@fortawesome\/free-regular-svg-icons\/-\/free-r/;"	s	object:dependencies.@fortawesome/free-regular-svg-icons
 resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@fortawesome\/free-solid-svg-icons\/-\/free-sol/;"	s	object:dependencies.@fortawesome/free-solid-svg-icons
 resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@fortawesome\/vue-fontawesome\/-\/vue-fontaweso/;"	s	object:dependencies.@fortawesome/vue-fontawesome
 resolved	package-lock.json	/^      "resolved": "https:\/\/registry.npmjs.org\/@hapi\/address\/-\/address-2.0.0.tgz",$/;"	s	object:dependencies.@hapi/address
@@ -9966,6 +9961,8 @@ version	package-lock.json	/^      "version": "5.1.1",$/;"	s	object:dependencies.
 version	package-lock.json	/^      "version": "5.1.2",$/;"	s	object:dependencies.safe-buffer
 version	package-lock.json	/^      "version": "5.1.3",$/;"	s	object:dependencies.har-validator
 version	package-lock.json	/^      "version": "5.1.4",$/;"	s	object:dependencies.parse-asn1
+version	package-lock.json	/^      "version": "5.10.1",$/;"	s	object:dependencies.@fortawesome/free-brands-svg-icons
+version	package-lock.json	/^      "version": "5.10.1",$/;"	s	object:dependencies.@fortawesome/free-regular-svg-icons
 version	package-lock.json	/^      "version": "5.10.1",$/;"	s	object:dependencies.@fortawesome/free-solid-svg-icons
 version	package-lock.json	/^      "version": "5.2.0",$/;"	s	object:dependencies.mocha
 version	package-lock.json	/^      "version": "5.2.0",$/;"	s	object:dependencies.read-pkg

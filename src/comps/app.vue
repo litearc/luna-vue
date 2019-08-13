@@ -14,12 +14,19 @@
           @click='on_icon_click'
         )
       .flex-row
-        .span.fix-sz this is a button
-        button.fix-sz(
-          @click='on_button_click'
-        ) button
+        span.fix-sz this is a button
+        ui-tooltip.fixsz(
+          text='click me'
+          placement='right'
+        )
+          button(
+            @click='on_button_click'
+          ) button
       .expand
-      span.fix-sz bottom of page
+      ui-tooltip.fix-sz(
+        text='this is the bottom'
+        placement='top'
+      ) bottom of page
     #viewer.expand
 </template>
 
