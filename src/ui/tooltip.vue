@@ -36,8 +36,8 @@ export default
 
   props: {
     text: '',
-    placement: {default: 'bottom'}, // ('top'|'right'|'bottom'|'left')-('top'|'right'|'bottom'|'left')
-    trigger: {default: 'hover'}, // 'hover', 'click', or 'focus'
+    placement: { default: 'bottom' }, // ('top'|'right'|'bottom'|'left')-('top'|'right'|'bottom'|'left')
+    trigger: { default: 'hover' }, // 'hover', 'click', or 'focus'
     transition: 'fade',
   },
 

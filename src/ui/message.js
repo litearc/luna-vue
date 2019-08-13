@@ -22,8 +22,6 @@ const message = function(opts)
   let id = seed++
   let el = new message_ctor({ data: opts })
 
-  // the id is a unique string that is used when shifting later messages up/down
-  // on the list when this one is removed
   el.id = id
   el.on_close = () => {
     message.close(el)
