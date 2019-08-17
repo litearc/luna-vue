@@ -33,6 +33,17 @@ export default
     }
   },
 
+  computed: {
+    style(){
+      return {
+      }
+    },
+    splitter_style(){
+      return {
+      }
+    }
+  },
+
   methods: {
     on_mouseup(){},
 
