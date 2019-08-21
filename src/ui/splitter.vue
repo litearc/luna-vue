@@ -49,10 +49,16 @@ export default
         height: '100%',
       }
       let sz = `${this.pane1_sz} 15px ${this.pane2_sz}`
-      if (this.dir === 'horizontal')
+      if (this.dir === 'horizontal'){
         style['grid-template-columns'] = sz
-      if (this.dir === 'vertical')
+        if (this.active)
+          style['cursor'] = 'ew-resize'
+      }
+      if (this.dir === 'vertical'){
         style['grid-template-rows'] = sz
+        if (this.active)
+          style['cursor'] = 'ns-resize'
+      }
       return style
     },
   },
@@ -64,9 +70,18 @@ export default
 
     on_mousemove(ev){
       if (this.active){
+        let a, b
+        if (this.dir === 'horizontal'){
+          a = ev.clientX
+          b = this.$refs.splitter.offsetWidth
+        }
+        else {
+          a = ev.clientY
+          b = this.$refs.splitter.offsetHeight
+        }
         let w = this.$refs.splitter.offsetWidth 
-        this.pane1_sz = `${ev.clientX/w}fr`
-        this.pane2_sz = `${(w-ev.clientX)/w}fr`
+        this.pane1_sz = `${a/b}fr`
+        this.pane2_sz = `${(b-a)/b}fr`
       }
     },
 

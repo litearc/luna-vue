@@ -1,6 +1,6 @@
 <template lang='pug'>
 #app
-  ui-splitter
+  ui-splitter(dir='horizontal')
     template(v-slot:slot1)
       span hello
     template(v-slot:slot2)

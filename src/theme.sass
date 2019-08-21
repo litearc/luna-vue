@@ -259,13 +259,25 @@ button
 .pane
   overflow: hidden
 
-.ui-splitter.horizontal > .pane:first-child
-  border-right: 1px solid $c-border
-  margin-right: -8px
+.ui-splitter
+  
+  &.horizontal 
+    & > .pane:first-child
+      border-right: 1px solid $c-border
+      margin-right: -8px
+    & > .pane:last-child
+      margin-left: -7px
+    & > .splitter
+      cursor: ew-resize
+      z-index: 1000
 
-.ui-splitter.horizontal > .pane:last-child
-  margin-left: -7px
+  &.vertical 
+    & > .pane:first-child
+      border-bottom: 1px solid $c-border
+      margin-bottom: -8px
+    & > .pane:last-child
+      margin-top: -7px
+    & > .splitter
+      cursor: ns-resize
+      z-index: 1000
 
-.ui-splitter.horizontal > .splitter
-  cursor: ew-resize
-  z-index: 1000
