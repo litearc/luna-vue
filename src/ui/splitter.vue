@@ -7,14 +7,14 @@ div.full-sz
     @mouseup='on_mouseup'
     @mousemove='on_mousemove'
   )
-    #pane1.expand
+    #pane1.expand(:style='pane1_style')
       slot(name='slot1')
     .splitter(
       :style='splitter_style'
       @click='on_click'
       @mousedown='on_mousedown'
     )
-    #pane2.expand
+    #pane2.expand(:style='pane2_style')
       slot(name='slot2')
 </template>
 
@@ -53,7 +53,7 @@ export default
         width: '100%',
         height: '100%',
       }
-      let sz = `${this.pane1_sz} 1px ${this.pane2_sz}`
+      let sz = `${this.pane1_sz} 15px ${this.pane2_sz}`
       if (this.dir === 'horizontal')
         style['grid-template-columns'] = sz
       if (this.dir === 'vertical')
@@ -62,8 +62,19 @@ export default
     },
     splitter_style(){
       return {
-        'background-color': 'red',
         cursor: {horizontal:'ew-resize', vertical:'ns-resize'}[this.dir],
+        'z-index': 1000
+      }
+    },
+    pane1_style(){
+      return {
+        'margin-right': '-8px',
+        'border-right': '1px solid gray'
+      }
+    },
+    pane2_style(){
+      return {
+        'margin-left': '-8px',
       }
     }
   },
@@ -71,17 +82,29 @@ export default
   methods: {
     on_mouseup(){
       this.active = false
+      console.log('on mouse up')
     },
 
-    on_mousemove(){},
+    on_mousemove(ev){
+      if (this.active){
+        let x = ev.clientX
+        let w1 = `${x}px`
+        let w2 = this.$refs.splitter.offsetWidth - x - 15 + 'px'
+        this.pane1_sz = `${w1}`
+        this.pane2_sz = `${w2}`
+      }
+    },
 
-    on_mousedown(){},
-
-    on_click(){
+    on_mousedown(ev){
       this.active = true
       let w = this.$refs.splitter.offsetWidth,
           h = this.$refs.splitter.offsetHeight
-      console.log(w, h)
+      this.x = ev.clientX
+      this.y = ev.clientY
+      console.log('on mouse down', w, h)
+    },
+
+    on_click(){
     },
   }
 }
