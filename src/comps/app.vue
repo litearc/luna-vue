@@ -1,10 +1,33 @@
 <template lang='pug'>
 #app
-  ui-splitter(dir='horizontal')
-    template(v-slot:slot1)
-      span hello
-    template(v-slot:slot2)
-      span world
+  ui-splitter
+    #sidebar.flex-col(slot='slot1')
+      .flex-row
+        span.fix-sz.bold name
+        ui-input.expand(placeholder='input name here')
+      .v-sep
+      .flex-row
+        span.fix-sz user
+        .expand
+        faicon.icon.fix-sz.clickable(
+          icon='cog'
+          @click='on_icon_click'
+        )
+      .flex-row
+        span.fix-sz this is a button
+        ui-tooltip.fixsz(
+          text='click me'
+          placement='right'
+        )
+          button(
+            @click='on_button_click'
+          ) button
+      .expand
+      ui-tooltip.fix-sz(
+        text='this is the bottom'
+        placement='top'
+      ) bottom of page
+    #viewer(slot='slot2')
 </template>
 
 <script>
@@ -60,7 +83,8 @@ export default {
 #sidebar
   padding: 8px
   background-color: $c-pane
-  width: 300px
+  /* width: 300px */
+  width: 100%
   height: 100vh
   
 </style>

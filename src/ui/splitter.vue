@@ -48,7 +48,7 @@ export default
         width: '100%',
         height: '100%',
       }
-      let sz = `${this.pane1_sz} 15px ${this.pane2_sz}`
+      let sz = `${this.pane1_sz} 1px ${this.pane2_sz}`
       if (this.dir === 'horizontal'){
         style['grid-template-columns'] = sz
         if (this.active)
