@@ -62,8 +62,7 @@ export default {
         }
       })
     },
-  } // methods
-  
+  }, // methods
 }
 </script>
 
@@ -77,6 +76,7 @@ export default {
   width: 100vw
   height: 100vh
   background-color: #222
+  padding: 100px
 
   @include global
 

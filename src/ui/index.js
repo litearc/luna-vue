@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import ui_input from './input.vue'
 import ui_splitter from './splitter.vue'
 import ui_textarea from './textarea.vue'
@@ -12,6 +13,9 @@ const comps = [
   ui_textarea,
   ui_tooltip,
 ]
+
+// a "global" event bus, used to communicate between components and with app
+export const ui_bus = new Vue()
 
 const install = function(Vue, opts = {}){
   comps.forEach(comp => {

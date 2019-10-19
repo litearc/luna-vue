@@ -4,17 +4,17 @@ div.full-sz
     ref='splitter'
     :class='ui_class'
     :style='ui_style'
-    @mouseup='on_mouseup'
-    @mousemove='on_mousemove'
   )
-    #pane1.pane.expand
+    #pane1.pane.expand(ref='pane1')
       slot(name='slot1')
-    .splitter(@mousedown='on_mousedown')
+    .splitter
     #pane2.pane.expand
       slot(name='slot2')
 </template>
 
 <script>
+let on = window.addEventListener
+
 export default
 {
   name: 'ui-splitter',
@@ -26,7 +26,8 @@ export default
 
   data(){
     return {
-      active: false,
+      near: false,
+      resizing: false,
       pane1_sz: '1fr',
       pane2_sz: '1fr',
       x: null,
@@ -48,15 +49,17 @@ export default
         width: '100%',
         height: '100%',
       }
-      let sz = `${this.pane1_sz} 1px ${this.pane2_sz}`
+      // we make the splitter width = 0 below, and let js figure out when the
+      // mouse is over (or near) it to do the resizing
+      let sz = `${this.pane1_sz} 0px ${this.pane2_sz}`
       if (this.dir === 'horizontal'){
         style['grid-template-columns'] = sz
-        if (this.active)
+        if (this.near && !this.resizing)
           style['cursor'] = 'ew-resize'
       }
       if (this.dir === 'vertical'){
         style['grid-template-rows'] = sz
-        if (this.active)
+        if (this.near && !this.resizing)
           style['cursor'] = 'ns-resize'
       }
       return style
@@ -64,30 +67,31 @@ export default
   },
 
   methods: {
-    on_mouseup(){
-      this.active = false
-    },
+  },
 
-    on_mousemove(ev){
-      if (this.active){
-        let a, b
-        if (this.dir === 'horizontal'){
-          a = ev.clientX
-          b = this.$refs.splitter.offsetWidth
-        }
-        else {
-          a = ev.clientY
-          b = this.$refs.splitter.offsetHeight
-        }
-        let w = this.$refs.splitter.offsetWidth 
-        this.pane1_sz = `${a/b}fr`
-        this.pane2_sz = `${(b-a)/b}fr`
-      }
-    },
+  mounted(){
+    on('mousemove', ev => {
+      let split = this.$refs.splitter
+      let pos = split.getBoundingClientRect()
+      let x = pos.top,
+          y = pos.left
+      let pane1 = this.$refs.pane1
+      this.near = (Math.abs((ev.x-x)-pane1.offsetWidth) < 10)
+    })
 
-    on_mousedown(ev){
-      this.active = true
-    },
-  }
+    on('mouseup', () => {
+      this.resizing = false
+      document.documentElement.style.cursor = ''
+      document.body.classList.remove('no-pointer-events')
+      document.body.classList.remove('non-selectable')
+    })
+
+    on('mousedown', ev => {
+      this.resizing = true
+      document.documentElement.style.cursor = 'grabbing'
+      document.body.classList.add('no-pointer-events')
+      document.body.classList.add('non-selectable')
+    })
+  },
 }
 </script>
