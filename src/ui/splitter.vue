@@ -14,6 +14,7 @@ div.full-sz
 
 <script>
 let on = window.addEventListener
+let dist = 10 // pixels, activate splitter
 
 export default
 {
@@ -66,9 +67,6 @@ export default
     },
   },
 
-  methods: {
-  },
-
   mounted(){
     on('mousemove', ev => {
       let split = this.$refs.splitter
@@ -77,6 +75,20 @@ export default
           y = pos.left
       let pane1 = this.$refs.pane1
       this.near = (Math.abs((ev.x-x)-pane1.offsetWidth) < 10)
+      
+      if (!this.resizing) return
+
+      let a, b
+      if (this.dir === 'horizontal'){
+        b = split.offsetWidth
+        a = Math.min(Math.max(ev.x-x, 1), b-1)
+      }
+      else {
+        b = split.offsetHeight
+        a = Math.min(Math.max(ev.y-y, 1), b-1)
+      }
+      this.pane1_sz = `${a/b}fr`
+      this.pane2_sz = `${(b-a)/b}fr`
     })
 
     on('mouseup', () => {
@@ -87,6 +99,7 @@ export default
     })
 
     on('mousedown', ev => {
+      if (!this.near) return
       this.resizing = true
       document.documentElement.style.cursor = 'grabbing'
       document.body.classList.add('no-pointer-events')
