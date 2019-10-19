@@ -1,6 +1,9 @@
 <template lang='pug'>
 #app
-  ui-splitter
+  ui-splitter(
+    min_size='250px'
+    max_size='400px'
+  )
     #sidebar.flex-col(slot='slot1')
       .flex-row
         span.fix-sz.bold name
@@ -82,7 +85,6 @@ export default {
 #sidebar
   padding: 8px
   background-color: $c-pane
-  /* width: 300px */
   width: 100%
   height: 100vh
   
