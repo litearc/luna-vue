@@ -1,9 +1,6 @@
 <template lang='pug'>
 #app
-  ui-splitter(
-    min_size='250px'
-    max_size='400px'
-  )
+  ui-splitter
     #sidebar.flex-col(slot='slot1')
       .flex-row
         span.fix-sz.bold name

@@ -23,8 +23,13 @@ export default
   props: {
     dir: { default: 'horizontal' },
     limits: { default: () => [0, 100] },
-    min_size: null,
-    max_size: null,
+    // these define the min and max sizes for panes 1 and 2.
+    // the default values mean "no restriction".
+    // only sizes for one of the panes should be set.
+    min1: { default: null },
+    max1: { default: null },
+    min2: { default: null },
+    max2: { default: null },
   },
 
   data(){
@@ -75,8 +80,8 @@ export default
     let split = this.$refs.splitter
     let b = (this.dir === 'horizontal') ? split.offsetWidth : split.offsetHeight
     let a = b/2
-    if (this.min_size !== null) a = Math.max(a, parseInt(this.min_size))
-    if (this.max_size !== null) a = Math.min(a, parseInt(this.max_size))
+    if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
+    if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
     this.pane1_sz = `${a/b}fr`
     this.pane2_sz = `${(b-a)/b}fr`
 
@@ -101,12 +106,11 @@ export default
         a = Math.min(Math.max(ev.y-y, 0), b-1)
       }
 
-      if (this.min_size !== null) a = Math.max(a, parseInt(this.min_size))
-      if (this.max_size !== null) a = Math.min(a, parseInt(this.max_size))
+      if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
+      if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
 
       this.pane1_sz = `${a/b}fr`
       this.pane2_sz = `${(b-a)/b}fr`
-      console.log(`pane sizes: ${this.pane1_sz} ${this.pane2_sz}`)
     })
 
     on('mouseup', () => {

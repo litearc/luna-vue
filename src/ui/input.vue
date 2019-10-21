@@ -23,4 +23,12 @@ export default
 @import ../theme
 #el
   @include input
+
+  /* this hides the up/down arrows in 'number' inputs */
+  &[type=number]
+    -moz-appearance: textfield
+    appearance: textfield
+
+  &[type=number]::-webkit-inner-spin-button, &[type=number]::-webkit-outer-spin-button
+    -webkit-appearance: none
 </style>
