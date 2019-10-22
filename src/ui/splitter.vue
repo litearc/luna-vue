@@ -16,6 +16,10 @@ div.full-sz
 let on = window.addEventListener
 let dist = 10 // pixels, activate splitter
 
+function to_px(s, w){
+  return (s[s.length-1] === 'x') ? parseFloat(s) : parseFloat(s)*w
+}
+
 export default
 {
   name: 'ui-splitter',
@@ -30,6 +34,7 @@ export default
     max1: { default: null },
     min2: { default: null },
     max2: { default: null },
+    mode: { default: 'C' },
   },
 
   data(){
@@ -74,44 +79,100 @@ export default
     },
   },
 
+  methods: {
+    // acceptable range in px where splitter can be. (2-array)
+    ok_range(){
+      let el = this.$refs.splitter
+      let w = (this.dir === 'horizontal') ? el.offsetWidth : el.offsetHeight
+      let min1 = (this.min1 === null) ? 0 : to_px(this.min1, w)
+      let max1 = (this.max1 === null) ? w : to_px(this.max1, w)
+      let min2 = (this.min2 === null) ? 0 : to_px(this.min2, w)
+      let max2 = (this.max2 === null) ? w : to_px(this.max2, w)
+      let min = Math.max(min1, min2)
+      let max = Math.min(max1, max2)
+      if (max < min) return null // no acceptable position for splitter
+      return [min, max]
+    },
+  }, // methods
+
   mounted(){
-    // if min_width or max_width are defined, and current sizes are outsize
-    // bounds, set current size appropriately
-    let split = this.$refs.splitter
-    let b = (this.dir === 'horizontal') ? split.offsetWidth : split.offsetHeight
-    let a = b/2
-    if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
-    if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
-    this.pane1_sz = `${a/b}fr`
-    this.pane2_sz = `${(b-a)/b}fr`
 
     on('mousemove', ev => {
-      let split = this.$refs.splitter
-      let pos = split.getBoundingClientRect()
-      let x = pos.top,
-          y = pos.left
+      let el = this.$refs.splitter
+      let tot_size = (this.dir === 'horizontal') ?
+        el.offsetWidth : el.offsetHeight
       let pane1 = this.$refs.pane1
-      this.near = (Math.abs((ev.x-x)-pane1.offsetWidth) < 10)
-      
-      if (!this.resizing) return
+      let pos = el.getBoundingClientRect()
+      let mouse_pos = (this.dir === 'horizontal') ? ev.x-pos.left : ev.y-pos.top
+      let splitter_pos = (this.dir === 'horizontal') ?
+        pane1.offsetWidth : pane1.offsetHeight
+      this.near = (Math.abs(mouse_pos-splitter_pos) < 10)
 
-      let a, b
-      // for some reason, the first pane can't be completely 1fr size
-      if (this.dir === 'horizontal'){
-        b = split.offsetWidth
-        a = Math.min(Math.max(ev.x-x, 0), b-1)
+      let r = this.ok_range()
+      if (r === null || !this.resizing) return
+
+      if (mouse_pos < r[0]) mouse_pos = r[0]
+      if (mouse_pos > r[1]) mouse_pos = r[1]
+
+      switch (this.mode){
+        case 'A':
+          this.pane1_sz = `${mouse_pos}px`
+          this.pane2_sz = `1fr`
+          break
+        case 'B':
+          this.pane1_sz = `1fr`
+          this.pane2_sz = `${tot_size-mouse_pos}px`
+          break
+        case 'C':
+          this.pane1_sz = `${mouse_pos/tot_size}fr`
+          this.pane2_sz = `${1-mouse_pos/tot_size}fr`
+          break
       }
-      else {
-        b = split.offsetHeight
-        a = Math.min(Math.max(ev.y-y, 0), b-1)
-      }
-
-      if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
-      if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
-
-      this.pane1_sz = `${a/b}fr`
-      this.pane2_sz = `${(b-a)/b}fr`
     })
+
+
+
+
+
+
+
+    // // if min_width or max_width are defined, and current sizes are outsize
+    // // bounds, set current size appropriately
+    // let split = this.$refs.splitter
+    // let b = (this.dir === 'horizontal') ? split.offsetWidth : split.offsetHeight
+    // let a = b/2
+    // if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
+    // if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
+    // this.pane1_sz = `${a/b}fr`
+    // this.pane2_sz = `${(b-a)/b}fr`
+    //
+    // on('mousemove', ev => {
+    //   let split = this.$refs.splitter
+    //   let pos = split.getBoundingClientRect()
+    //   let x = pos.top,
+    //       y = pos.left
+    //   let pane1 = this.$refs.pane1
+    //   this.near = (Math.abs((ev.x-x)-pane1.offsetWidth) < 10)
+    //   
+    //   if (!this.resizing) return
+    //
+    //   let a, b
+    //   // for some reason, the first pane can't be completely 1fr size
+    //   if (this.dir === 'horizontal'){
+    //     b = split.offsetWidth
+    //     a = Math.min(Math.max(ev.x-x, 0), b-1)
+    //   }
+    //   else {
+    //     b = split.offsetHeight
+    //     a = Math.min(Math.max(ev.y-y, 0), b-1)
+    //   }
+    //
+    //   if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
+    //   if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
+    //
+    //   this.pane1_sz = `${a/b}fr`
+    //   this.pane2_sz = `${(b-a)/b}fr`
+    // })
 
     on('mouseup', () => {
       this.resizing = false
