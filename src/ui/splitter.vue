@@ -30,6 +30,7 @@ export default
     // these define the min and max sizes for panes 1 and 2.
     // the default values mean "no restriction".
     // only sizes for one of the panes should be set.
+    init1: { default: null }, // initial size of pane 1 (default is 1/2)
     min1: { default: null },
     max1: { default: null },
     min2: { default: null },
@@ -84,10 +85,10 @@ export default
     ok_range(){
       let el = this.$refs.splitter
       let w = (this.dir === 'horizontal') ? el.offsetWidth : el.offsetHeight
-      let min1 = (this.min1 === null) ? 0 : to_px(this.min1, w)
-      let max1 = (this.max1 === null) ? w : to_px(this.max1, w)
-      let min2 = (this.min2 === null) ? 0 : to_px(this.min2, w)
-      let max2 = (this.max2 === null) ? w : to_px(this.max2, w)
+      let min1 = (this.min1 === null) ? 0   : to_px(this.min1, w)
+      let max1 = (this.max1 === null) ? w-1 : to_px(this.max1, w)
+      let min2 = (this.min2 === null) ? 0   : to_px(this.min2, w)
+      let max2 = (this.max2 === null) ? w-1 : to_px(this.max2, w)
       let min = Math.max(min1, min2)
       let max = Math.min(max1, max2)
       if (max < min) return null // no acceptable position for splitter
@@ -96,6 +97,34 @@ export default
   }, // methods
 
   mounted(){
+
+    // set the initial size so that it meets the requirements
+    let r = this.ok_range()
+    if (r !== null){
+      let pane1 = this.$refs.pane1
+      let pos = (this.dir === 'horizontal') ?
+        pane1.offsetWidth : pane1.offsetHeight
+      let el = this.$refs.splitter
+      let tot_size = (this.dir === 'horizontal') ?
+        el.offsetWidth : el.offsetHeight
+      if (pos < r[0]) pos = r[0]
+      if (pos > r[1]) pos = r[1]
+
+      switch (this.mode){
+        case 'A':
+          this.pane1_sz = `${pos}px`
+          this.pane2_sz = `1fr`
+          break
+        case 'B':
+          this.pane1_sz = `1fr`
+          this.pane2_sz = `${tot_size-pos}px`
+          break
+        case 'C':
+          this.pane1_sz = `${pos/tot_size}fr`
+          this.pane2_sz = `${1-pos/tot_size}fr`
+          break
+      }
+    }
 
     on('mousemove', ev => {
       let el = this.$refs.splitter
@@ -129,50 +158,6 @@ export default
           break
       }
     })
-
-
-
-
-
-
-
-    // // if min_width or max_width are defined, and current sizes are outsize
-    // // bounds, set current size appropriately
-    // let split = this.$refs.splitter
-    // let b = (this.dir === 'horizontal') ? split.offsetWidth : split.offsetHeight
-    // let a = b/2
-    // if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
-    // if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
-    // this.pane1_sz = `${a/b}fr`
-    // this.pane2_sz = `${(b-a)/b}fr`
-    //
-    // on('mousemove', ev => {
-    //   let split = this.$refs.splitter
-    //   let pos = split.getBoundingClientRect()
-    //   let x = pos.top,
-    //       y = pos.left
-    //   let pane1 = this.$refs.pane1
-    //   this.near = (Math.abs((ev.x-x)-pane1.offsetWidth) < 10)
-    //   
-    //   if (!this.resizing) return
-    //
-    //   let a, b
-    //   // for some reason, the first pane can't be completely 1fr size
-    //   if (this.dir === 'horizontal'){
-    //     b = split.offsetWidth
-    //     a = Math.min(Math.max(ev.x-x, 0), b-1)
-    //   }
-    //   else {
-    //     b = split.offsetHeight
-    //     a = Math.min(Math.max(ev.y-y, 0), b-1)
-    //   }
-    //
-    //   if (this.min1 !== null) a = Math.max(a, parseInt(this.min1))
-    //   if (this.max1 !== null) a = Math.min(a, parseInt(this.max1))
-    //
-    //   this.pane1_sz = `${a/b}fr`
-    //   this.pane2_sz = `${(b-a)/b}fr`
-    // })
 
     on('mouseup', () => {
       this.resizing = false
