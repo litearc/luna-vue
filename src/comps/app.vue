@@ -26,6 +26,7 @@
           button(
             @click='on_button_click'
           ) button
+      ui-tree(:root='dir_struct')
       .expand
       ui-tooltip.fix-sz(
         text='this is the bottom'
@@ -45,6 +46,7 @@ export default {
   data(){
     return {
       input: '',
+      dir_struct: {}, // folder structure
     }
   }, // data
 
@@ -67,6 +69,50 @@ export default {
       })
     },
   }, // methods
+
+  created(){
+    this.dir_struct = {
+      name: 'root folder',
+      is_folder: true,
+      is_open: true,
+      contents: [
+        {
+          name: 'folder A',
+          is_folder: true,
+          is_open: true,
+          contents: [
+            {
+              name: 'item 1A',
+              is_folder: false,
+            },
+            {
+              name: 'item 1B',
+              is_folder: false,
+            },
+          ]
+        },
+        {
+          name: 'folder B',
+          is_folder: true,
+          is_open: true,
+          contents: [
+            {
+              name: 'item 1B',
+              is_folder: false,
+            },
+          ]
+        },
+        {
+          name: 'item 1',
+          is_folder: false,
+        },
+        {
+          name: 'item 2',
+          is_folder: false,
+        },
+      ]
+    }
+  },
 }
 </script>
 
