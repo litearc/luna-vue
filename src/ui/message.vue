@@ -46,7 +46,8 @@ export default
     },
 
     fade_name(){
-      if (['top', 'bottom'].includes(this.position)) return `fade-${ this.position }`
+      if (['top', 'bottom'].includes(this.position))
+        return `fade-${ this.position }`
       return "" // error
     }
   }, // computed

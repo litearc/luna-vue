@@ -1,9 +1,9 @@
+build
 fonts
 src/fonts
 node_modules
 tags
 .DS_Store
-config.gypi
 
 #Electron-builder output
 /dist_electron

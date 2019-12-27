@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import ui_dropdown from './dropdown.vue'
 import ui_input from './input.vue'
 import ui_splitter from './splitter.vue'
 import ui_textarea from './textarea.vue'
@@ -9,6 +10,7 @@ import dialog from './dialog.js'
 import message from './message.js'
 
 const comps = [
+  ui_dropdown,
   ui_input,
   ui_splitter,
   ui_textarea,

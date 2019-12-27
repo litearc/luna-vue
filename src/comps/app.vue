@@ -1,10 +1,13 @@
 <template lang='pug'>
 #app
+  // splitter between the left sidebar and main content area
   ui-splitter#splitter(
     min1='300px'
     max1='500px'
     mode='A'
   )
+
+    // sidebar
     #sidebar.flex-col(slot='slot1')
       .flex-row
         span.fix-sz.bold name
@@ -27,11 +30,18 @@
             @click='on_button_click'
           ) button
       ui-tree(:root='dir_struct')
+      .flex-row
+        ui-dropdown(
+          trigger='hover-keep'
+        )
+          button dropdown menu
       .expand
       ui-tooltip.fix-sz(
         text='this is the bottom'
         placement='top'
       ) bottom of page
+
+    // main content area
     #viewer(slot='slot2')
 </template>
 
