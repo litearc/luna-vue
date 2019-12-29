@@ -1,5 +1,5 @@
 <template lang='pug'>
-#menu
+#menu(ref='menu')
   .item(v-for='(item,i) in items_' :key='i')
     div {{ item }}
 </template>
@@ -18,6 +18,13 @@ export default {
     items: {},
   },
 
+  mounted(){
+    let menu = this.$refs.menu
+
+    menu.addEventListener('mouseleave', () => {
+      this.$emit('close')
+    })
+  }
 }
 </script>
 

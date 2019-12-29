@@ -18,5 +18,15 @@ export default
 {
   name: 'ui-tooltip',
   mixins: [ popup_mixin ],
+
+  props: {
+    trigger: { default: 'hover' },
+  },
+
+  data(){
+    return {
+      space: 4, // add a little space between trigger and popup
+    }
+  }
 }
 </script>

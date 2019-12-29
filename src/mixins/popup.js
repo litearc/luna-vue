@@ -4,6 +4,8 @@ export default
     return {
       show: false,
       pos: { top: 0, left: 0 },
+      space: 0,
+      mouse_in: false,
     }
   },
 
@@ -15,14 +17,6 @@ export default
         'left': `${ this.pos.left }px`,
       }
     },
-
-    // space (px) between trigger and popup
-    space(){
-      switch (this.trigger){
-        case 'hover': return 4
-        case 'hover-keep': return 0
-      }
-    }
   },
 
   props: {
@@ -121,34 +115,53 @@ export default
   }, // methods
 
   mounted(){
-    let el = this.$refs.trigger
+    let tr = this.$refs.trigger
 
     switch (this.trigger){
       case 'click':
-        el.addEventListener('click', () => {
-          this.show = ! this.show
+        tr.addEventListener('click', () => {
+          this.show = !this.show
           if (this.show)
             this.set_popup_pos()
+        })
+        tr.addEventListener('mouseenter', () => {
+          this.mouse_in = true
+        })
+        tr.addEventListener('mouseleave', () => {
+          this.mouse_in = false
         })
         break
 
       case 'hover':
-      case 'hover-keep':
-        el.addEventListener('mouseenter', () => {
+        tr.addEventListener('mouseenter', () => {
           this.show = true
           this.set_popup_pos()
+          this.mouse_in = true
         })
-        el.addEventListener('mouseleave', () => {
+        tr.addEventListener('mouseleave', () => {
           this.show = false
+          this.mouse_in = false
+        })
+        break
+
+      case 'hover-keep':
+        tr.addEventListener('mouseenter', () => {
+          this.show = true
+          this.set_popup_pos()
+          this.mouse_in = true
+        })
+        // the 'close' condition is handled by the popup
+        tr.addEventListener('mouseleave', () => {
+          this.mouse_in = false
         })
         break
       
       case 'focus':
-        el.addEventListener('focus', () => {
+        tr.addEventListener('focus', () => {
           this.show = true
           this.set_popup_pos()
         })
-        el.addEventListener('blur', () => {
+        tr.addEventListener('blur', () => {
           this.show = false
         })
         break

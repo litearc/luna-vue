@@ -9,7 +9,7 @@ span.ui-tooltip
     ref='popup'
     :style='popup_style'
   )
-    ui-menu
+    ui-menu(@close='close')
 </template>
 
 <script>
@@ -20,8 +20,22 @@ export default
 {
   name: 'ui-dropdown',
   mixins: [ popup_mixin ],
+
+  props: {
+    trigger: { default: 'hover-keep' },
+  },
+
   components: {
     'ui-menu': ui_menu,
   },
+
+  methods: {
+    close(){
+      this.$nextTick(() => {
+        if (!this.mouse_in)
+          this.show = false
+      })
+    }
+  }
 }
 </script>
