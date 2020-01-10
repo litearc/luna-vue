@@ -2,14 +2,15 @@
 span.ui-tooltip
   // the `display: inline-block` is needed for the `trigger` div to be the same
   // size as the slot, but not expand more than that
-  div(ref='trigger' style='display: inline-block')
+  #trigger
     slot
-  .menu(
-    v-if='show'
-    ref='popup'
-    :style='popup_style'
-  )
-    ui-menu(@close='close')
+    ui-menu#menu
+  //- .menu(
+  //-   v-if='show'
+  //-   ref='popup'
+  //-   :style='popup_style'
+  //- )
+  //-   ui-menu
 </template>
 
 <script>
@@ -19,7 +20,7 @@ import ui_menu from './menu'
 export default
 {
   name: 'ui-dropdown',
-  mixins: [ popup_mixin ],
+  // mixins: [ popup_mixin ],
 
   props: {
     trigger: { default: 'hover-keep' },
@@ -28,14 +29,16 @@ export default
   components: {
     'ui-menu': ui_menu,
   },
-
-  methods: {
-    close(){
-      this.$nextTick(() => {
-        if (!this.mouse_in)
-          this.show = false
-      })
-    }
-  }
 }
 </script>
+
+<style lang='sass'>
+#menu
+  border: 1px solid red
+  display: none
+
+#trigger:hover #menu
+  border: 1px solid green
+  display: block
+
+</style>
