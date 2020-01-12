@@ -34,11 +34,9 @@ export default
 
 <style lang='sass'>
 #menu
-  border: 1px solid red
   display: none
 
 #trigger:hover #menu
-  border: 1px solid green
   display: block
 
 </style>

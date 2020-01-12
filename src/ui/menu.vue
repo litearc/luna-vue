@@ -1,73 +1,54 @@
 <template lang='pug'>
-#menu(ref='menu')
-  .item(v-for='(item,i) in items_' :key='i')
-    div {{ item }}
+#menu
+  ui.dmenu
+    li 1a
+    li 1b
+    li 1c
+      ul.dmenu
+        li 2a_more_words
+          ul.dmenu
+            li 3a
+            li 3b
+            li 3c
+        li 2b
 </template>
 
 <script>
 export default {
   name: 'ui-menu',
 
-  data(){
-    return {
-      items_: ['Hello', 'world', 'this', 'is', 'a', 'test'],
-      dir_struct: {},
-    }
-  },
-
-  props: {
-    items: {},
-  },
-
-  created() {
-    this.dir_struct = {
-      name: 'root folder',
-      is_folder: true,
-      is_open: true,
-      contents: [
-        {
-          name: 'folder A',
-          is_folder: true,
-          is_open: true,
-          contents: [
-            {
-              name: 'item 1A',
-              is_folder: false,
-            },
-            {
-              name: 'item 1B',
-              is_folder: false,
-            },
-          ]
-        },
-        {
-          name: 'folder B',
-          is_folder: true,
-          is_open: true,
-          contents: [
-            {
-              name: 'item 1B',
-              is_folder: false,
-            },
-          ]
-        },
-        {
-          name: 'item 1',
-          is_folder: false,
-        },
-        {
-          name: 'item 2',
-          is_folder: false,
-        },
-      ]
-    }
-  }
 }
 </script>
 
 <style lang='sass'>
 @import ../theme
 
-.item:hover
-  color: $c-bright
+li
+  border: 1px solid green
+  //height: 28px
+
+ul, li
+  padding: 0
+  margin: 0
+
+.dmenu
+  list-style: none
+  position: relative
+  display: none
+
+#menu > .dmenu
+  display: block
+
+li
+  position: relative // needed to position .dsubmenu correctly
+
+li:hover > ul.dmenu
+  display: block
+
+ul.dmenu
+  position: absolute
+  left: 100%
+  top: -1px
+  padding: 0
+
 </style>
