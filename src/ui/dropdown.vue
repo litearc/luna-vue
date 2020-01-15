@@ -19,9 +19,9 @@ export default
   data(){
     return {
       items: [
-        { name: 'a', contents: null },
+        { name: 'a this is a long string', contents: null },
         { name: 'b', contents: null },
-        { name: 'c', contents: [
+        { name: 'c this is also a long string', contents: [
           { name: '1', contents: [
             { name: 'aa', contents: null },
             { name: 'bb', contents: null },

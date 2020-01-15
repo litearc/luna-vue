@@ -1,17 +1,5 @@
 <template lang='pug'>
-#menu(:class='{ is_root }')
-  //- .dmenu
-  //-   li 1a
-  //-   li 1b
-  //-   li 1c
-  //-     ul.dmenu
-  //-       li 2a_more_words
-  //-         ul.dmenu
-  //-           li 3a
-  //-           li 3b
-  //-           li 3c
-  //-       li 2b
-  
+#menu.menu(:class='{ is_root }')
   .dmenu
     li(v-for='(item,i) in items' :key='i')
       span {{ item.name }}
@@ -36,9 +24,6 @@ export default {
 <style lang='sass'>
 @import ../theme
 
-li
-  border: 1px solid green
-
 ul, li
   padding: 0
   margin: 0
@@ -51,28 +36,23 @@ ul, li
 #menu.is_root > .dmenu
   display: block
 
-// #menu:not(.is_root)
-//   border: 1px solid red
-
 li
   position: relative // needed to position .dsubmenu correctly
+  padding-left: 12px
+  padding-right: 12px
 
-li:hover > .dmenu
+li:hover > .dmenu, li:hover > #menu > .dmenu
   display: block
 
-li:hover > #menu > .dmenu
-  display: block
-
-// ul.dmenu
-//   position: absolute
-//   left: 100%
-//   top: -1px
-//   padding: 0
+li > .menu
+  border: 0
+li:hover > .menu
+  border: 1px solid $c-border
 
 #menu:not(.is_root)
   position: absolute
   left: 100%
-  top: -1px
+  top: -1px // should be matched to border width
   padding: 0
 
 </style>
