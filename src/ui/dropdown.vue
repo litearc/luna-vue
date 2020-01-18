@@ -2,19 +2,36 @@
 span.ui-tooltip
   // the `display: inline-block` is needed for the `trigger` div to be the same
   // size as the slot, but not expand more than that
-  #trigger
+  // add position: relative?
+  span hello {{ num }} 
+  #trigger(ref='trigger' :style='trigger_style' @click='test_color="green"')
     slot
     ui-menu#menu(:items='items')
 </template>
 
 <script>
-import popup_mixin from '../mixins/popup'
 import ui_menu from './menu'
 
 export default
 {
   name: 'ui-dropdown',
-  // mixins: [ popup_mixin ],
+
+  computed: {
+
+    trigger_style(){
+      console.log('trigger style')
+      return {
+        border: '1px solid blue',
+        display: 'inline-block',
+        'background-color': this.test_color,
+        // '--bg-color': this.test_color,
+      }
+    }
+  },
+  
+  props: {
+    placement: { default: 'bottom' }
+  },
 
   data(){
     return {
@@ -28,7 +45,11 @@ export default
           ] },
           { name: '2', contents: null }
         ] }
-      ]
+      ],
+      trigger_xpos: null,
+      trigger_ypos: null,
+      test_color: 'red',
+      num: 0
     }
   },
 
@@ -39,12 +60,23 @@ export default
   components: {
     'ui-menu': ui_menu,
   },
+
+  mounted(){
+    console.log('mounted')
+    this.trigger_xpos = this.$refs.trigger.offsetLeft
+    this.trigger_ypos = this.$refs.trigger.offsetTop
+    this.test_color = 'green'
+  },
 }
 </script>
 
 <style lang='sass'>
 #menu
   display: none
+  position: absolute
+
+// #trigger
+//   background-color: var(--bg-color)
 
 #trigger:hover #menu
   display: block

@@ -40,6 +40,11 @@
         text='this is the bottom'
         placement='top'
       ) bottom of page
+      ui-dropdown.fix-sz(
+        trigger='hover-keep'
+        placement='top'
+      )
+        button dropdown menu
 
     // main content area
     #viewer(slot='slot2')
@@ -136,6 +141,11 @@ export default {
   width: 100vw
   height: 100vh
   background-color: #222
+
+  // for some reason, `position: relative` (along with `overflow: hidden`) is
+  // needed to prevent the tooltip from expanding the div
+  position: relative // allows absolute position of subelements
+  overflow: hidden
 
   @include global
 

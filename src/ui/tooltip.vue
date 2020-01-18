@@ -2,6 +2,7 @@
 span.ui-tooltip
   // the `display: inline-block` is needed for the `trigger` div to be the same
   // size as the slot, but not expand more than that
+  // div(ref='trigger' style='display: inline-block')
   div(ref='trigger' style='display: inline-block')
     slot
   .tooltip(
@@ -30,3 +31,6 @@ export default
   }
 }
 </script>
+
+<style lang='sass'>
+</style>

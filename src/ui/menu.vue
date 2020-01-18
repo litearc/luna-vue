@@ -2,7 +2,13 @@
 #menu.menu(:class='{ is_root }')
   .dmenu
     li(v-for='(item,i) in items' :key='i')
-      span {{ item.name }}
+      .item.flex-row
+        span {{ item.name }}
+        .expand
+        faicon.icon(
+          v-if='item.contents !== null'
+          icon='caret-right'
+        )
       ui-menu(
         v-if='item.contents !== null'
         :items='item.contents'
@@ -40,6 +46,9 @@ li
   position: relative // needed to position .dsubmenu correctly
   padding-left: 12px
   padding-right: 12px
+
+li:hover > .item
+  color: $c-bright
 
 li:hover > .dmenu, li:hover > #menu > .dmenu
   display: block
