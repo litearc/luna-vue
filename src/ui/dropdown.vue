@@ -3,10 +3,16 @@ span.ui-tooltip
   // the `display: inline-block` is needed for the `trigger` div to be the same
   // size as the slot, but not expand more than that
   // add position: relative?
-  span hello {{ num }} 
-  #trigger(ref='trigger' :style='trigger_style' @click='test_color="green"')
+  #trigger(
+    ref='trigger'
+    :class='{enabled}'
+  )
     slot
-    ui-menu#menu(:items='items')
+    ui-menu#menu(
+      :items='items'
+      :style='menu_style'
+      @clicked='on_click($event)'
+    )
 </template>
 
 <script>
@@ -16,19 +22,6 @@ export default
 {
   name: 'ui-dropdown',
 
-  computed: {
-
-    trigger_style(){
-      console.log('trigger style')
-      return {
-        border: '1px solid blue',
-        display: 'inline-block',
-        'background-color': this.test_color,
-        // '--bg-color': this.test_color,
-      }
-    }
-  },
-  
   props: {
     placement: { default: 'bottom' }
   },
@@ -43,13 +36,23 @@ export default
             { name: 'aa', contents: null },
             { name: 'bb', contents: null },
           ] },
-          { name: '2', contents: null }
+          { name: '2', contents: null },
+          { name: '3', contents: null }
         ] }
       ],
-      trigger_xpos: null,
-      trigger_ypos: null,
-      test_color: 'red',
-      num: 0
+      wtrigger: null,
+      htrigger: null,
+      wmenu: null,
+      hmenu: null,
+      enabled: true,
+    }
+  },
+
+  computed: {
+    menu_style(){
+      return {
+        '--menu-top' : `${this.htrigger}px`
+      }
     }
   },
 
@@ -62,10 +65,18 @@ export default
   },
 
   mounted(){
-    console.log('mounted')
-    this.trigger_xpos = this.$refs.trigger.offsetLeft
-    this.trigger_ypos = this.$refs.trigger.offsetTop
-    this.test_color = 'green'
+    this.wtrigger = this.$refs.trigger.offsetWidth
+    this.htrigger = this.$refs.trigger.offsetHeight
+    this.$refs.trigger.addEventListener('mouseenter', () => {
+      this.enabled = true
+    })
+  },
+
+  methods: {
+    on_click(arr){
+      this.enabled = false // to make the menu go away
+      this.$emit('item-selected', arr)
+    }
   },
 }
 </script>
@@ -74,11 +85,15 @@ export default
 #menu
   display: none
   position: absolute
+  white-space: nowrap
+  top: var(--menu-top)
+  // bottom: var(--menu-top)
 
-// #trigger
-//   background-color: var(--bg-color)
+#trigger
+  display: inline-block
+  position: relative
 
-#trigger:hover #menu
+#trigger.enabled:hover #menu
   display: block
 
 </style>

@@ -33,6 +33,7 @@
       .flex-row
         ui-dropdown(
           trigger='hover-keep'
+          @item-selected='on_item_selected'
         )
           button dropdown menu
       .expand
@@ -43,6 +44,7 @@
       ui-dropdown.fix-sz(
         trigger='hover-keep'
         placement='top'
+        @item-selected='on_item_selected'
       )
         button dropdown menu
 
@@ -82,6 +84,9 @@ export default {
           console.log(`dialog closed ${i} ${opt}`)
         }
       })
+    },
+    on_item_selected(arr){
+      console.log('item selected: ' + arr)
     },
   }, // methods
 
