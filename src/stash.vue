@@ -1,4 +1,55 @@
 <template lang='pug'>
+form
+  div
+    input(
+      type="checkbox"
+      id="jack"
+      value="Jack"
+      v-model="checked"
+    )
+    label(for="jack")
+      span Jack
+      br
+    input(
+      type="checkbox"
+      id="john"
+      value="John"
+      v-model="checked"
+    )
+    label(for="john")
+      span John
+      br
+    input(
+      type="checkbox"
+      id="mike"
+      value="Mike"
+      v-model="checked"
+    )
+    label(for="mike")
+      span Mike
+      br
+</template>
+
+
+<template lang='pug'>
+form
+  div(
+    v-for='(item,i) in items'
+    :key='i'
+  )
+    input(
+      type='checkbox'
+      id=`item-${i}`
+      :value='item'
+      v-model='checked'
+    )
+    label(for=`item-${i}`)
+      span {{ item }}
+      br
+</template>
+
+
+<template lang='pug'>
 #app
   // splitter between the left sidebar and main content area
   ui-splitter#splitter(

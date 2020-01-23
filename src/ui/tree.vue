@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
 #file
   margin-left: 20px
 </style>

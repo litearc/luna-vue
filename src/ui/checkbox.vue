@@ -1,18 +1,21 @@
 <template lang='pug'>
-form
+#el
   div(
     v-for='(item,i) in items'
     :key='i'
   )
-    input(
-      type='checkbox'
-      id=`item-${i}`
-      :value='item'
-      v-model='checked'
-    )
-    label(for=`item-${i}`)
-      span {{ item }}
-      br
+    span.item-icon(style='display: inline-block')
+      faicon.checked(
+        v-if='checked[i]'
+        icon='check-square'
+        @click='on_icon_click(i)'
+      )
+      faicon.unchecked(
+        v-else
+        icon='square'
+        @click='on_icon_click(i)'
+      )
+    span {{ item }}
 </template>
 
 <script>
@@ -23,18 +26,36 @@ export default
 
   data(){
     return {
-      items: ['Jack', 'John', 'Mike'],
       checked: []
     }
   },
  
   props: {
-    options: {}
+    items: {}
+  },
+
+  created(){
+    this.checked = Array(this.items.length).fill(false)
+  },
+
+  methods: {
+    on_icon_click(i){
+      this.$set(this.checked, i, !this.checked[i])
+      this.$emit('checkbox-clicked', this.checked)
+    }
   }
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
 @import ../theme
+
+.item-icon
+  display: inline-block
+  text-align: center
+  width: 24px
+
+.checked
+  color: $c-blue
 </style>
 

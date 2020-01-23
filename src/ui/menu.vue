@@ -41,7 +41,7 @@ export default {
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
 @import ../theme
 
 ul, li

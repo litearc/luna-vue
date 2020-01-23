@@ -1,36 +1,4 @@
 <template lang='pug'>
-form
-  div
-    input(
-      type="checkbox"
-      id="jack"
-      value="Jack"
-      v-model="checked"
-    )
-    label(for="jack")
-      span Jack
-      br
-    input(
-      type="checkbox"
-      id="john"
-      value="John"
-      v-model="checked"
-    )
-    label(for="john")
-      span John
-      br
-    input(
-      type="checkbox"
-      id="mike"
-      value="Mike"
-      v-model="checked"
-    )
-    label(for="mike")
-      span Mike
-      br
-</template>
-
-<template lang='pug'>
 #app.center
   #icon-menu
     div.menu-item(@click='on_new_file')
@@ -46,7 +14,7 @@ form
         faicon(icon='folder-open')
       span Open File / Project
   ui-checkbox(
-    :options='["hello", "world"]'
+    :items='["hello", "world"]'
   )
 </template>
 
