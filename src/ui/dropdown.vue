@@ -22,10 +22,6 @@ export default
 {
   name: 'ui-dropdown',
 
-  props: {
-    placement: { default: 'bottom' }
-  },
-
   data(){
     return {
       items: [
@@ -48,6 +44,11 @@ export default
     }
   },
 
+  props: {
+    placement: { default: 'bottom' },
+    trigger: { default: 'hover-keep' },
+  },
+
   computed: {
     menu_style(){
       return {
@@ -56,12 +57,16 @@ export default
     }
   },
 
-  props: {
-    trigger: { default: 'hover-keep' },
-  },
-
   components: {
     'ui-menu': ui_menu,
+  },
+
+  methods:
+  {
+    on_click(arr){
+      this.enabled = false // to make the menu go away
+      this.$emit('item-selected', arr)
+    },
   },
 
   mounted(){
@@ -72,12 +77,6 @@ export default
     })
   },
 
-  methods: {
-    on_click(arr){
-      this.enabled = false // to make the menu go away
-      this.$emit('item-selected', arr)
-    }
-  },
 }
 </script>
 

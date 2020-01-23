@@ -8,12 +8,12 @@
       faicon.checked(
         v-if='checked[i]'
         icon='check-square'
-        @click='on_icon_click(i)'
+        @click='on_click(i)'
       )
       faicon.unchecked(
         v-else
         icon='square'
-        @click='on_icon_click(i)'
+        @click='on_click(i)'
       )
     span {{ item }}
 </template>
@@ -38,12 +38,13 @@ export default
     this.checked = Array(this.items.length).fill(false)
   },
 
-  methods: {
-    on_icon_click(i){
+  methods:
+  {
+    on_click(i){
       this.$set(this.checked, i, !this.checked[i])
-      this.$emit('checkbox-clicked', this.checked)
-    }
-  }
+      this.$emit('clicked', this.checked)
+    },
+  },
 }
 </script>
 

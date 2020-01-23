@@ -58,6 +58,7 @@ export default
       this.$destroy(true)
       this.$el.parentNode.removeChild(this.$el)
     },
+
     get_icon(){
       return {
         'success': 'check-circle',
@@ -65,13 +66,14 @@ export default
         'failure': 'times-circle',
       }[this.type]
     },
+
     get_color(){
       return {
         'success': 'color-green',
         'warning': 'color-gold',
         'failure': 'color-red',
       }[this.type]
-    }
+    },
   }, // methods
 
   mounted(){
@@ -80,6 +82,6 @@ export default
         this.on_close()
       this.visible = false
     }, this.duration)
-  }
+  },
 }
 </script>

@@ -9,16 +9,6 @@ export default
     }
   },
 
-  computed: {
-    popup_style(){
-      return {
-        'position': 'absolute',
-        'top': `${ this.pos.top }px`,
-        'left': `${ this.pos.left }px`,
-      }
-    },
-  },
-
   props: {
     text: '',
 
@@ -29,9 +19,19 @@ export default
     trigger: { default: 'hover' },
   },
 
-  methods: {
-    set_popup_pos()
-    {
+  computed: {
+    popup_style(){
+      return {
+        'position': 'absolute',
+        'top': `${ this.pos.top }px`,
+        'left': `${ this.pos.left }px`,
+      }
+    },
+  },
+
+  methods:
+  {
+    set_popup_pos(){
       // if `nextTick` is not used, (pw, ph, pl, pt) all return 0
       this.$nextTick(() => {
 
@@ -111,7 +111,6 @@ export default
         this.pos.left = left
       })
     },
-
   }, // methods
 
   mounted(){

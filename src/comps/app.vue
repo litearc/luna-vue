@@ -1,6 +1,6 @@
 <template lang='pug'>
 #app.center
-  #icon-menu
+  #icon-menu(v-if='show == "start_menu"')
     div.menu-item(@click='on_new_file')
       span.item-icon
         faicon(icon='file')
@@ -13,19 +13,44 @@
       span.item-icon
         faicon(icon='folder-open')
       span Open File / Project
-  ui-checkbox(
-    :items='["hello", "world"]'
-  )
+
+  #new-file-menu(v-if='show == "new_file_menu"')
+    .flex-row
+      faicon.icon.clickable.fix-sz(
+        icon='arrow-left'
+        style='align-self: center'
+        @click='back_to_start'
+      )
+      ui-radio.fix-sz(
+        :items='["Sprite", "Animation", "Tileset", "Map"]'
+      )
 </template>
 
 <script>
 export default {
   name: 'app',
 
-  methods: {
-    on_new_file(){},
-    on_new_proj(){},
-    on_open(){},
+  data(){
+    return {
+      show: 'start_menu',
+    }
+  },
+
+  methods:
+  {
+    on_new_file(){
+      this.show = 'new_file_menu'
+    },
+
+    on_new_proj(){
+    },
+
+    on_open(){
+    },
+
+    back_to_start(){
+      this.show = 'start_menu'
+    },
   },
 
 }
@@ -49,7 +74,7 @@ export default {
 
   @include global
 
-#icon-menu .item-icon
+.item-icon
   display: inline-block
   text-align: center
   width: 24px

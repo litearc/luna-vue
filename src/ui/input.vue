@@ -13,9 +13,9 @@ export default
   name: 'ui-input',
   inheritAttrs: false,
  
-  props: [
-    'value'
-  ],
+  props: {
+    value: {}
+  },
 }
 </script>
 

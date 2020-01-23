@@ -28,7 +28,8 @@ export default {
     is_root: { default: true },
   },
 
-  methods: {
+  methods:
+  {
     item_clicked(i){
       this.$emit('clicked', [i])
     },
@@ -36,7 +37,7 @@ export default {
     on_click(arr, i){
       arr.unshift(i)
       this.$emit('clicked', arr)
-    }
+    },
   },
 }
 </script>

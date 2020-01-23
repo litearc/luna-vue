@@ -23,6 +23,17 @@ function to_px(s, w){
 export default
 {
   name: 'ui-splitter',
+
+  data(){
+    return {
+      near: false,
+      resizing: false,
+      pane1_sz: '1fr',
+      pane2_sz: '1fr',
+      x: null,
+      y: null,
+    }
+  },
   
   props: {
     dir: { default: 'horizontal' },
@@ -38,18 +49,8 @@ export default
     mode: { default: 'C' },
   },
 
-  data(){
-    return {
-      near: false,
-      resizing: false,
-      pane1_sz: '1fr',
-      pane2_sz: '1fr',
-      x: null,
-      y: null,
-    }
-  },
-
-  computed: {
+  computed:
+  {
     ui_class(){
       return {
         horizontal: this.dir === 'horizontal',
@@ -80,7 +81,8 @@ export default
     },
   },
 
-  methods: {
+  methods:
+  {
     // acceptable range in px where splitter can be. (2-array)
     ok_range(){
       let el = this.$refs.splitter
@@ -97,7 +99,6 @@ export default
   }, // methods
 
   mounted(){
-
     // set the initial size so that it meets the requirements
     let r = this.ok_range()
     if (r !== null){

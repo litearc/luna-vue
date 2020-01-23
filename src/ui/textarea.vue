@@ -13,9 +13,9 @@ export default
   name: 'ui-textarea',
   inheritAttrs: false,
  
-  props: [
-    'value'
-  ],
+  props: {
+    value: {}
+  },
 }
 </script>
 

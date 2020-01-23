@@ -56,11 +56,12 @@ export default
           this.callback(this.choice, this.options[this.choice])
       }
     },
+
     on_click(i){
       this.choice = i
       this.visible = false
-    }
-  } // methods
+    },
+  }, // methods
 
 }
 </script>

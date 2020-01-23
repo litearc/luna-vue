@@ -30,7 +30,8 @@ export default {
     indent: { default: 0 },
   },
 
-  computed: {
+  computed:
+  {
     files(){
       return this.root.contents.filter(f => !f.is_folder)
     },
@@ -50,15 +51,15 @@ export default {
     }
   }, //computed
 
-  methods: {
+  methods:
+  {
     ...mapMutations([
       'toggle',
     ]),
 
     on_icon_click(){
       this.root.is_open = !this.root.is_open
-    }
-
+    },
   }, // methods
 }
 </script>
