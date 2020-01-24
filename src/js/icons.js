@@ -7,8 +7,10 @@ import {
   faArrowCircleLeft,
   faArrowLeft,
   faArrowRight,
+  faCaretDown,
   faCaretLeft,
   faCaretRight,
+  faCaretUp,
   faCheckCircle,
   faCheckSquare,
   faCircle,
@@ -58,8 +60,10 @@ library.add(faAngleRight)
 library.add(faArrowCircleLeft)
 library.add(faArrowLeft)
 library.add(faArrowRight)
+library.add(faCaretDown)
 library.add(faCaretLeft)
 library.add(faCaretRight)
+library.add(faCaretUp)
 library.add(faCheckCircle)
 library.add(faCheckSquare)
 library.add(faCircle)

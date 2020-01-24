@@ -1,6 +1,6 @@
 <template lang='pug'>
 #menu.menu(
-  :class='{ is_root }'
+  :class='{ "is-root": is_root }'
   )
   .dmenu
     li(v-for='(item,i) in items' :key='i')
@@ -15,7 +15,7 @@
         v-if='item.contents !== null'
         :items='item.contents'
         :is_root='false'
-        @clicked='on_click($event, i)'
+        @click='on_click($event, i)'
       )
 </template>
 
@@ -31,12 +31,12 @@ export default {
   methods:
   {
     item_clicked(i){
-      this.$emit('clicked', [i])
+      this.$emit('click', [i])
     },
 
     on_click(arr, i){
       arr.unshift(i)
-      this.$emit('clicked', arr)
+      this.$emit('click', arr)
     },
   },
 }
@@ -54,7 +54,7 @@ ul, li
   position: relative
   display: none
 
-#menu.is_root > .dmenu
+#menu.is-root > .dmenu
   display: block
 
 li
@@ -73,7 +73,7 @@ li > .menu
 li:hover > .menu
   visibility: visible
 
-#menu:not(.is_root)
+#menu:not(.is-root)
   position: absolute
   left: 100%
   top: -5px // should be matched to (border + padding)

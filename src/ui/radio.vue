@@ -4,7 +4,7 @@
     v-for='(item,i) in items'
     :key='i'
   )
-    span.item-icon(style='display: inline-block')
+    span.it-icon(style='display: inline-block')
       faicon.selected(
         v-if='selected == i'
         icon='dot-circle'
@@ -46,11 +46,6 @@ export default
 
 <style scoped lang='sass'>
 @import ../theme
-
-.item-icon
-  display: inline-block
-  text-align: center
-  width: 24px
 
 .selected
   color: $c-blue

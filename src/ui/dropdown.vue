@@ -11,7 +11,7 @@ span.ui-tooltip
     ui-menu#menu(
       :items='items'
       :style='menu_style'
-      @clicked='on_click($event)'
+      @click='on_click($event)'
     )
 </template>
 
@@ -24,18 +24,6 @@ export default
 
   data(){
     return {
-      items: [
-        { name: 'a this is a long string', contents: null },
-        { name: 'b', contents: null },
-        { name: 'c this is also a long string', contents: [
-          { name: '1', contents: [
-            { name: 'aa', contents: null },
-            { name: 'bb', contents: null },
-          ] },
-          { name: '2', contents: null },
-          { name: '3', contents: null }
-        ] }
-      ],
       wtrigger: null,
       htrigger: null,
       wmenu: null,
@@ -47,6 +35,7 @@ export default
   props: {
     placement: { default: 'bottom' },
     trigger: { default: 'hover-keep' },
+    items: {},
   },
 
   computed: {

@@ -39,11 +39,11 @@ $c-border: $cM
 $c-viewer: $cB
 $c-input: $cC
 $c-messsage-bg: $cE
+$c-dropdown: $cC
 
 
 // constants
 $dur-fade: .2s
-$menu-min-width: 120px
 
 $font-size: 12.5px
 @font-face
@@ -127,6 +127,9 @@ $font-size: 12.5px
 .align-baseline
   align-items: baseline
 
+.hl-hover:hover
+  color: $c-bright
+
 
 @mixin global
   font-family: main
@@ -144,7 +147,6 @@ $font-size: 12.5px
   border-radius: 2px
   color: $c-bright
   padding: 4px
-  // transition: border .1s
 
   &.invisible
     background-color: $c-pane
@@ -263,7 +265,9 @@ button
   background-color: $cH
   border-radius: 4px
 
+
 // menu
+$menu-min-width: 120px
 .menu
   padding: 4px 0px 4px 0px
   background-color: $cH
@@ -271,7 +275,12 @@ button
   min-width: $menu-min-width
   border: 1px solid $c-border
 
+  &.is-root
+    width: 100%
+    overflow-x: hidden
 
+
+// splitter
 .ui-splitter
   
   &.horizontal 
@@ -291,4 +300,23 @@ button
     & > .splitter
       cursor: ns-resize
       z-index: 1000
+
+
+// icon text (text with an icon to the left)
+$icon-width: 24px
+.it-icon
+  display: inline-block
+  text-align: center
+  width: 24px
+
+
+// dropdown
+.dropdown
+  border-radius: 4px
+  background-color: $c-dropdown
+  padding: 4px 16px 4px 16px
+  display: flex
+  flex-direction: row
+  align-items: baseline
+
 

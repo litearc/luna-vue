@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import ui_checkbox from './checkbox.vue'
+import ui_combobox from './combobox.vue'
 import ui_dropdown from './dropdown.vue'
+import ui_icon_text from './icon_text.vue'
 import ui_input from './input.vue'
 import ui_radio from './radio.vue'
 import ui_splitter from './splitter.vue'
@@ -13,7 +15,9 @@ import message from './message.js'
 
 const comps = [
   ui_checkbox,
+  ui_combobox,
   ui_dropdown,
+  ui_icon_text,
   ui_input,
   ui_radio,
   ui_splitter,

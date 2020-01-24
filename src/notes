@@ -1,0 +1,10 @@
+order of options in component:
+name
+inheritAttrs
+data
+props
+computed
+components
+methods
+created
+mounted

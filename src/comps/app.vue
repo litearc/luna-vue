@@ -1,18 +1,24 @@
 <template lang='pug'>
 #app.center
   #icon-menu(v-if='show == "start_menu"')
-    div.menu-item(@click='on_new_file')
-      span.item-icon
-        faicon(icon='file')
-      span New File
-    div.menu-item(@click='on_new_proj')
-      span.item-icon
-        faicon(icon='folder')
-      span New Project
-    div.menu-item(@click='on_open')
-      span.item-icon
-        faicon(icon='folder-open')
-      span Open File / Project
+    ui-icon-text(
+      icon='file'
+      text='New File'
+      hl='text'
+      @click='on_new_file'
+    )
+    ui-icon-text(
+      icon='folder'
+      text='New Project'
+      hl='text'
+      @click='on_new_proj'
+    )
+    ui-icon-text(
+      icon='folder-open'
+      text='Open File / Project'
+      hl='text'
+      @click='on_open'
+    )
 
   #new-file-menu(v-if='show == "new_file_menu"')
     .flex-row
@@ -22,6 +28,9 @@
         @click='back_to_start'
       )
       ui-radio.fix-sz(
+        :items='["Sprite", "Animation", "Tileset", "Map"]'
+      )
+      ui-combobox(
         :items='["Sprite", "Animation", "Tileset", "Map"]'
       )
 </template>
