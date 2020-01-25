@@ -14,6 +14,7 @@ span.ui-tooltip
       :items='items'
       :style='menu_style'
       @item-selected='on_item_selected($event)'
+      v-click-outside='{handler:"on_click_outside", exclude:["trigger"]}'
     )
 </template>
 
@@ -64,6 +65,10 @@ export default
         this.enabled = !this.enabled
       }
     },
+
+    on_click_outside(){
+      this.enabled = false
+    }
   },
 
   mounted(){

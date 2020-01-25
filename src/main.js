@@ -3,6 +3,7 @@ import app from './comps/app.vue'
 import store from './store'
 import ui from './ui'
 import icons from './js/icons'
+import './directives/click_outside'
 
 Vue.use(ui)
 Vue.component('faicon', icons)
