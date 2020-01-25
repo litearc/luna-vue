@@ -5,13 +5,15 @@ span.ui-tooltip
   // add position: relative?
   #trigger(
     ref='trigger'
-    :class='{enabled}'
+    :class='{enabled, hover:trigger=="hover", click:trigger=="click"}'
+    @click='on_trigger_click'
   )
     slot
+    // use 'stop' to not trigger click event of #trigger
     ui-menu#menu(
       :items='items'
       :style='menu_style'
-      @click='on_click($event)'
+      @item-selected='on_item_selected($event)'
     )
 </template>
 
@@ -28,13 +30,13 @@ export default
       htrigger: null,
       wmenu: null,
       hmenu: null,
-      enabled: true,
+      enabled: false,
     }
   },
 
   props: {
     placement: { default: 'bottom' },
-    trigger: { default: 'hover-keep' },
+    trigger: { default: 'hover' }, // 'hover' or 'click'
     items: {},
   },
 
@@ -52,18 +54,28 @@ export default
 
   methods:
   {
-    on_click(arr){
+    on_item_selected(arr){
       this.enabled = false // to make the menu go away
       this.$emit('item-selected', arr)
+    },
+
+    on_trigger_click(){
+      if (this.trigger == 'click'){
+        this.enabled = !this.enabled
+      }
     },
   },
 
   mounted(){
     this.wtrigger = this.$refs.trigger.offsetWidth
     this.htrigger = this.$refs.trigger.offsetHeight
-    this.$refs.trigger.addEventListener('mouseenter', () => {
-      this.enabled = true
-    })
+
+    // for some reason, if I add a `removeEventListener` in `destroyed()`, this
+    // stops working after the first time the menu opens
+    if (this.trigger == 'hover')
+      this.$refs.trigger.addEventListener('mouseenter', () => {
+        this.enabled = true
+      })
   },
 
 }
@@ -81,7 +93,10 @@ export default
   display: inline-block
   position: relative
 
-#trigger.enabled:hover #menu
+#trigger.enabled.hover:hover #menu
+  display: block
+
+#trigger.enabled.click #menu
   display: block
 
 </style>

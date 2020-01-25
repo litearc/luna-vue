@@ -4,7 +4,7 @@
   )
   .dmenu
     li(v-for='(item,i) in items' :key='i')
-      .item.flex-row(@click='item_clicked(i)')
+      .item.flex-row(@click.stop='item_clicked(i)')
         span {{ item.name }}
         .expand
         faicon.icon(
@@ -15,7 +15,7 @@
         v-if='item.contents !== null'
         :items='item.contents'
         :is_root='false'
-        @click='on_click($event, i)'
+        @item-selected='on_item_selected($event, i)'
       )
 </template>
 
@@ -31,12 +31,12 @@ export default {
   methods:
   {
     item_clicked(i){
-      this.$emit('click', [i])
+      this.$emit('item-selected', [i])
     },
 
-    on_click(arr, i){
+    on_item_selected(arr, i){
       arr.unshift(i)
-      this.$emit('click', arr)
+      this.$emit('item-selected', arr)
     },
   },
 }

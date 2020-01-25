@@ -21,18 +21,10 @@
     )
 
   #new-file-menu(v-if='show == "new_file_menu"')
-    .flex-row
-      faicon.icon.clickable.fix-sz(
-        icon='arrow-left'
-        style='align-self: center'
-        @click='back_to_start'
-      )
-      ui-radio.fix-sz(
-        :items='["Sprite", "Animation", "Tileset", "Map"]'
-      )
-      ui-combobox(
-        :items='["Sprite", "Animation", "Tileset", "Map"]'
-      )
+    span.text-space-right Resource Type
+    ui-combobox(
+      :items='["Sprite", "Animation", "Tileset", "Map"]'
+    )
 </template>
 
 <script>

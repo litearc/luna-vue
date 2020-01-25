@@ -1,9 +1,11 @@
 <template lang='pug'>
   ui-dropdown(
     :items='list'
+    trigger='click'
+    @item-selected='on_item_select'
   )
     .dropdown(style='width: 200px')
-      span.fix-sz hello
+      span.fix-sz {{ items[isel] }}
       .expand
       span.fix-sz
         faicon(icon='caret-down')
@@ -17,6 +19,7 @@ export default
   data(){
     return{
       list: {},
+      isel: 0,
     }
   },
 
@@ -31,7 +34,14 @@ export default
         name: item,
         contents: null,
       })
-  }
+  },
+
+  methods:
+  {
+    on_item_select(arr){
+      this.isel = arr[0]
+    },
+  },
 }
 </script>
 
