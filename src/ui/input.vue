@@ -4,6 +4,8 @@ input#el(
   :value='value'
   spellcheck='false'
   @input='$emit("input", $event.target.value)'
+  :class='el_class'
+  :style='el_style'
 )
 </template>
 
@@ -14,8 +16,22 @@ export default
   inheritAttrs: false,
  
   props: {
-    value: {}
+    value: {},
+    mclass: { default: null },
+    mstyle: { default: null },
   },
+
+  computed:
+  {
+    el_class(){
+      return (this.mclass === null) ? {} : this.mclass
+    },
+
+    el_style(){
+      return (this.mstyle === null) ? {} : this.mstyle
+    },
+  },
+
 }
 </script>
 

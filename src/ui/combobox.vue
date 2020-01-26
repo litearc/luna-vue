@@ -4,7 +4,10 @@
     trigger='click'
     @item-selected='on_item_select'
   )
-    .dropdown(style='width: 200px')
+    .dropdown(
+      :class='el_class'
+      :style='el_style'
+    )
       span.fix-sz {{ items[isel] }}
       .expand
       span.fix-sz
@@ -25,6 +28,19 @@ export default
 
   props: {
     items: {},
+    mclass: { default: null },
+    mstyle: { default: null },
+  },
+
+  computed:
+  {
+    el_class(){
+      return (this.mclass === null) ? {} : this.mclass
+    },
+
+    el_style(){
+      return (this.mstyle === null) ? {} : this.mstyle
+    },
   },
 
   created(){

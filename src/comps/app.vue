@@ -20,11 +20,19 @@
       @click='on_open'
     )
 
-  #new-file-menu(v-if='show == "new_file_menu"')
-    span.text-space-right Resource Type
-    ui-combobox(
-      :items='["Sprite", "Animation", "Tileset", "Map"]'
-    )
+  #new-file-menu.flex-col(v-if='show == "new_file_menu"' style='width: 300px; border: 1px solid #444')
+    div
+      span.text-space-right Type
+      ui-combobox(
+        :items='["Sprite", "Animation", "Tileset", "Map"]'
+        mstyle='width: 150px'
+      )
+    .flex-row
+      span File
+      ui-input(
+        placeholder='file not chosen'
+        mclass='expand'
+      )
 </template>
 
 <script>

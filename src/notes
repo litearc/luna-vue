@@ -8,3 +8,9 @@ components
 methods
 created
 mounted
+
+known bugs / issues:
+- this is an issue with Vue 2 (will be fixed in Vue 3). `class` and `style`
+  attributes cannot be (reliably) passed with `v-bind='$attrs'`. for now, the
+  code has separate attributes for these: `mclass` and `mstyle`.
+  todo: replace these in Vue 3 accordingly.
