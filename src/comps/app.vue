@@ -21,8 +21,8 @@
     )
 
   #new-file-menu.flex-col(v-if='show == "new_file_menu"' style='width: 300px; border: 1px solid #444')
-    div
-      span.text-space-right Type
+    .flex-row
+      span Type
       ui-combobox(
         :items='["Sprite", "Animation", "Tileset", "Map"]'
         mstyle='width: 150px'
@@ -31,17 +31,33 @@
       span File
       ui-input(
         placeholder='file not chosen'
+        :value='fname'
+        disabled
         mclass='expand'
       )
+      faicon.icon.clickable(
+        icon='folder-open'
+        @click='on_file_select'
+      )
+    div
+      span.bold Image
+      div Width: 320px
+      div Height: 240px
+      
 </template>
 
 <script>
+let path = require('path')
+let { dialog } = require('electron').remote
+
 export default {
   name: 'app',
 
   data(){
     return {
       show: 'start_menu',
+      fpath: '',
+      fname: '',
     }
   },
 
@@ -60,8 +76,22 @@ export default {
     back_to_start(){
       this.show = 'start_menu'
     },
-  },
 
+    on_file_select(){
+      dialog.showOpenDialog({
+        filters: [{
+          name: 'Image Files',
+          extensions: ['png', 'bmp', 'jpg'],
+        }],
+        properties: ['openFile'],
+      }).then(({canceled, filePaths}) => {
+        if (!canceled){
+          this.fpath = filePaths[0]
+          this.fname = path.basename(this.fpath)
+        }
+      })
+    },
+  },
 }
 </script>
 

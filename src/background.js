@@ -1,6 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu } from 'electron'
+import {
+  app,
+  dialog,
+  ipcMain,
+  protocol,
+  BrowserWindow,
+  Menu } from 'electron'
 import {
   createProtocol,
   installVueDevtools
@@ -28,7 +34,7 @@ function createWindow () {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     // uncomment line below to open dev tools on startup (if in test mode)
-    // if (!process.env.IS_TEST) win.webContents.openDevTools()
+    if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
