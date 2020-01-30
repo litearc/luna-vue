@@ -5,73 +5,24 @@
     ui-combobox(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
       mstyle='width: 150px'
+      @item_selected='on_page_select'
     )
-  .flex-row
-    span File
-    ui-input(
-      placeholder='file not chosen'
-      :value='fname'
-      disabled
-      mclass='expand'
-    )
-    faicon.icon.clickable(
-      icon='folder-open'
-      @click='on_file_select'
-    )
-  div.grid.hgap(style='grid-template-columns: 1fr 1fr')
-    .g11.bold Image
-    .g21
-      .flex-row
-        span Width
-        .expand
-        ui-input(
-          type='number'
-          disabled
-          placeholder='-'
-          :value='imwidth_text'
-          mstyle='width: 60px; text-align: right'
-        )
-        span px
-    .g31
-      .flex-row
-        span Height
-        .expand
-        ui-input(
-          type='number'
-          disabled
-          placeholder='-'
-          :value='imheight_text'
-          mstyle='width: 60px; text-align: right'
-        )
-        span px
-    .g12.bold Tile
-    .g22
-      .flex-row
-        span Width
-        .expand
-        ui-input(
-          type='number'
-          value='24'
-          mstyle='width: 60px; text-align: right'
-        )
-        span px
-    .g32
-      .flex-row
-        span Height
-        .expand
-        ui-input(
-          type='number'
-          value='32'
-          mstyle='width: 60px; text-align: right'
-        )
-        span px
+
+  new-sprite(v-if='ipage == 0')
+
+  .flex-row(style='margin-top: 16px')
+    .expand
+    button(
+      @click='$emit("cancelled")'
+    ) Cancel
+    button.highlighted Create
 </template>
 
 <script>
-let fs = require('fs')
-let path = require('path')
-let { dialog } = require('electron').remote
-import { load_image } from '../js/image'
+import new_anim from './new_anim.vue'
+import new_map from './new_map.vue'
+import new_sprite from './new_sprite.vue'
+import new_tileset from './new_tileset.vue'
 
 export default
 {
@@ -79,44 +30,21 @@ export default
 
   data(){
     return {
-      fpath: '',
-      fname: '',
-      imwidth: null,
-      imheight: null,
-      img: null,
+      ipage: 0,
     }
   },
 
-  computed:
-  {
-    imwidth_text(){
-      if (this.imwidth === null) return ''
-      return this.imwidth
-    },
-    imheight_text(){
-      if (this.imheight === null) return ''
-      return this.imheight
-    },
+  components: {
+    'new-anim': new_anim,
+    'new-map': new_map,
+    'new-sprite': new_sprite,
+    'new-tileset': new_tileset,
   },
 
   methods:
   {
-    on_file_select(){
-      dialog.showOpenDialog({
-        filters: [{
-          name: 'Image',
-          extensions: ['png'], // only support png for now
-        }],
-        properties: ['openFile'],
-      }).then(({canceled, filePaths}) => {
-        if (!canceled){
-          this.fpath = filePaths[0]
-          this.fname = path.basename(this.fpath)
-          let { w, h, data } = load_image(this.fpath)
-          this.imwidth = w
-          this.imheight = h
-        }
-      })
+    on_page_select(i){
+      this.ipage = i
     },
   }, // methods
 
@@ -125,4 +53,7 @@ export default
 
 <style lang='sass'>
 @import ../theme
+
+button
+  min-width: $button-std-w
 </style>

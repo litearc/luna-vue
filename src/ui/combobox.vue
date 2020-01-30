@@ -56,6 +56,7 @@ export default
   {
     on_item_select(arr){
       this.isel = arr[0]
+      this.$emit('item_selected', this.isel)
     },
   },
 }

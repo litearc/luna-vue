@@ -8,6 +8,7 @@
 
   page-new-resource(
     v-if='page == "new_resource"'
+    @cancelled='page = "intro"'
   )
   
 </template>
