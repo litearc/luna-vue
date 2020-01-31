@@ -9,13 +9,18 @@
     )
 
   new-sprite(v-if='ipage == 0')
+  new-anim(v-if='ipage == 1')
+  new-tileset(v-if='ipage == 2')
+  new-map(v-if='ipage == 3')
 
   .flex-row(style='margin-top: 16px')
     .expand
     button(
       @click='$emit("cancelled")'
     ) Cancel
-    button.highlighted Create
+    button.highlighted(
+      @click='$emit("create_editor")'
+    ) Create
 </template>
 
 <script>
