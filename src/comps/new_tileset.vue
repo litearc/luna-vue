@@ -22,7 +22,7 @@
           type='number'
           disabled
           placeholder='-'
-          :value='imwidth_text'
+          :value='im_width_text'
           mstyle='width: 60px; text-align: right'
         )
         span px
@@ -34,7 +34,7 @@
           type='number'
           disabled
           placeholder='-'
-          :value='imheight_text'
+          :value='im_height_text'
           mstyle='width: 60px; text-align: right'
         )
         span px
@@ -44,8 +44,7 @@
         span Width
         .expand
         ui-input(
-          type='number'
-          value='16'
+          v-model.number='tile_width'
           mstyle='width: 60px; text-align: right'
         )
         span px
@@ -54,8 +53,7 @@
         span Height
         .expand
         ui-input(
-          type='number'
-          value='16'
+          v-model.number='tile_height'
           mstyle='width: 60px; text-align: right'
         )
         span px
@@ -68,6 +66,26 @@ export default
 {
   name: 'new_tileset',
   mixins: [ image_sel_mixin ],
+
+  data(){
+    return {
+      tile_width: 16,
+      tile_height: 16,
+    }
+  },
+
+  methods:
+  {
+    editor_data(){
+      return {
+        tile_width : this.tile_width,
+        tile_height : this.tile_height,
+        im_width : this.im_width,
+        im_height : this.im_width,
+        im_data : this.im_data,
+      }
+    }
+  },
 }
 </script>
 

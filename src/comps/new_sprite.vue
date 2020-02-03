@@ -22,7 +22,7 @@
           type='number'
           disabled
           placeholder='-'
-          :value='imwidth_text'
+          :value='im_width_text'
           mstyle='width: 60px; text-align: right'
         )
         span px
@@ -34,7 +34,7 @@
           type='number'
           disabled
           placeholder='-'
-          :value='imheight_text'
+          :value='im_height_text'
           mstyle='width: 60px; text-align: right'
         )
         span px

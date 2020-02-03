@@ -8,10 +8,8 @@
       @item_selected='on_page_select'
     )
 
-  new-sprite(v-if='ipage == 0')
-  new-anim(v-if='ipage == 1')
-  new-tileset(v-if='ipage == 2')
-  new-map(v-if='ipage == 3')
+  keep-alive
+    component(:is='page' ref='curr_page')
 
   .flex-row(style='margin-top: 16px')
     .expand
@@ -19,8 +17,9 @@
       @click='$emit("cancelled")'
     ) Cancel
     button.highlighted(
-      @click='$emit("create_editor")'
+      @click='on_click_create'
     ) Create
+
 </template>
 
 <script>
@@ -36,7 +35,19 @@ export default
   data(){
     return {
       ipage: 0,
+      pages: [
+        new_sprite,
+        new_anim,
+        new_tileset,
+        new_map,
+      ],
     }
+  },
+
+  computed: {
+    page(){
+      return this.pages[this.ipage]
+    },
   },
 
   components: {
@@ -51,8 +62,12 @@ export default
     on_page_select(i){
       this.ipage = i
     },
-  }, // methods
 
+    on_click_create(){
+      let ed_data = this.$refs.curr_page.editor_data()
+      this.$emit('create_page', ed_data)
+    },
+  }, // methods
 }
 </script>
 

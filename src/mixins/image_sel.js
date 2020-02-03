@@ -11,21 +11,21 @@ export default
     return {
       fpath: '',
       fname: '',
-      imwidth: null,
-      imheight: null,
-      img: null,
+      im_width: null,
+      im_height: null,
+      im_data: null,
     }
   },
 
   computed:
   {
-    imwidth_text(){
+    im_width_text(){
       if (this.imwidth === null) return ''
-      return this.imwidth
+      return this.im_width
     },
-    imheight_text(){
+    im_height_text(){
       if (this.imheight === null) return ''
-      return this.imheight
+      return this.im_height
     },
   },
 
@@ -43,8 +43,9 @@ export default
           this.fpath = filePaths[0]
           this.fname = path.basename(this.fpath)
           let { w, h, data } = load_image(this.fpath)
-          this.imwidth = w
-          this.imheight = h
+          this.im_width = w
+          this.im_height = h
+          this.im_data = data
         }
       })
     },

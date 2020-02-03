@@ -9,6 +9,12 @@
   page-new-resource(
     v-if='page == "new_resource"'
     @cancelled='page = "intro"'
+    @create_page='create_page'
+  )
+
+  tabs(
+    v-if='page == "tabs"'
+    :tab_data='ed_data'
   )
   
 </template>
@@ -16,6 +22,7 @@
 <script>
 import page_intro from './page_intro.vue'
 import page_new_resource from './page_new_resource.vue'
+import tabs from './tabs.vue'
 
 export default {
   name: 'app',
@@ -30,6 +37,15 @@ export default {
   {
     'page-intro': page_intro,
     'page-new-resource': page_new_resource,
+    'tabs': tabs,
+  },
+
+  methods:
+  {
+    create_page(ed_data){
+      this.ed_data = [ ed_data ]
+      this.page = 'tabs'
+    }
   },
 }
 </script>
