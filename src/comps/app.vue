@@ -3,25 +3,17 @@
 
   page-intro(
     v-if='page == "intro"'
-    @new_file_selected='page = "new_resource"'
-  )
-
-  page-new-resource(
-    v-if='page == "new_resource"'
-    @cancelled='page = "intro"'
-    @create_page='create_page'
+    @new_file_selected='page = "tabs"'
   )
 
   tabs(
     v-if='page == "tabs"'
-    :tab_data='ed_data'
   )
   
 </template>
 
 <script>
 import page_intro from './page_intro.vue'
-import page_new_resource from './page_new_resource.vue'
 import tabs from './tabs.vue'
 
 export default {
@@ -29,23 +21,14 @@ export default {
 
   data(){
     return {
-      page: 'intro', // 'intro', 'new_resource', or 'editors'
+      page: 'intro', // 'intro', 'tabs'
     }
   },
 
   components:
   {
     'page-intro': page_intro,
-    'page-new-resource': page_new_resource,
     'tabs': tabs,
-  },
-
-  methods:
-  {
-    create_page(ed_data){
-      this.ed_data = [ ed_data ]
-      this.page = 'tabs'
-    }
   },
 }
 </script>
@@ -67,13 +50,4 @@ export default {
   overflow: hidden
 
   @include global
-
-.item-icon
-  display: inline-block
-  text-align: center
-  width: 24px
-
-.menu-item:hover
-  color: $c-bright
-
 </style>

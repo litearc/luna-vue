@@ -23,5 +23,13 @@ module.exports = {
         },
       ] // rules
     }, // module
-  
-  };
+
+    // This is supposed to make `template` work during runtime, but it doesn't.
+    // Instead, setting `runtimeCompiler` in `vue.config.js` does it.
+    // resolve: {
+    //   alias: {
+    //     vue: 'vue/dist/vue.js'
+    //   }
+    // },
+
+};

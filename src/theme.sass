@@ -113,10 +113,10 @@ $font-size: 12.5px
 
 // adds space to the left of all non-first items in a flex row,
 // or top of all non-first items in a flex col
-.flex-row > :not(.expand) ~ :not(*:first-child)
+.flex-row.spaced > :not(.expand) ~ :not(*:first-child)
   margin-left: 8px
 
-.flex-col > :not(.expand) ~ :not(*:first-child)
+.flex-col.spaced > :not(.expand) ~ :not(*:first-child)
   margin-top: 8px
 
 
