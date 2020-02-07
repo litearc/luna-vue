@@ -3,16 +3,23 @@
   #tab-area.flex-row
     #tabs.expand
     #actions
-  #content.expand
-    component(
-      :is='editors[0]'
-    )
+  #content.expand(
+    style='border: 1px solid red'
+    @click='on_click'
+  )
+    keep-alive
+      editor-anim(v-if='curr_editor.type === "anim"')
+      editor-map(v-if='curr_editor.type === "map"')
+      editor-sprite(v-if='curr_editor.type === "sprite"')
+      editor-tileset(v-if='curr_editor.type === "tileset"')
 </template>
 
 <script>
 import Vue from 'vue'
-import editor_vue from './editor.vue'
-let editor_ctor = Vue.extend(editor_vue)
+import editor_anim from './editor_anim.vue'
+import editor_map from './editor_map.vue'
+import editor_sprite from './editor_sprite.vue'
+import editor_tileset from './editor_tileset.vue'
 
 export default
 {
@@ -21,7 +28,11 @@ export default
   data(){
     return {
       itab: 0, // index of currently active tab
-      editors: ()=>[],
+      editors: [
+        { type: 'map' },
+        { type: 'anim' },
+        { type: 'sprite' },
+      ],
     }
   },
 
@@ -32,34 +43,28 @@ export default
   },
 
   computed: {
+    curr_editor(){
+      return this.editors[this.itab]
+    },
+    ntabs(){
+      return this.editors.length
+    }
   },
 
   components: {
+    'editor-anim': editor_anim,
+    'editor-map': editor_map,
+    'editor-sprite': editor_sprite,
+    'editor-tileset': editor_tileset,
   },
 
+  methods: {
+    on_click(){
+      this.itab = (this.itab+1)%this.ntabs
+    },
+  }, // methods
+
   created(){
-    // this.editors[0] = new editor_ctor({
-    //   props: { ed_data: "hello" },
-    //   template: `<span>hello</span>`
-    // })
-    //
-    // this.editors[1] = new editor_ctor({
-    //   props: { ed_data: "world" },
-    //   template: `<span>world</span>`
-    // })
-
-    this.editors[0] = {
-      // render (h) {
-      //   return h('div', 'hello')
-      // }
-      template: `<span>hello</span>`
-    }
-
-    console.log(this.editors[0])
-    console.log(editor_vue)
-
-    let tmp = new editor_ctor()
-    console.log(tmp)
   },
 
   mounted(){
@@ -76,6 +81,7 @@ export default
 
 #tab-area
   height: 24px
+  background-color: $cB
 
 #tabs
   height: 100%

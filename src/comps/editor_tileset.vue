@@ -1,4 +1,5 @@
 <template lang='pug'>
+  span editor_tileset {{ val }}
 </template>
 
 <script>
@@ -10,15 +11,13 @@ export default
   name: 'editor_tileset',
 
   data(){
-  },
-
-  props: {
+    return {
+      val: null,
+    }
   },
 
   created(){
-  },
-
-  mounted(){
+    this.val = Math.floor(Math.random() * 101);
   },
 }
 </script>

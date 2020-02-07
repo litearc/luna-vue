@@ -1,5 +1,5 @@
 <template lang='pug'>
-  span helllo
+  span {{ ed_data }}
 </template>
 
 <script>
@@ -24,7 +24,7 @@ export default
   },
 
   props: {
-    ed_data: { default: null },
+    ed_data: { default: 'hello' },
   },
 
 }
