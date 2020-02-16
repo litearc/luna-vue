@@ -1,6 +1,6 @@
 <template lang='pug'>
-#el.flex-col
-  .flex-row
+#el.flex-col.spaced
+  .flex-row.spaced
     span Type
     ui-combobox(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
@@ -11,7 +11,7 @@
   keep-alive
     component(:is='page' ref='curr_page')
 
-  .flex-row(style='margin-top: 16px')
+  .flex-row.spaced(style='margin-top: 16px')
     .expand
     button(
       @click='$emit("cancelled")'
@@ -36,17 +36,17 @@ export default
     return {
       ipage: 0,
       pages: [
-        new_sprite,
-        new_anim,
-        new_tileset,
-        new_map,
+        ['sprite', new_sprite],
+        ['anim', new_anim],
+        ['tileset', new_tileset],
+        ['map', new_map],
       ],
     }
   },
 
   computed: {
     page(){
-      return this.pages[this.ipage]
+      return this.pages[this.ipage][1]
     },
   },
 
@@ -65,7 +65,7 @@ export default
 
     on_click_create(){
       let ed_data = this.$refs.curr_page.editor_data()
-      this.$emit('create_page', ed_data)
+      this.$emit('create_page', this.pages[this.ipage][0], ed_data)
     },
   }, // methods
 }

@@ -1,6 +1,6 @@
 <template lang='pug'>
 #el
-  .flex-row
+  .flex-row.spaced
     span File
     ui-input(
       placeholder='file not chosen'
@@ -15,7 +15,7 @@
   .grid.hgap(style='grid-template-columns: 1fr 1fr; margin-top: 8px')
     .g11.bold Image
     .g21
-      .flex-row
+      .flex-row.spaced
         span Width
         .expand
         ui-input(
@@ -27,7 +27,7 @@
         )
         span px
     .g31
-      .flex-row
+      .flex-row.spaced
         span Height
         .expand
         ui-input(
@@ -40,7 +40,7 @@
         span px
     .g12.bold Tile
     .g22
-      .flex-row
+      .flex-row.spaced
         span Width
         .expand
         ui-input(
@@ -49,7 +49,7 @@
         )
         span px
     .g32
-      .flex-row
+      .flex-row.spaced
         span Height
         .expand
         ui-input(

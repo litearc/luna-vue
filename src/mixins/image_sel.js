@@ -31,18 +31,18 @@ export default
 
   methods:
   {
-    on_file_select(){
+    /*async*/ on_file_select(){
       dialog.showOpenDialog({
         filters: [{
           name: 'Image',
           extensions: ['png'], // only support png for now
         }],
         properties: ['openFile'],
-      }).then(({canceled, filePaths}) => {
+      }).then( async ({canceled, filePaths}) => {
         if (!canceled){
           this.fpath = filePaths[0]
           this.fname = path.basename(this.fpath)
-          let { w, h, data } = load_image(this.fpath)
+          let {w, h, data} = await load_image(this.fpath)
           this.im_width = w
           this.im_height = h
           this.im_data = data

@@ -3,15 +3,29 @@
   #tab-area.flex-row
     #tabs.expand
     #actions
-  #content.expand(
+
+  #content.center(
     style='border: 1px solid red'
     @click='on_click'
   )
     keep-alive
-      editor-anim(v-if='curr_editor.type === "anim"')
-      editor-map(v-if='curr_editor.type === "map"')
-      editor-sprite(v-if='curr_editor.type === "sprite"')
-      editor-tileset(v-if='curr_editor.type === "tileset"')
+      page-new-resource(
+        v-if='curr_editor.type === "none"'
+        style='border: 1px solid green; width: 320px; height: 200px'
+        @create_page='on_create_page'
+      )
+      editor-anim(
+        v-if='curr_editor.type === "anim"'
+      )
+      editor-map(
+        v-if='curr_editor.type === "map"'
+      )
+      editor-sprite(
+        v-if='curr_editor.type === "sprite"'
+      )
+      editor-tileset(
+        v-if='curr_editor.type === "tileset"'
+      )
 </template>
 
 <script>
@@ -20,6 +34,8 @@ import editor_anim from './editor_anim.vue'
 import editor_map from './editor_map.vue'
 import editor_sprite from './editor_sprite.vue'
 import editor_tileset from './editor_tileset.vue'
+import page_new_resource from './page_new_resource.vue'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default
 {
@@ -28,11 +44,6 @@ export default
   data(){
     return {
       itab: 0, // index of currently active tab
-      editors: [
-        { type: 'map' },
-        { type: 'anim' },
-        { type: 'sprite' },
-      ],
     }
   },
 
@@ -43,12 +54,15 @@ export default
   },
 
   computed: {
+    ...mapState([
+      'tabs',
+    ]),
     curr_editor(){
-      return this.editors[this.itab]
+      return this.tabs[this.itab]
     },
     ntabs(){
-      return this.editors.length
-    }
+      return this.tabs.length
+    },
   },
 
   components: {
@@ -56,11 +70,20 @@ export default
     'editor-map': editor_map,
     'editor-sprite': editor_sprite,
     'editor-tileset': editor_tileset,
+    'page-new-resource': page_new_resource,
   },
 
   methods: {
     on_click(){
       this.itab = (this.itab+1)%this.ntabs
+    },
+    on_create_page(page_name, ed_data){
+      // TODO: this is not reactive
+      this.tabs[this.itab] = {
+        type: page_name,
+        data: ed_data,
+      }
+      console.log('page created')
     },
   }, // methods
 
