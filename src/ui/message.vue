@@ -8,7 +8,7 @@ transition(
     :style='style'
     v-show='visible'
   )
-    .flex-row
+    .flex-row.bl
       faicon.icon.fix-sz(
         v-if='type !== ""'
         :class='get_color()'

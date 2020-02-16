@@ -1,6 +1,6 @@
 <template lang='pug'>
 #el.flex-col.spaced
-  .flex-row.spaced
+  .flex-row.bl.spaced
     span Type
     ui-combobox(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
@@ -11,7 +11,7 @@
   keep-alive
     component(:is='page' ref='curr_page')
 
-  .flex-row.spaced(style='margin-top: 16px')
+  .flex-row.bl.spaced(style='margin-top: 16px')
     .expand
     button(
       @click='$emit("cancelled")'
@@ -71,7 +71,7 @@ export default
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
 @import ../theme
 
 button

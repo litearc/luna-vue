@@ -15,7 +15,7 @@
       v-show='visible'
     )
       .fix-sz.pg(style='margin-bottom: 8px') {{ message }}
-      .flex-row
+      .flex-row.bl
         .expand
         button.fix-sz(
           v-for='(opt, i) in options'

@@ -1,6 +1,6 @@
 <template lang='pug'>
 #el
-  .flex-row.spaced
+  .flex-row.bl.spaced
     span File
     ui-input(
       placeholder='file not chosen'
@@ -15,7 +15,7 @@
   .grid.hgap(style='grid-template-columns: 1fr 1fr; margin-top: 8px')
     .g11.bold Image
     .g21
-      .flex-row.spaced
+      .flex-row.bl.spaced
         span Width
         .expand
         ui-input(
@@ -27,7 +27,7 @@
         )
         span px
     .g31
-      .flex-row.spaced
+      .flex-row.bl.spaced
         span Height
         .expand
         ui-input(
@@ -40,7 +40,7 @@
         span px
     .g12.bold Animation
     .g22
-      .flex-row.spaced
+      .flex-row.bl.spaced
         span Width
         .expand
         ui-input(
@@ -50,7 +50,7 @@
         )
         span px
     .g32
-      .flex-row.spaced
+      .flex-row.bl.spaced
         span Height
         .expand
         ui-input(
@@ -71,5 +71,5 @@ export default
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
 </style>

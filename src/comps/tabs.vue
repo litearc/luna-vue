@@ -1,10 +1,18 @@
 <template lang='pug'>
 #el.flex-col
   #tab-area.flex-row
-    #tabs.expand
-    #actions
+    ui-tabs.expand(:tabs='tabs')
+    #icon-area
+      faicon.icon.clickable(
+        icon='file'
+        @click='on_new_file'
+      )
+      faicon.icon.clickable(
+        icon='folder-open'
+        @click='on_open_file'
+      )
 
-  #content.center(
+  #content.expand.center(
     style='border: 1px solid red'
     @click='on_click'
   )
@@ -74,16 +82,27 @@ export default
   },
 
   methods: {
+    ...mapMutations([
+      'set_prop'
+    ]),
     on_click(){
       this.itab = (this.itab+1)%this.ntabs
     },
     on_create_page(page_name, ed_data){
-      // TODO: this is not reactive
-      this.tabs[this.itab] = {
+      this.set_prop([this.tabs, this.itab, {
+        name: 'Untitled',
         type: page_name,
         data: ed_data,
-      }
-      console.log('page created')
+      }])
+    },
+    on_new_file(){
+      this.tabs.push({
+        name: 'Untitled',
+        type: 'none',
+        data: {},
+      })
+    },
+    on_open_file(){
     },
   }, // methods
 
@@ -95,7 +114,7 @@ export default
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
 @import ../theme
 
 #el
@@ -112,5 +131,14 @@ export default
 #actions
   width: 120px
   height: 100%
+
+#icon-area
+  height: 100%
+  border: 1px solid green
+  padding-left: 6px
+  padding-right: 6px
+
+  & .icon:not(:first-child)
+    margin-left: 8px
 </style>
 

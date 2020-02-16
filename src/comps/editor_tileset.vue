@@ -1,4 +1,5 @@
 <template lang='pug'>
+#el
   span editor_tileset {{ val }}
 </template>
 
@@ -22,5 +23,7 @@ export default
 }
 </script>
 
-<style lang='sass'>
+<style scoped lang='sass'>
+#el
+  border: 1px solid blue
 </style>
