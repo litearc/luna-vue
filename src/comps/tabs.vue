@@ -83,7 +83,8 @@ export default
 
   methods: {
     ...mapMutations([
-      'set_prop'
+      'push',
+      'set_prop',
     ]),
     on_click(){
       this.itab = (this.itab+1)%this.ntabs
@@ -96,11 +97,11 @@ export default
       }])
     },
     on_new_file(){
-      this.tabs.push({
+      this.push([this.tabs, {
         name: 'Untitled',
         type: 'none',
         data: {},
-      })
+      }])
     },
     on_open_file(){
     },
