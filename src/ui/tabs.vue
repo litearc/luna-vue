@@ -1,6 +1,11 @@
 <template lang='pug'>
 #tab-widget
-  #tab(v-for='(tab, i) in tabs' :key='i')
+  #tab(
+    v-for='(tab, i) in tabs'
+    :key='i'
+    :class='{ active: itab === i }'
+    @click='on_click(i)'
+  )
     span {{ tab.name }}
 </template>
 
@@ -10,8 +15,16 @@ export default
   name: 'ui-tabs',
 
   props: {
-    tabs: ()=>[]
-  }
+    tabs: { default: ()=>[] },
+    itab: { default: 0 },
+  },
+
+  methods:
+  {
+    on_click(i){
+      this.$emit('tab_changed', i)
+    }
+  }, // methods
   
 }
 </script>
@@ -30,5 +43,8 @@ export default
   padding-left: 4px
   overflow: hidden
   border: 1px solid green
+
+  &.active
+    border: 1px solid blue
 </style>
 

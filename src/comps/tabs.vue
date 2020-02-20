@@ -1,7 +1,11 @@
 <template lang='pug'>
 #el.flex-col
   #tab-area.flex-row
-    ui-tabs.expand(:tabs='tabs')
+    ui-tabs.expand(
+      :tabs='tabs'
+      :itab='itab'
+      @tab_changed='on_tab_changed'
+    )
     #icon-area
       faicon.icon.clickable(
         icon='file'
@@ -14,7 +18,6 @@
 
   #content.expand.center(
     style='border: 1px solid red'
-    @click='on_click'
   )
     keep-alive
       page-new-resource(
@@ -86,9 +89,9 @@ export default
       'push',
       'set_prop',
     ]),
-    on_click(){
-      this.itab = (this.itab+1)%this.ntabs
-    },
+    // on_click(){
+    //   this.itab = (this.itab+1)%this.ntabs
+    // },
     on_create_page(page_name, ed_data){
       this.set_prop([this.tabs, this.itab, {
         name: 'Untitled',
@@ -105,6 +108,9 @@ export default
     },
     on_open_file(){
     },
+    on_tab_changed(i){
+      this.itab = i
+    }
   }, // methods
 
   created(){

@@ -6,7 +6,7 @@ span.ui-tooltip
   #trigger(
     ref='trigger'
     :class='{enabled, hover:trigger=="hover", click:trigger=="click"}'
-    @click='on_trigger_click'
+    @click.stop='on_trigger_click'
   )
     slot
     // use 'stop' to not trigger click event of #trigger
