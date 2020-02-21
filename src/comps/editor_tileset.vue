@@ -24,6 +24,4 @@ export default
 </script>
 
 <style scoped lang='sass'>
-#el
-  border: 1px solid blue
 </style>

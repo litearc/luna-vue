@@ -6,7 +6,14 @@
     :class='{ active: itab === i }'
     @click='on_click(i)'
   )
-    span {{ tab.name }}
+    .vcenter
+      span.flex-row.full-w
+        span {{ tab.name }}
+        .expand
+        faicon.icon.clickable(
+          icon='times-circle'
+          @click='on_close(i)'
+        )
 </template>
 
 <script>
@@ -23,6 +30,9 @@ export default
   {
     on_click(i){
       this.$emit('tab_changed', i)
+    },
+    on_close(i){
+      this.$emit('tab_closed', i)
     }
   }, // methods
   
@@ -33,18 +43,19 @@ export default
 @import ../theme
 
 #tab-widget
-  border: 1px solid blue
   height: 24px
 
 #tab
   display: inline-block
-  width: 100px
+  width: $tab-width
   height: 100%
-  padding-left: 4px
+  padding-left: 8px
+  padding-right: 8px
   overflow: hidden
-  border: 1px solid green
+  border-radius: 4px 4px 0px 0px
+  background-color: $cD
 
   &.active
-    border: 1px solid blue
+    background-color: $cH
 </style>
 

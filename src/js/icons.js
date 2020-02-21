@@ -46,6 +46,7 @@ import {
   faSyncAlt,
   faTag,
   faTimesCircle,
+  faTimes,
   faUndo,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -100,6 +101,7 @@ library.add(faSquareRegular)
 library.add(faSyncAlt)
 library.add(faTag)
 library.add(faTimesCircle)
+library.add(faTimes)
 library.add(faUndo)
 
 export default FontAwesomeIcon

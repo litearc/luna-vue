@@ -5,36 +5,41 @@
       :tabs='tabs'
       :itab='itab'
       @tab_changed='on_tab_changed'
+      @tab_closed='on_tab_closed'
     )
     #icon-area
-      faicon.icon.clickable(
-        icon='file'
-        @click='on_new_file'
-      )
-      faicon.icon.clickable(
-        icon='folder-open'
-        @click='on_open_file'
-      )
+      .vcenter
+        faicon.icon.clickable(
+          icon='file'
+          @click='on_new_file'
+        )
+        faicon.icon.clickable(
+          icon='folder-open'
+          @click='on_open_file'
+        )
 
-  #content.expand.center(
-    style='border: 1px solid red'
-  )
+  #content.expand.center
     keep-alive
-      page-new-resource(
+      component(
+        :is='tab_comp[itab]["none"]'
         v-if='curr_editor.type === "none"'
-        style='border: 1px solid green; width: 320px; height: 200px'
         @create_page='on_create_page'
+        style='width: 320px; height: 240px'
       )
-      editor-anim(
+      component(
+        :is='tab_comp[itab]["anim"]'
         v-if='curr_editor.type === "anim"'
       )
-      editor-map(
+      component(
+        :is='tab_comp[itab]["map"]'
         v-if='curr_editor.type === "map"'
       )
-      editor-sprite(
+      component(
+        :is='tab_comp[itab]["sprite"]'
         v-if='curr_editor.type === "sprite"'
       )
-      editor-tileset(
+      component(
+        :is='tab_comp[itab]["tileset"]'
         v-if='curr_editor.type === "tileset"'
       )
 </template>
@@ -48,6 +53,8 @@ import editor_tileset from './editor_tileset.vue'
 import page_new_resource from './page_new_resource.vue'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
+let _ = require('lodash')
+
 export default
 {
   name: 'tabs',
@@ -55,6 +62,22 @@ export default
   data(){
     return {
       itab: 0, // index of currently active tab
+
+      // an array that stores, for each tab, a component options object for each
+      // editor (and also the new resource page). these objects are cloned from
+      // the base objects from the 'import' statements above - otherwise the
+      // data is shared across tabs.
+      // `tab_comp[0]['anim']` is the `editor_anim` for the 0-th tab.
+      tab_comp: ()=>[],
+
+      // maps string for editor type to component options object
+      editor: {
+        'none': page_new_resource,
+        'anim': editor_anim,
+        'map': editor_map,
+        'sprite': editor_sprite,
+        'tileset': editor_tileset,
+      },
     }
   },
 
@@ -84,36 +107,47 @@ export default
     'page-new-resource': page_new_resource,
   },
 
-  methods: {
+  methods:
+  {
     ...mapMutations([
       'push',
       'set_prop',
     ]),
-    // on_click(){
-    //   this.itab = (this.itab+1)%this.ntabs
-    // },
+
     on_create_page(page_name, ed_data){
+      this.tab_comp[this.itab][page_name] = _.cloneDeep(this.editor[page_name])
       this.set_prop([this.tabs, this.itab, {
         name: 'Untitled',
         type: page_name,
         data: ed_data,
       }])
     },
+
     on_new_file(){
       this.push([this.tabs, {
         name: 'Untitled',
         type: 'none',
         data: {},
       }])
+      let i = this.tabs.length-1
+      this.tab_comp[i] = {}
+      this.tab_comp[i]['none'] = _.cloneDeep(page_new_resource)
     },
+
     on_open_file(){
     },
+
     on_tab_changed(i){
       this.itab = i
+    },
+
+    on_tab_closed(i){
     }
   }, // methods
 
   created(){
+    this.tab_comp[0] = {}
+    this.tab_comp[0]['none'] = _.cloneDeep(page_new_resource)
   },
 
   mounted(){
@@ -141,7 +175,6 @@ export default
 
 #icon-area
   height: 100%
-  border: 1px solid green
   padding-left: 6px
   padding-right: 6px
 

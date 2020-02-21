@@ -18,12 +18,12 @@ export default new Vuex.Store({
 
   mutations:
   {
-    // generic way to set variables
+    // generic way to set variables.
     set(s, [name, val]){
       s[name] = val
     },
 
-    // set an object's property reactively
+    // set an object's property reactively.
     set_prop(s, [obj, prop, val]){
       Vue.set(obj, prop, val)
     },
@@ -33,6 +33,7 @@ export default new Vuex.Store({
     merge(s, [dest, src]){
     },
 
+    // push an item to end of array.
     push(s, [arr, item]){
       arr.push(item)
     },
