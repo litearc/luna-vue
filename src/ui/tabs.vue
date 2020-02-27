@@ -44,6 +44,8 @@ export default
 
 #tab-widget
   height: 24px
+  overflow: hidden
+  white-space: nowrap
 
 #tab
   display: inline-block

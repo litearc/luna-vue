@@ -21,26 +21,14 @@
   #content.expand.center
     keep-alive
       component(
-        :is='tab_comp[itab]["none"]'
+        :is='tab_comp[itab]'
         v-if='curr_editor.type === "none"'
         @create_page='on_create_page'
         style='width: 320px; height: 240px'
       )
       component(
-        :is='tab_comp[itab]["anim"]'
-        v-if='curr_editor.type === "anim"'
-      )
-      component(
-        :is='tab_comp[itab]["map"]'
-        v-if='curr_editor.type === "map"'
-      )
-      component(
-        :is='tab_comp[itab]["sprite"]'
-        v-if='curr_editor.type === "sprite"'
-      )
-      component(
-        :is='tab_comp[itab]["tileset"]'
-        v-if='curr_editor.type === "tileset"'
+        :is='tab_comp[itab]'
+        v-else
       )
 </template>
 
@@ -63,11 +51,11 @@ export default
     return {
       itab: 0, // index of currently active tab
 
-      // an array that stores, for each tab, a component options object for each
-      // editor (and also the new resource page). these objects are cloned from
+      // an array that stores, for each tab, a component options object for the
+      // current editor (or new resource page). these objects are cloned from
       // the base objects from the 'import' statements above - otherwise the
       // data is shared across tabs.
-      // `tab_comp[0]['anim']` is the `editor_anim` for the 0-th tab.
+      // `tab_comp[0]` is the editor for the 0-th tab.
       tab_comp: ()=>[],
 
       // maps string for editor type to component options object
@@ -115,7 +103,8 @@ export default
     ]),
 
     on_create_page(page_name, ed_data){
-      this.tab_comp[this.itab][page_name] = _.cloneDeep(this.editor[page_name])
+      this.set_prop([this.tab_comp, this.itab,
+        _.cloneDeep(this.editor[page_name])])
       this.set_prop([this.tabs, this.itab, {
         name: 'Untitled',
         type: page_name,
@@ -130,8 +119,7 @@ export default
         data: {},
       }])
       let i = this.tabs.length-1
-      this.tab_comp[i] = {}
-      this.tab_comp[i]['none'] = _.cloneDeep(page_new_resource)
+      this.set_prop([this.tab_comp, i, _.cloneDeep(page_new_resource)])
     },
 
     on_open_file(){
@@ -146,8 +134,7 @@ export default
   }, // methods
 
   created(){
-    this.tab_comp[0] = {}
-    this.tab_comp[0]['none'] = _.cloneDeep(page_new_resource)
+    this.set_prop([this.tab_comp, 0, _.cloneDeep(page_new_resource)])
   },
 
   mounted(){
