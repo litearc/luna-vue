@@ -8,6 +8,7 @@
 
   tabs(
     v-if='page == "tabs"'
+    @all_tabs_closed='page = "intro"'
   )
   
 </template>

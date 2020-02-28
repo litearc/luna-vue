@@ -11,9 +11,7 @@ export default new Vuex.Store({
     // or 'map', and a `data` property, which contains the editor data. if the
     // type is 'none', the 'new resource' page is shown. the 'name' is displayed
     // in the tab.
-    tabs: [
-      { name: 'Untitled', type: 'none', data: {} },
-    ],
+    tabs: [],
   },
 
   mutations:
@@ -36,6 +34,11 @@ export default new Vuex.Store({
     // push an item to end of array.
     push(s, [arr, item]){
       arr.push(item)
+    },
+
+    // removes an item from an array or object.
+    remove(s, [obj, key]){
+      Vue.delete(obj, key)
     },
 
   },

@@ -14,16 +14,21 @@ span.ui-tooltip
       :items='items'
       :style='menu_style'
       @item-selected='on_item_selected($event)'
-      v-click-outside='{handler:"on_click_outside", exclude:["trigger"]}'
+      v-click-outside='on_click_outside'
     )
 </template>
 
 <script>
 import ui_menu from './menu'
+import click_outside from 'vue-click-outside'
 
 export default
 {
   name: 'ui-dropdown',
+
+  directives: {
+    'click-outside': click_outside
+  },
 
   data(){
     return {

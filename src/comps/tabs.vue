@@ -56,7 +56,7 @@ export default
       // the base objects from the 'import' statements above - otherwise the
       // data is shared across tabs.
       // `tab_comp[0]` is the editor for the 0-th tab.
-      tab_comp: ()=>[],
+      tab_comp: [],
 
       // maps string for editor type to component options object
       editor: {
@@ -99,6 +99,7 @@ export default
   {
     ...mapMutations([
       'push',
+      'remove',
       'set_prop',
     ]),
 
@@ -130,11 +131,19 @@ export default
     },
 
     on_tab_closed(i){
+      if (i <= this.itab)
+        this.itab = Math.max(this.itab-1, 0)
+
+      this.remove([this.tabs, i])
+      this.remove([this.tab_comp, i])
+      if (this.tabs.length == 0)
+        this.$emit('all_tabs_closed')
     }
   }, // methods
 
   created(){
-    this.set_prop([this.tab_comp, 0, _.cloneDeep(page_new_resource)])
+    this.push([this.tabs, { name: 'Untitled', type: 'none', data: {} }])
+    this.push([this.tab_comp, _.cloneDeep(page_new_resource)])
   },
 
   mounted(){

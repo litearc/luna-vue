@@ -12,7 +12,7 @@
         .expand
         faicon.icon.clickable(
           icon='times-circle'
-          @click='on_close(i)'
+          @click.stop='on_close(i)'
         )
 </template>
 
