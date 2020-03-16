@@ -1,6 +1,16 @@
 <template lang='pug'>
 #el
-  span editor_tileset {{ val }}
+  ui-splitter(
+    min2='250px'
+    max2='400px'
+    mode='B'
+  )
+    #image-area(
+      slot='slot1'
+    )
+    ed-tileset-sidebar(
+      slot='slot2'
+    )
 </template>
 
 <script>
@@ -12,16 +22,28 @@ export default
   name: 'editor_tileset',
 
   data(){
-    return {
-      val: null,
-    }
+    return {}
+  },
+
+  props: {
+    data: { default: {} },
+  },
+
+  components: {
+    'ed-tileset-image': ed_tileset_image,
+    'ed-tileset-sidebar': ed_tileset_sidebar,
   },
 
   created(){
-    this.val = Math.floor(Math.random() * 101);
+    console.log(this.data)
   },
 }
 </script>
 
 <style scoped lang='sass'>
+@import ../theme
+
+#image-area
+  width: 100%
+  height: 100%
 </style>

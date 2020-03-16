@@ -1,9 +1,12 @@
 <template lang='pug'>
 input#el(
+  ref='el'
   v-bind='$attrs'
   :value='value'
   spellcheck='false'
   @input='$emit("input", $event.target.value)'
+  @focus='$emit("focus", $event)'
+  @blur='$emit("blue", $event)'
   :class='el_class'
   :style='el_style'
 )
@@ -30,7 +33,13 @@ export default
     el_style(){
       return (this.mstyle === null) ? {} : this.mstyle
     },
-  },
+  }, // computed
+
+  method:
+  {
+    focus(){ this.$refs.el.focus() },
+    blur(){ this.$refs.el.blur() },
+  }, // methods
 
 }
 </script>

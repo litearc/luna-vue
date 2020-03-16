@@ -74,6 +74,11 @@ $font-size: 12.5px
   color: $c-gold
 
 
+// prevents pointer events
+.no-pointer-events, .no-pointer-events *
+  pointer-events: none
+
+
 // sizing
 .full-sz
   width: 100%
@@ -397,7 +402,7 @@ $icon-width: 24px
 .dropdown
   border-radius: 4px
   background-color: $c-dropdown
-  padding: 4px 16px 4px 16px
+  padding: 4px 13px 4px 13px
   display: flex
   flex-direction: row
   align-items: baseline

@@ -21,14 +21,15 @@
   #content.expand.center
     keep-alive
       component(
-        :is='tab_comp[itab]'
         v-if='curr_editor.type === "none"'
+        :is='tab_comp[itab]'
         @create_page='on_create_page'
         style='width: 320px; height: 240px'
       )
       component(
-        :is='tab_comp[itab]'
         v-else
+        :is='tab_comp[itab]'
+        :data='tabs[itab].data'
       )
 </template>
 

@@ -46,7 +46,7 @@ export default
     max1: { default: null },
     min2: { default: null },
     max2: { default: null },
-    mode: { default: 'C' },
+    mode: { default: 'C' }, // specifies how panes resize when window resizes
   },
 
   computed:
@@ -93,7 +93,16 @@ export default
       let max2 = (this.max2 === null) ? w-1 : to_px(this.max2, w)
       let min = Math.max(min1, min2)
       let max = Math.min(max1, max2)
-      if (max < min) return null // no acceptable position for splitter
+      if (max < min){ // no acceptable position for splitter
+        console.log('no acceptable position for splitter found');
+        return null
+      } 
+      // for 'B' mode, where slot2 is fixed size, need to adjust size
+      if (this.mode === 'B'){
+        let tmp = min
+        min = w-max
+        max = w-tmp
+      }
       return [min, max]
     },
   }, // methods
