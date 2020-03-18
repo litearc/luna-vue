@@ -1,17 +1,17 @@
 <template lang='pug'>
-  ui-dropdown(
-    :items='list'
-    trigger='click'
-    @item-selected='on_item_select'
+ui-dropdown(
+  :items='list'
+  trigger='click'
+  @item-selected='on_item_select'
+)
+  .dropdown(
+    :class='el_class'
+    :style='el_style'
   )
-    .dropdown(
-      :class='el_class'
-      :style='el_style'
-    )
-      span.fix-sz {{ items[isel] }}
-      .expand
-      span.fix-sz
-        faicon(icon='caret-down')
+    span.fix-sz {{ items[isel] }}
+    .expand
+    span.fix-sz
+      faicon(icon='caret-down')
 </template>
 
 <script>
@@ -63,4 +63,16 @@ export default
 </script>
 
 <style scoped lang='sass'>
+@import ../theme
+
+.dropdown
+  border-radius: 4px
+  background-color: $c-dropdown
+  padding: 4px 13px 4px 13px
+  display: flex
+  flex-direction: row
+  align-items: baseline
+
+  &:hover
+    background-color: $cD
 </style>

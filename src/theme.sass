@@ -45,6 +45,7 @@ $c-dropdown: $cC
 // constants
 $dur-fade: .2s
 $tab-width: 140px
+$icon-width: 24px
 
 $font-size: 12.5px
 @font-face
@@ -104,7 +105,7 @@ $font-size: 12.5px
 
 .fix-sz
   flex-grow: 0
-  flex-shrink: 1
+  flex-shrink: 0
 
 .expand
   flex-grow: 1
@@ -262,32 +263,6 @@ $font-size: 12.5px
   &.selected
     color: $c-prim
 
-
-// message (pops up from below or above page)
-.ui-message
-  @include global
-
-  position: fixed
-  text-align: center
-  transform: translateX(-50%) // centers div on screen
-  transition: all $dur-fade
-  padding: 8px
-  background-color: $c-messsage-bg
-  border: 1px solid $c-messsage-bg
-  border-radius: 4px
-
-.fade-top-enter-active, .fade-top-leave-active, .fade-bottom-enter-active, .fade-bottom-leave-active
-  transition: all $dur-fade
-
-.fade-top-enter, .fade-top-leave-to
-  opacity: 0
-  transform: translate(-50%, -30px) // the -50% needed to keep div centered
-
-.fade-bottom-enter, .fade-bottom-leave-to
-  opacity: 0
-  transform: translate(-50%, +30px) // the -50% needed to keep div centered
-
-
 // button
 $button-std-w: 100px
 button
@@ -313,107 +288,15 @@ button
       background-color: darken($c-prim, 10%)
 
 
-// dialog (dialog box with message and options, e.g. 'Cancel' and 'Ok')
-.dialog-box
-  @include global
-  
-  position: fixed
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
-  min-width: 160px
-  max-width: 320px
-
-  background-color: $c-pane
-  border-radius: 4px
-  padding: 16px
-
-.bg
-  position: fixed
-  top: 0
-  bottom: 0
-  left: 0
-  right: 0
-  background-color: $c-semitrans
-
-.bg-fade-enter-active, .bg-fade-leave-active, .dialog-fade-enter-active, .dialog-fade-leave-active
-  transition: all $dur-fade
-
-.bg-fade-enter, .bg-fade-leave-to
-  background-color: $c-trans
-
-.dialog-fade-enter, .dialog-fade-leave-to
-  opacity: 0
-
-
-// tooltip
-.tooltip
-  font-size: 90%
-  padding: 4px 8px 2px 8px
-  background-color: $cH
-  border-radius: 4px
-
-
-// menu
-$menu-min-width: 120px
-.menu
-  padding: 4px 0px 4px 0px
-  background-color: $cH
-  border-radius: 4px
-  min-width: $menu-min-width
-  border: 1px solid $c-border
-
-  &.is-root
-    width: 100%
-    overflow-x: hidden
-
-
-// splitter
-.ui-splitter
-  
-  &.horizontal 
-    & > .pane:first-child
-      margin-right: -1px
-    & > .pane:last-child
-      margin-left: -1px
-    & > .splitter
-      cursor: ew-resize
-      z-index: 1000
-
-  &.vertical 
-    & > .pane:first-child
-      margin-bottom: -1px
-    & > .pane:last-child
-      margin-top: -1px
-    & > .splitter
-      cursor: ns-resize
-      z-index: 1000
-
-
 // icon text (text with an icon to the left)
-$icon-width: 24px
 .it-icon
   display: inline-block
   text-align: center
-  width: 24px
-
-
-// dropdown
-.dropdown
-  border-radius: 4px
-  background-color: $c-dropdown
-  padding: 4px 13px 4px 13px
-  display: flex
-  flex-direction: row
-  align-items: baseline
-
-  &:hover
-    background-color: $cD
+  width: $icon-width
 
 
 // text-input space
 $text-inp-space: 8px
-
 .text-space-right
   margin-right: $text-inp-space
 

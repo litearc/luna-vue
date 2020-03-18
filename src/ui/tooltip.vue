@@ -33,4 +33,11 @@ export default
 </script>
 
 <style scoped lang='sass'>
+@import ../theme
+
+.tooltip
+  font-size: 90%
+  padding: 4px 8px 2px 8px
+  background-color: $cH
+  border-radius: 4px
 </style>

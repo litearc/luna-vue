@@ -186,3 +186,27 @@ export default
   },
 }
 </script>
+
+<style scoped lang='sass'>
+@import ../theme
+
+.ui-splitter
+  
+  &.horizontal 
+    & > .pane:first-child
+      margin-right: -1px
+    & > .pane:last-child
+      margin-left: -1px
+    & > .splitter
+      cursor: ew-resize
+      z-index: 1000
+
+  &.vertical 
+    & > .pane:first-child
+      margin-bottom: -1px
+    & > .pane:last-child
+      margin-top: -1px
+    & > .splitter
+      cursor: ns-resize
+      z-index: 1000
+</style>

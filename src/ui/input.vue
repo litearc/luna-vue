@@ -1,5 +1,5 @@
 <template lang='pug'>
-input#el(
+input.ui-input(
   ref='el'
   v-bind='$attrs'
   :value='value'
@@ -46,7 +46,7 @@ export default
 
 <style scoped lang='sass'>
 @import ../theme
-#el
+.ui-input
   @include input
 
   /* this hides the up/down arrows in 'number' inputs */

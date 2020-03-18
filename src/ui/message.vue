@@ -85,3 +85,31 @@ export default
   },
 }
 </script>
+
+<style scoped lang='sass'>
+@import ../theme
+
+.ui-message
+  @include global
+
+  position: fixed
+  text-align: center
+  transform: translateX(-50%) // centers div on screen
+  transition: all $dur-fade
+  padding: 8px
+  background-color: $c-messsage-bg
+  border: 1px solid $c-messsage-bg
+  border-radius: 4px
+
+.fade-top-enter-active, .fade-top-leave-active, .fade-bottom-enter-active, .fade-bottom-leave-active
+  transition: all $dur-fade
+
+.fade-top-enter, .fade-top-leave-to
+  opacity: 0
+  transform: translate(-50%, -30px) // the -50% needed to keep div centered
+
+.fade-bottom-enter, .fade-bottom-leave-to
+  opacity: 0
+  transform: translate(-50%, +30px) // the -50% needed to keep div centered
+</style>
+

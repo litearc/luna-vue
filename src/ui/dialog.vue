@@ -1,5 +1,5 @@
 <template lang='pug'>
-#dialog
+.ui-dialog
   transition(
     name='bg-fade'
     @after-leave='on_afterleave'
@@ -65,3 +65,38 @@ export default
 
 }
 </script>
+
+<style scoped lang='sass'>
+@import ../theme
+
+.dialog-box
+  @include global
+  
+  position: fixed
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  min-width: 160px
+  max-width: 320px
+
+  background-color: $c-pane
+  border-radius: 4px
+  padding: 16px
+
+.bg
+  position: fixed
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  background-color: $c-semitrans
+
+.bg-fade-enter-active, .bg-fade-leave-active, .dialog-fade-enter-active, .dialog-fade-leave-active
+  transition: all $dur-fade
+
+.bg-fade-enter, .bg-fade-leave-to
+  background-color: $c-trans
+
+.dialog-fade-enter, .dialog-fade-leave-to
+  opacity: 0
+</style>

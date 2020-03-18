@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el
+.ui-checkbox
   div(
     v-for='(item,i) in items'
     :key='i'

@@ -1,5 +1,5 @@
 <template lang='pug'>
-#menu.menu(
+.ui-menu(
   :class='{ "is-root": is_root }'
   )
   .dmenu
@@ -45,6 +45,18 @@ export default {
 <style scoped lang='sass'>
 @import ../theme
 
+$menu-min-width: 120px
+.ui-menu
+  padding: 4px 0px 4px 0px
+  background-color: $cH
+  border-radius: 4px
+  min-width: $menu-min-width
+  border: 1px solid $c-border
+
+  &.is-root
+    width: 100%
+    overflow-x: hidden
+
 ul, li
   padding: 0
   margin: 0
@@ -54,7 +66,7 @@ ul, li
   position: relative
   display: none
 
-#menu.is-root > .dmenu
+.ui-menu.is-root > .dmenu
   display: block
 
 li
@@ -65,15 +77,15 @@ li
 li:hover > .item
   color: $c-bright
 
-li:hover > .dmenu, li:hover > #menu > .dmenu
+li:hover > .dmenu, li:hover > .ui-menu > .dmenu
   display: block
 
-li > .menu
+li > .ui-menu
   visibility: hidden
-li:hover > .menu
+li:hover > .ui-menu
   visibility: visible
 
-#menu:not(.is-root)
+.ui-menu:not(.is-root)
   position: absolute
   left: 100%
   top: -5px // should be matched to (border + padding)
