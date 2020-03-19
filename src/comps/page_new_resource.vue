@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el.flex-col.spaced
+#page_new_resource.flex-col.spaced
   .flex-row.bl.spaced
     span Type
     ui-combobox(

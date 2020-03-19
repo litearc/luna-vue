@@ -1,5 +1,5 @@
 <template lang='pug'>
-textarea#el(
+textarea.ui-textarea(
   v-bind='$attrs'
   :value='value'
   spellcheck='false'
@@ -21,7 +21,8 @@ export default
 
 <style scoped lang='sass'>
 @import ../theme
-#el
+ 
+.ui-textarea
   @include input
   resize: none
 </style>

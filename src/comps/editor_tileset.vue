@@ -1,15 +1,17 @@
 <template lang='pug'>
-#el
-  ui-splitter(
+#editor_tileset
+  ui-splitter#splitter(
     min2='250px'
     max2='400px'
     mode='B'
   )
-    #image-area(
+    ed-tileset-image(
       slot='slot1'
+      :itab='itab'
     )
     ed-tileset-sidebar(
       slot='slot2'
+      :itab='itab'
     )
 </template>
 
@@ -26,7 +28,7 @@ export default
   },
 
   props: {
-    data: { default: {} },
+    itab: {},
   },
 
   components: {
@@ -43,7 +45,7 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 
-#image-area
+#editor_tileset, #image-area, #bar-area
   width: 100%
   height: 100%
 </style>

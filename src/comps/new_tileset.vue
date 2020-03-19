@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el
+#new_tileset
   .flex-row.bl.spaced
     span File
     ui-input(

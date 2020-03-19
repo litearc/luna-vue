@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el
+#ed_tileset_sidebar
   .bold Tileset Properties
 </template>
 
@@ -13,7 +13,7 @@ export default
   },
 
   props: {
-
+    itab: {},
   },
 
 }
@@ -21,7 +21,7 @@ export default
 
 <style scoped lang='sass'>
 @import ../theme
-#el
+#ed_tileset_sidebar
   padding: 12px
   width: 100%
   height: 100%

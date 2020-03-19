@@ -1,19 +1,18 @@
 <template lang='pug'>
-#el
+.ui-radio
   div(
     v-for='(item,i) in items'
     :key='i'
+    @click='on_click(i)'
   )
     span.it-icon(style='display: inline-block')
       faicon.selected(
         v-if='selected == i'
         icon='dot-circle'
-        @click='on_click(i)'
       )
       faicon.unselected(
         v-else
         icon='circle'
-        @click='on_click(i)'
       )
     span {{ item }}
 </template>

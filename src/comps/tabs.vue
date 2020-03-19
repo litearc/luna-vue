@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el.flex-col
+#tabs.flex-col
   #tab-area.flex-row
     ui-tabs.expand(
       :tabs='tabs'
@@ -29,7 +29,7 @@
       component(
         v-else
         :is='tab_comp[itab]'
-        :data='tabs[itab].data'
+        :itab='itab'
       )
 </template>
 
@@ -155,16 +155,13 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 
-#el
+#tabs
   width: 100%
   height: 100%
 
 #tab-area
   height: 24px
   background-color: $cB
-
-#tabs
-  height: 100%
 
 #actions
   width: 120px

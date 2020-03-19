@@ -1,6 +1,6 @@
 <template lang='pug'>
-#tab-widget
-  #tab(
+.ui-tabs
+  .tab(
     v-for='(tab, i) in tabs'
     :key='i'
     :class='{ active: itab === i }'
@@ -42,12 +42,12 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 
-#tab-widget
+.ui-tabs
   height: 24px
   overflow: hidden
   white-space: nowrap
 
-#tab
+.tab
   display: inline-block
   width: $tab-width
   height: 100%

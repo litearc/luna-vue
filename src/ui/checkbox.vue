@@ -3,17 +3,16 @@
   div(
     v-for='(item,i) in items'
     :key='i'
+    @click='on_click(i)'
   )
     span.item-icon(style='display: inline-block')
       faicon.checked(
         v-if='checked[i]'
         icon='check-square'
-        @click='on_click(i)'
       )
       faicon.unchecked(
         v-else
         icon='square'
-        @click='on_click(i)'
       )
     span {{ item }}
 </template>

@@ -31,7 +31,7 @@ export default
 
   methods:
   {
-    /*async*/ on_file_select(){
+    on_file_select(){
       dialog.showOpenDialog({
         filters: [{
           name: 'Image',

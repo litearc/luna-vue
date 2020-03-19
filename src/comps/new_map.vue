@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el
+#new_map
 </template>
 
 <script>

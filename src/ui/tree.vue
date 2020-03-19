@@ -1,5 +1,5 @@
 <template lang='pug'>
-#tree(:style='ui_style')
+.ui-tree(:style='ui_style')
   // first list folders ...
   #root
     faicon.icon.clickable(
