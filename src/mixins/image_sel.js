@@ -46,6 +46,7 @@ export default
           this.im_width = w
           this.im_height = h
           this.im_data = data
+          console.log(data)
         }
       })
     },

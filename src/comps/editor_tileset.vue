@@ -35,10 +35,6 @@ export default
     'ed-tileset-image': ed_tileset_image,
     'ed-tileset-sidebar': ed_tileset_sidebar,
   },
-
-  created(){
-    console.log(this.data)
-  },
 }
 </script>
 
