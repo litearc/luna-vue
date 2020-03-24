@@ -81,7 +81,7 @@ export default
         tile_width : this.tile_width,
         tile_height : this.tile_height,
         im_width : this.im_width,
-        im_height : this.im_width,
+        im_height : this.im_height,
         im_data : this.im_data,
       }
     }

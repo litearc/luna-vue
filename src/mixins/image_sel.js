@@ -2,6 +2,7 @@ let fs = require('fs')
 let path = require('path')
 let { dialog } = require('electron').remote
 import { load_image } from '../js/image'
+import { i8_to_f32 } from '../js/util'
 
 export default
 {
@@ -45,8 +46,7 @@ export default
           let {w, h, data} = await load_image(this.fpath)
           this.im_width = w
           this.im_height = h
-          this.im_data = data
-          console.log(data)
+          this.im_data = i8_to_f32(data)
         }
       })
     },

@@ -1,13 +1,11 @@
 <template lang='pug'>
 #el_tileset_image.center(ref='root')
-  img(src='../images/roadway.png')
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-// let fs = require('fs')
-// let m = fs.readFileSync('/home/hislam/s/code/vue/app/src/comps/roadway.png')
-// console.log(m)
+let app
 
 export default
 {
@@ -19,14 +17,24 @@ export default
     }
   },
 
+  computed: {
+    ...mapState([
+      'tabs',
+    ])
+  },
+
   props: {
     itab: {},
   },
 
   mounted(){
-    console.log(this.pub)
-    let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
-    console.log(tex)
+    // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
+    let { im_data, im_width, im_height } = this.tabs[this.itab].data
+    app = new PIXI.Application({width: im_width, height: im_height})
+    this.$refs.root.appendChild(app.view)
+    let tex = PIXI.Texture.fromBuffer(im_data, im_width, im_height)
+    let spr = new PIXI.Sprite(tex)
+    app.stage.addChild(spr)
   },
 }
 </script>
