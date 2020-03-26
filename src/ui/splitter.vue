@@ -183,6 +183,8 @@ export default
       document.body.classList.add('no-pointer-events')
       document.body.classList.add('non-selectable')
     })
+
+    // todo: remove these listeners on destruction
   },
 }
 </script>
