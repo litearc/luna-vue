@@ -26,6 +26,7 @@ import {
 	faFolder,
 	faFolderOpen,
   faLayerGroup,
+  faMinus,
   faMinusCircle,
 	faMousePointer,
   faPaintBrush,
@@ -34,6 +35,7 @@ import {
   faPenFancy,
   faPenNib,
   faPlayCircle,
+  faPlus,
   faPlusCircle,
   faPlusSquare,
   faRedo,
@@ -81,6 +83,7 @@ library.add(faFolder)
 library.add(faFolderOpen)
 library.add(faLayerGroup)
 library.add(faMousePointer)
+library.add(faMinus)
 library.add(faMinusCircle)
 library.add(faPaintBrush)
 library.add(faPen)
@@ -88,6 +91,7 @@ library.add(faPencilAlt)
 library.add(faPenFancy)
 library.add(faPenNib)
 library.add(faPlayCircle)
+library.add(faPlus)
 library.add(faPlusCircle)
 library.add(faPlusSquare)
 library.add(faRedo)

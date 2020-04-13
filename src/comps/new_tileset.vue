@@ -83,6 +83,8 @@ export default
         im_width : this.im_width,
         im_height : this.im_height,
         im_data : this.im_data,
+        tileset_props: [ {key:'name', val:'forest'} ],
+        tile_props: [],
       }
     }
   },

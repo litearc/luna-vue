@@ -1,14 +1,32 @@
 <template lang='pug'>
 #ed_tileset_sidebar
-  .bold Tileset Properties
-  ui-icon#icon(icon='grid')
-  span Hello
+  #title.flex-row
+    span.bold Tileset Properties
+    .expand
+    ui-tooltip(text='Add')
+      faicon.icon.clickable.title-icon(icon='plus' @click='on_plus')
+  #grid
+    template(v-for='(item,i) in tabs[itab].data.tileset_props')
+      ui-input(v-model='item.key')
+      ui-input(v-model='item.val')
+      ui-tooltip(text='Remove')
+        faicon.icon.clickable.title-icon(
+          icon='minus'
+          @click='on_minus(i)'
+          style='margin-left: 2px'
+        )
+  .divider
+  #title.flex-row
+    span.bold Tile Properties
+    .expand
+    ui-tooltip(text='Add')
+      faicon.icon.clickable.title-icon(icon='plus')
+
 </template>
 
 <script>
-  // svg(viewBox='0 0 100 100' :height='h')
-  //   path(d='M20 10h10v80H20zM70 10h10v80H70z' :fill='fill')
-  //   path(d='M10 20h80v10H10zM10 70h80v10H10z' :fill='fill')
+import { mapState, mapGetters, mapMutations } from 'vuex'
+
 export default
 {
   name: 'ed_tileset_sidebar',
@@ -24,6 +42,28 @@ export default
     itab: {},
   },
 
+  computed: {
+    ...mapState([
+      'tabs',
+    ]),
+  },
+
+  methods: {
+    ...mapMutations([
+      'push',
+      'remove',
+    ]),
+    on_plus(){
+      this.push([this.tabs[this.itab].data.tileset_props, {key:'', val:''}])
+    },
+    on_minus(i){
+      this.remove([this.tabs[this.itab].data.tileset_props, i])
+    },
+  },
+
+  created(){
+    console.log(this.tabs[this.itab].data)
+  },
 }
 </script>
 
@@ -34,9 +74,19 @@ export default
   width: 100%
   height: 100%
   background-color: $c-pane
- 
+
+.space
+  width: 8px
+
 #icon:hover
   color: red
   /* border: 1px solid red */
+
+#grid
+  display: grid
+  grid-template-columns: 1fr 1fr 0fr
+  margin-top: 8px
+  grid-gap: 4px
+  align-items: center
 </style>
 

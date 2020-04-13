@@ -1,5 +1,18 @@
 <template lang='pug'>
-#el_tileset_image.center(ref='root')
+#el_tileset_image.full-sz
+  #toolbar.center
+    ui-tooltip(text='Zoom Out')
+      faicon.toolbar-icon(icon='search-minus')
+    .space
+    ui-tooltip(text='Zoom In')
+      faicon.toolbar-icon(icon='search-plus')
+    .space
+    ui-tooltip(text='Grid')
+      ui-icon.toolbar-icon(icon='grid' height='12px' style='border' text base)
+    .space
+    ui-tooltip(text='Save')
+      faicon.toolbar-icon(icon='save')
+  #image.center(ref='root')
 </template>
 
 <script>
@@ -41,5 +54,12 @@ export default
 
 <style scoped lang='sass'>
 @import ../theme
+#toolbar
+  display: absolute
+  height: 24px
+
+  .space
+    width: 8px
+
 </style>
 

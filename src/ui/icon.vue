@@ -1,5 +1,5 @@
 <template lang='pug'>
-svg#svg(ref='svg' viewBox='0 0 100 100' height='15px')
+svg(ref='svg' viewBox='0 0 120 120' :height='height' :style='svg_style')
   path(v-for='path in paths[icon]' :d='path' fill='currentColor')
 </template>
 
@@ -11,24 +11,30 @@ export default
   data(){
     return {
       paths: {
-        'grid' : ['M20 10h10v80H20zM70 10h10v80H70z', 'M10 20h80v10H10zM10 70h80v10H10z']
+        'grid' : ['M20 10h10v100H20zM90 10h10v100H90z', 'M10 20h100v10H10zM10 90h100v10H10z']
       }
     }
   },
 
   props: {
-    icon: {}
+    icon: {},
+    height: { default: '15px' },
+    base: { default: true, type: Boolean },
   },
+
+  computed: {
+    svg_style(){
+      return {
+        position: 'relative',
+        top: (this.base) ? '.125em' : '0',
+      }
+    }
+  }, // methods
 }
 </script>
 
 <style scoped lang='sass'>
 @import ../theme
-
-svg
-  position: relative
-  top: $font-size/5
-  margin: 0 4.5px
 
 </style>
 

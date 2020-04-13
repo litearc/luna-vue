@@ -40,4 +40,5 @@ export default
   padding: 4px 8px 2px 8px
   background-color: $cH
   border-radius: 4px
+  z-index: 1
 </style>
