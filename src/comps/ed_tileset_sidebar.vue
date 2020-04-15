@@ -3,25 +3,52 @@
   #title.flex-row
     span.bold Tileset Properties
     .expand
-    ui-tooltip(text='Add')
-      faicon.icon.clickable.title-icon(icon='plus' @click='on_plus')
+    ui-tooltip(
+      text='Add'
+      placement='left'
+    )
+      faicon.icon.clickable.title-icon(
+        icon='plus'
+        @click='on_tileset_plus'
+      )
   #grid
     template(v-for='(item,i) in tabs[itab].data.tileset_props')
       ui-input(v-model='item.key')
       ui-input(v-model='item.val')
-      ui-tooltip(text='Remove')
+      ui-tooltip(
+        text='Remove'
+        placement='left'
+      )
         faicon.icon.clickable.title-icon(
           icon='minus'
-          @click='on_minus(i)'
+          @click='on_tileset_minus(i)'
           style='margin-left: 2px'
         )
   .divider
   #title.flex-row
     span.bold Tile Properties
     .expand
-    ui-tooltip(text='Add')
-      faicon.icon.clickable.title-icon(icon='plus')
-
+    ui-tooltip(
+      text='Add'
+      placement='left'
+    )
+      faicon.icon.clickable.title-icon(
+        icon='plus'
+        @click='on_tile_plus'
+      )
+  #grid
+    template(v-for='(item,i) in tabs[itab].data.tile_props')
+      ui-input(v-model='item.key')
+      ui-input(v-model='item.val')
+      ui-tooltip(
+        text='Remove'
+        placement='left'
+      )
+        faicon.icon.clickable.title-icon(
+          icon='minus'
+          @click='on_tile_minus(i)'
+          style='margin-left: 2px'
+        )
 </template>
 
 <script>
@@ -53,11 +80,17 @@ export default
       'push',
       'remove',
     ]),
-    on_plus(){
+    on_tileset_plus(){
       this.push([this.tabs[this.itab].data.tileset_props, {key:'', val:''}])
     },
-    on_minus(i){
+    on_tileset_minus(i){
       this.remove([this.tabs[this.itab].data.tileset_props, i])
+    },
+    on_tile_plus(){
+      this.push([this.tabs[this.itab].data.tile_props, {key:'', val:''}])
+    },
+    on_tile_minus(i){
+      this.remove([this.tabs[this.itab].data.tile_props, i])
     },
   },
 

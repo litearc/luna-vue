@@ -8,7 +8,7 @@
       faicon.toolbar-icon(icon='search-plus')
     .space
     ui-tooltip(text='Grid')
-      ui-icon.toolbar-icon(icon='grid' height='12px' style='border' text base)
+      ui-icon.toolbar-icon(icon='grid' height='12px' text base)
     .space
     ui-tooltip(text='Save')
       faicon.toolbar-icon(icon='save')
@@ -18,7 +18,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-let app
+let app, grid
 
 export default
 {
@@ -38,6 +38,11 @@ export default
 
   props: {
     itab: {},
+  },
+
+  methods: {
+    draw_grid(){
+    }
   },
 
   mounted(){
