@@ -35,6 +35,7 @@ export default {
 </script>
 
 <style lang='sass'>
+@import ../style
 @import ../theme
 *
   box-sizing: border-box
