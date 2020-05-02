@@ -1,5 +1,5 @@
 <template lang='pug'>
-#app.center
+#app.center.border-red-100
 
   page-intro(
     v-if='page == "intro"'
@@ -35,7 +35,6 @@ export default {
 </script>
 
 <style lang='sass'>
-@import ../style
 @import ../theme
 *
   box-sizing: border-box

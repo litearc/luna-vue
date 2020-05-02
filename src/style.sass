@@ -1,4 +1,4 @@
-// much of this is adapted from tailwind css
+// taken from tailwind css :::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // default styles for various elements .........................................
 
@@ -1219,4 +1219,119 @@ object
   stroke-width: 1
 .stroke-2
   stroke-width: 2
+
+// app :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+// color palette
+$cA: #141515
+$cB: #1b1c1c
+$cC: #1d1e1f
+$cD: #262829
+$cE: #2e3031
+$cF: #2b2d2e
+$cG: #323435
+$cH: #343536
+$cI: #37393a
+$cJ: #393b3d
+$cK: #3b3d3d
+$cL: #424445
+$cM: #454849
+$cN: #494b4d
+$cO: #4a4e50
+$cP: #5d6062
+$cQ: #7e8184
+$cR: #94989a
+$cS: #9ba2a8
+$cT: #ebf0f5
+
+$c-text: $cR
+$c-dim-text: $cO
+$c-highlight: $cT
+$c-pane-bg: $cD
+$c-border: $cL
+$c-dark-bg: $cB
+
+$c-blue: hsl(210, 60%, 60%)
+$c-green: hsl(130, 60%, 60%)
+$c-red: hsl(0, 60%, 60%)
+$c-gold: hsl(45, 60%, 60%)
+$c-primary: $c-blue
+
+$c-none: rgb(0, 0, 0, 0)
+$c-black-50: rgb(0, 0, 0, .5)
+
+// constants
+$dur-fade: .2s
+$tab-width: 140px
+$icon-width: 24px
+$font-size: 12px
+
+// classes / pseudo-classes ::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+.color-primary
+  color: $c-primary
+
+.hover-color-highlight:hover
+  color: $c-highlight
+
+// ui ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+// font
+@font-face
+  font-family: main
+  src: url(../fonts/regular.ttf)
+
+@font-face
+  font-family: main
+  font-weight: bold
+  src: url(../fonts/bold.ttf)
+
+@mixin font
+  font-family: main
+  font-size: $font-size
+  font-variant-numeric: tabular-nums
+  letter-spacing: 0.05em
+  color: $c-text
+
+// input / text area
+@mixin input
+  background-color: $cC
+  border: 1px solid $cD
+  border-radius: 2px
+  color: $c-bright
+  padding: 4px
+
+  &::placeholder
+    color: $c-dim-text
+  &.invisible
+    background-color: transparent
+    border: 0
+  &:hover, &:focus
+    background-color: $cC
+  &:focus
+    outline: none
+    border: 1px solid $c-prim
+
+// button
+$button-width: 100px
+
+button
+  background-color: $cM
+  border: none
+  color: $c-bright
+  padding: 4px 12px
+  text-align: center
+  text-decoration: none
+  display: inline-block
+  border-radius: 3px
+  cursor: pointer
+  outline: none
+
+  &:hover
+    background-color: $cO
+  
+  &.colored
+    background-color: darken($c-prim, 20%)
+    &:hover
+      background-color: darken($c-prim, 10%)
 
