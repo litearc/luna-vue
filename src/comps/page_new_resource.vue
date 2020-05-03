@@ -2,7 +2,7 @@
 #page_new_resource.flex-col.border-red
   .flex.flex-row.items-baseline
     span Type
-    ui-combobox.m-left-2(
+    ui-combobox.ml-2(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
       mstyle='width: 150px'
       @item_selected='on_page_select'
@@ -16,7 +16,7 @@
     button.flex-none(
       @click='$emit("cancelled")'
     ) Cancel
-    button.flex-none.m-left-2(
+    button.flex-none.ml-2(
       @click='on_click_create'
     ) Create
 </template>

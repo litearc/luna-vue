@@ -8,11 +8,11 @@
       @tab_closed='on_tab_closed'
     )
     #icon-area.flex-none.flex.flex-row.items-center
-      faicon.icon.hover-color-highlight(
+      faicon.icon.hover-hl(
         icon='file'
         @click='on_new_file'
       )
-      faicon.icon.hover-color-highlight(
+      faicon.icon.hover-hl(
         icon='folder-open'
         @click='on_open_file'
       )

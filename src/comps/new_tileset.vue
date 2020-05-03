@@ -8,14 +8,14 @@
       disabled
       mclass='expand'
     )
-    faicon.icon.hover-color-highlight(
+    faicon.icon.hover-hl(
       icon='folder-open'
       @click='on_file_select'
     )
-  .grid.hgap(style='grid-template-columns: 1fr 1fr; margin-top: 8px')
-    .g11.bold Image
-    .g21
-      .flex-row.bl.spaced
+  .grid.grid-cols-1.gap-1
+    .grid-11.font-bold Image
+    .grid-21
+      .flex.flex-row.items-baseline
         span Width
         .expand
         ui-input(
@@ -26,8 +26,8 @@
           mstyle='width: 60px; text-align: right'
         )
         span px
-    .g31
-      .flex-row.bl.spaced
+    .grid-31
+      .flex.flex-row.items-baseline
         span Height
         .expand
         ui-input(
@@ -38,9 +38,9 @@
           mstyle='width: 60px; text-align: right'
         )
         span px
-    .g12.bold Tile
-    .g22
-      .flex-row.bl.spaced
+    .grid-12.font-bold Tile
+    .grid-22
+      .flex.flex-row.items-baseline
         span Width
         .expand
         ui-input(
@@ -48,8 +48,8 @@
           mstyle='width: 60px; text-align: right'
         )
         span px
-    .g32
-      .flex-row.bl.spaced
+    .grid-32
+      .flex.flex-row.items-baseline
         span Height
         .expand
         ui-input(
