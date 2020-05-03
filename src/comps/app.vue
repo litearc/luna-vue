@@ -1,5 +1,5 @@
 <template lang='pug'>
-#app.center.border-red-100
+#app.flex-center
 
   page-intro(
     v-if='page == "intro"'
@@ -35,7 +35,8 @@ export default {
 </script>
 
 <style lang='sass'>
-@import ../theme
+// @import ../theme
+@import ../style
 *
   box-sizing: border-box
   user-select: none
@@ -50,5 +51,5 @@ export default {
   position: relative // allows absolute position of subelements
   overflow: hidden
 
-  @include global
+  @include font
 </style>

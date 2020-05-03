@@ -1274,6 +1274,14 @@ $font-size: 12px
 .hover-color-highlight:hover
   color: $c-highlight
 
+.flex-center
+  display: flex
+  align-items: center
+  justify-content: center
+
+.icon
+  width: 20px
+
 // ui ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // font
@@ -1298,7 +1306,7 @@ $font-size: 12px
   background-color: $cC
   border: 1px solid $cD
   border-radius: 2px
-  color: $c-bright
+  color: $c-highlight
   padding: 4px
 
   &::placeholder
@@ -1310,15 +1318,17 @@ $font-size: 12px
     background-color: $cC
   &:focus
     outline: none
-    border: 1px solid $c-prim
+    border: 1px solid $c-primary
 
 // button
 $button-width: 100px
 
 button
+  @include font
+
   background-color: $cM
   border: none
-  color: $c-bright
+  color: $c-highlight
   padding: 4px 12px
   text-align: center
   text-decoration: none
@@ -1331,7 +1341,59 @@ button
     background-color: $cO
   
   &.colored
-    background-color: darken($c-prim, 20%)
+    background-color: darken($c-primary, 20%)
     &:hover
-      background-color: darken($c-prim, 10%)
+      background-color: darken($c-primary, 10%)
+
+// for debugging
+.border-red
+  border: 1px solid red
+.border-blue
+  border: 1px solid blue
+.border-green
+  border: 1px solid green
+
+.m-left-1
+  margin-left: 0.25rem
+.m-left-2
+  margin-left: 0.5rem
+.m-left-3
+  margin-left: 0.75rem
+.m-left-4
+  margin-left: 1rem
+.m-left-px
+  margin-left: 1px
+
+.m-right-1
+  margin-right: 0.25rem
+.m-right-2
+  margin-right: 0.5rem
+.m-right-3
+  margin-right: 0.75rem
+.m-right-4
+  margin-right: 1rem
+.m-right-px
+  margin-right: 1px
+
+.m-top-1
+  margin-top: 0.25rem
+.m-top-2
+  margin-top: 0.5rem
+.m-top-3
+  margin-top: 0.75rem
+.m-top-4
+  margin-top: 1rem
+.m-top-px
+  margin-top: 1px
+
+.m-bottom-1
+  margin-bottom: 0.25rem
+.m-bottom-2
+  margin-bottom: 0.5rem
+.m-bottom-3
+  margin-bottom: 0.75rem
+.m-bottom-4
+  margin-bottom: 1rem
+.m-bottom-px
+  margin-bottom: 1px
 

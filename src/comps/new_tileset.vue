@@ -1,14 +1,14 @@
 <template lang='pug'>
-#new_tileset
-  .flex-row.bl.spaced
+#new_tileset.border-blue
+  .flex.flex-row.items-baseline
     span File
-    ui-input(
+    ui-input.mx-2(
       placeholder='file not chosen'
       :value='fname'
       disabled
       mclass='expand'
     )
-    faicon.icon.clickable(
+    faicon.icon.hover-color-highlight(
       icon='folder-open'
       @click='on_file_select'
     )
@@ -92,4 +92,5 @@ export default
 </script>
 
 <style scoped lang='sass'>
+@import ../style
 </style>

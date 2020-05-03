@@ -1,25 +1,24 @@
 <template lang='pug'>
-#page_new_resource.flex-col.spaced
-  .flex-row.bl.spaced
+#page_new_resource.flex-col.border-red
+  .flex.flex-row.items-baseline
     span Type
-    ui-combobox(
+    ui-combobox.m-left-2(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
       mstyle='width: 150px'
       @item_selected='on_page_select'
     )
 
   keep-alive
-    component(:is='page' ref='curr_page')
+    component.my-2(:is='page' ref='curr_page')
 
-  .flex-row.bl.spaced(style='margin-top: 16px')
-    .expand
-    button(
+  .flex.flex-row
+    .flex-1.border-green
+    button.flex-none(
       @click='$emit("cancelled")'
     ) Cancel
-    button.highlighted(
+    button.flex-none.m-left-2(
       @click='on_click_create'
     ) Create
-
 </template>
 
 <script>
@@ -72,8 +71,8 @@ export default
 </script>
 
 <style scoped lang='sass'>
-@import ../theme
+@import ../style
 
 button
-  min-width: $button-std-w
+  min-width: 100px
 </style>
