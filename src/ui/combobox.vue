@@ -8,9 +8,9 @@ ui-dropdown(
     :class='el_class'
     :style='el_style'
   )
-    span.fix-sz {{ items[isel] }}
+    span.fixed {{ items[isel] }}
     .expand
-    span.fix-sz
+    span.fixed
       faicon(icon='caret-down')
 </template>
 

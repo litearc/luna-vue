@@ -1,6 +1,6 @@
 <template lang='pug'>
-#page_new_resource.flex-col.spaced
-  .flex-row.bl.spaced
+#page_new_resource.flex-col.spaced-8px
+  .flex-row.align-bl.spaced-8px
     span Type
     ui-combobox(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
@@ -11,7 +11,7 @@
   keep-alive
     component(:is='page' ref='curr_page')
 
-  .flex-row.bl.spaced(style='margin-top: 16px')
+  .flex-row.align-bl.spaced-8px(style='margin-top: 16px')
     .expand
     button(
       @click='$emit("cancelled")'

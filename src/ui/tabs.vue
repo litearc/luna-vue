@@ -10,7 +10,7 @@
       span.flex-row.full-w
         span {{ tab.name }}
         .expand
-        faicon.icon.clickable(
+        faicon.icon.hover-hl(
           icon='times-circle'
           @click.stop='on_close(i)'
         )

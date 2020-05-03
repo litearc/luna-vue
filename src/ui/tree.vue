@@ -2,7 +2,7 @@
 .ui-tree(:style='ui_style')
   // first list folders ...
   #root
-    faicon.icon.clickable(
+    faicon.icon.hover-hl(
       :icon='folder_icon'
       @click='on_icon_click'
       style='width: 12px; margin-right: 8px'

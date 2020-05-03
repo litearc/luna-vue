@@ -1,6 +1,6 @@
 <template lang='pug'>
 #new_anim
-  .flex-row.bl.spaced
+  .flex-row.align-bl.spaced-8px
     span File
     ui-input(
       placeholder='file not chosen'
@@ -8,14 +8,14 @@
       disabled
       mclass='expand'
     )
-    faicon.icon.clickable(
+    faicon.icon.hover-hl(
       icon='folder-open'
       @click='on_file_select'
     )
-  .grid.hgap(style='grid-template-columns: 1fr 1fr; margin-top: 8px')
+  .grid.hgap-20px(style='grid-template-columns: 1fr 1fr; margin-top: 8px')
     .g11.bold Image
     .g21
-      .flex-row.bl.spaced
+      .flex-row.align-bl.spaced-8px
         span Width
         .expand
         ui-input(
@@ -27,7 +27,7 @@
         )
         span px
     .g31
-      .flex-row.bl.spaced
+      .flex-row.align-bl.spaced-8px
         span Height
         .expand
         ui-input(
@@ -40,7 +40,7 @@
         span px
     .g12.bold Animation
     .g22
-      .flex-row.bl.spaced
+      .flex-row.align-bl.spaced-8px
         span Width
         .expand
         ui-input(
@@ -50,7 +50,7 @@
         )
         span px
     .g32
-      .flex-row.bl.spaced
+      .flex-row.align-bl.spaced-8px
         span Height
         .expand
         ui-input(

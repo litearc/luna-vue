@@ -1,39 +1,37 @@
-// color palette - defines *all* the colors used in the app
+// color palette :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 $cA: #141515
 $cB: #1b1c1c
 $cC: #1d1e1f
 $cD: #262829
 $cE: #2e3031
-$cF: #262829
-$cG: #2b2d2e
-$cH: #323435
-$cI: #343536
-$cJ: #37393a
-$cK: #393b3d
-$cL: #3b3d3d
-$cM: #424445
-$cN: #454849
-$cO: #494b4d
-$cP: #4a4e50
-$cQ: #5d6062
-$cR: #7e8184
-$cS: #94989a
-$cT: #9ba2a8
-$cU: #ebf0f5
+$cF: #2b2d2e
+$cG: #323435
+$cH: #343536
+$cI: #37393a
+$cJ: #393b3d
+$cK: #3b3d3d
+$cL: #424445
+$cM: #454849
+$cN: #494b4d
+$cO: #4a4e50
+$cP: #5d6062
+$cQ: #7e8184
+$cR: #94989a
+$cS: #9ba2a8
+$cT: #ebf0f5
 
 $c-blue: hsl(210, 60%, 60%)
 $c-green: hsl(130, 60%, 60%)
 $c-red: hsl(0, 60%, 60%)
 $c-gold: hsl(45, 60%, 60%)
 $c-prim: $c-blue
-
 $c-trans: rgb(0, 0, 0, 0)
 $c-semitrans: rgb(0, 0, 0, .5)
 
 // define colors for various elements from palette
 $c-text: $cS
 $c-dim: $cP
-$c-bright: $cU
+$c-bright: $cT
 $c-pane: $cD
 $c-border: $cM
 $c-viewer: $cB
@@ -41,13 +39,20 @@ $c-input: $cC
 $c-messsage-bg: $cE
 $c-dropdown: $cC
 
+$c-text: $cR
+$c-text-dim: $cO
+$c-text-hl: $cT
+$c-bg-pane: $cD
+$c-bg-dark: $cB
+$c-border: $cL
 
-// constants
+// constants :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 $dur-fade: .2s
 $tab-width: 140px
 $icon-width: 24px
-
 $font-size: 12px
+
+// font ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 @font-face
   font-family: main
   src: url(../fonts/regular.ttf)
@@ -57,60 +62,56 @@ $font-size: 12px
   font-weight: bold
   src: url(../fonts/bold.ttf)
 
+@mixin font
+  font-family: main
+  font-size: $font-size
+  font-variant-numeric: tabular-nums
+  letter-spacing: 0.05em
+  line-height: 1.5
+  color: $c-text
 
 // font options
 .bold
   font-weight: bold
-
 .color-blue
   color: $c-blue
-
 .color-green
   color: $c-green
-
 .color-red
   color: $c-red
-
 .color-gold
   color: $c-gold
 
-
-// prevents pointer events
-.no-pointer-events, .no-pointer-events *
-  pointer-events: none
-
-
-// sizing
-.full-sz
+// sizing ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+.full
   width: 100%
   height: 100%
-
 .full-w
   width: 100%
-
 .full-h
   width: 100%
 
-// flexbox
+// flexbox :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 .flex-col
   display: flex
   flex-direction: column
-
 .flex-row
   display: flex
   flex-direction: row
 
-.bl
+.align-bl
   align-items: baseline
 
-.fix-sz
+.fixed
   flex-grow: 0
   flex-shrink: 0
-
 .expand
   flex-grow: 1
   flex-shrink: 1
 
+// align-items controls the alignment of items in the cross-axis, so centering
+// items horizontally or vertically depends on whether the flex direction is row
+// or column
 .center
   display: flex
   align-items: center
@@ -120,37 +121,37 @@ $font-size: 12px
 
 .hcenter
   display: flex
-  justify-content: center
   width: 100%
   height: 100%
+  &.flex-col
+    align-items: center
+  &:not(.flex-col)
+    justify-content: center
 
 .vcenter
   display: flex
-  align-items: center
   width: 100%
   height: 100%
-
-.v-sep
-  border-top: 1px solid $c-border
+  &.flex-col
+    justify-content: center
+  &:not(.flex-col)
+    align-items: center
 
 // adds space to the left of all non-first items in a flex row,
 // or top of all non-first items in a flex col
-.flex-row.spaced > :not(.expand) ~ :not(*:first-child)
+.flex-row.spaced-8px > :not(.expand) ~ :not(*:first-child)
   margin-left: 8px
-
-.flex-col.spaced > :not(.expand) ~ :not(*:first-child)
+.flex-col.spaced-8px > :not(.expand) ~ :not(*:first-child)
   margin-top: 8px
 
-
-// grid
+// grid ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 .grid
   display: grid
 
-  &.hgap
+  &.hgap-20px
     grid-column-gap: 20px
-
-  &.vgap
-    grid-row-gap: 12px
+  &.vgap-20px
+    grid-row-gap: 20px
 
   // indexed like matrices
   & > .g11
@@ -158,119 +159,77 @@ $font-size: 12px
     grid-column-end: 2
     grid-row-start: 1
     grid-row-end: 2
-
   & > .g12
     grid-column-start: 2
     grid-column-end: 3
     grid-row-start: 1
     grid-row-end: 2
-
   & > .g13
     grid-column-start: 3
     grid-column-end: 4
     grid-row-start: 1
     grid-row-end: 2
-
   & > .g21
     grid-column-start: 1
     grid-column-end: 2
     grid-row-start: 2
     grid-row-end: 3
-
   & > .g22
     grid-column-start: 2
     grid-column-end: 3
     grid-row-start: 2
     grid-row-end: 3
-
   & > .g23
     grid-column-start: 3
     grid-column-end: 4
     grid-row-start: 2
     grid-row-end: 3
-
   & > .g31
     grid-column-start: 1
     grid-column-end: 2
     grid-row-start: 3
     grid-row-end: 4
-
   & > .g32
     grid-column-start: 2
     grid-column-end: 3
     grid-row-start: 3
     grid-row-end: 4
-
   & > .g33
     grid-column-start: 3
     grid-column-end: 4
     grid-row-start: 3
     grid-row-end: 4
 
+// ui elements :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-// text / paragraphs
-.pg
-  line-height: 1.5
-
-.align-baseline
-  align-items: baseline
-
-.hl-hover:hover
-  color: $c-bright
-
-
-@mixin global
-  font-family: main
-  font-size: $font-size
-  font-variant-numeric: tabular-nums
-  letter-spacing: 0.05em
-  color: $c-text
-
-
+// text input
 @mixin input
-  @include global
-
+  @include font
   background-color: $c-input
-  border: 1px solid $c-pane
+  border: 1px solid $c-bg-pane
   border-radius: 2px
   color: $c-bright
   padding: 4px
 
   &.invisible
-    background-color: $c-pane
-
+    background-color: $c-bg-pane
   &::placeholder
     color: $c-dim
-
   &:hover
     background-color: $c-input
-
   &:focus
     outline: none
     background-color: $c-input
     border: 1px solid $c-prim
 
-
-// icons. for some reason, can't select faicon directly, so all faicon have a
-// .icon class, which we use to select them
-.icon
-  position: relative
-  top: 1px // font-awesome icons are a little high by default
-
-  &.clickable:hover
-    color: $c-bright
-
-  &.selected
-    color: $c-prim
-
 // button
 $button-std-w: 100px
 button
-  @include global
+  @include font
 
   background-color: $cM
   border: none
-  color: $cU
+  color: $cT
   padding: 4px 12px
   text-align: center
   text-decoration: none
@@ -281,12 +240,19 @@ button
 
   &:hover
     background-color: $cO
-
   &.highlighted
     background-color: darken($c-prim, 20%)
     &:hover
       background-color: darken($c-prim, 10%)
 
+// icons. for some reason, can't select faicon directly, so all faicon have a
+// .icon class, which we use to select them
+.icon
+  position: relative
+  top: 1px // font-awesome icons are a little high by default
+
+  &.selected
+    color: $c-prim
 
 // icon text (text with an icon to the left)
 .it-icon
@@ -294,20 +260,31 @@ button
   text-align: center
   width: $icon-width
 
+// mainly for debugging
+.border-red
+  border: 1px solid $c-red
+.border-blue
+  border: 1px solid $c-blue
+.border-green
+  border: 1px solid $c-green
 
-// text-input space
-$text-inp-space: 8px
-.text-space-right
-  margin-right: $text-inp-space
-
-.border
-  border: 1px solid red
-
-.divider
+.hdivider
   width: 100%
   margin: 8px 0
   border: 1px solid $cH
+.vdivider
+  height: 100%
+  margin: 0 8px
+  border: 1px solid $cH
 
+.inline
+  display: inline
 .inline-block
   display: inline-block
+
+.no-pointer-events, .no-pointer-events *
+  pointer-events: none
+
+.hover-hl:hover
+  color: $c-bright
 

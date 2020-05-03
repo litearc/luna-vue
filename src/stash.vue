@@ -61,18 +61,18 @@ form
     // sidebar
     #sidebar.flex-col(slot='slot1')
       .flex-row
-        span.fix-sz.bold name
+        span.fixed.bold name
         ui-input.expand(placeholder='input name here')
       .v-sep
       .flex-row
-        span.fix-sz user
+        span.fixed user
         .expand
-        faicon.icon.fix-sz.clickable(
+        faicon.icon.fixed.hover-hl(
           icon='cog'
           @click='on_icon_click'
         )
       .flex-row
-        span.fix-sz this is a button
+        span.fixed this is a button
         ui-tooltip.fixsz(
           text='click me'
           placement='right'
@@ -88,11 +88,11 @@ form
         )
           button dropdown menu
       .expand
-      ui-tooltip.fix-sz(
+      ui-tooltip.fixed(
         text='this is the bottom'
         placement='top'
       ) bottom of page
-      ui-dropdown.fix-sz(
+      ui-dropdown.fixed(
         trigger='hover-keep'
         placement='top'
         @item-selected='on_item_selected'

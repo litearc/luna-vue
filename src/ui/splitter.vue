@@ -1,5 +1,5 @@
 <template lang='pug'>
-div.full-sz
+div.full
   .ui-splitter(
     ref='splitter'
     :class='ui_class'

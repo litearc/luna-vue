@@ -9,7 +9,7 @@
       text='Add'
       placement='left'
     )
-      faicon.icon.clickable.title-icon(
+      faicon.icon.hover-hl.title-icon(
         icon='plus'
         @click='on_tileset_plus'
       )
@@ -20,12 +20,12 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.clickable.title-icon(
+        faicon.icon.hover-hl.title-icon(
           icon='minus'
           @click='on_tileset_minus(i)'
           style='margin-left: 2px'
         )
-  .divider
+  .hdivider
   .sb-title
     .inline-block.bold(style='width: 50%; text-align: center') TILE PROPERTIES
     .inline-block.bold(style='width: 50%; text-align: center') TILE FLAGS
@@ -37,7 +37,7 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.clickable.title-icon(
+        faicon.icon.hover-hl.title-icon(
           icon='minus'
           @click='on_tile_minus(i)'
           style='margin-left: 2px'
@@ -51,7 +51,7 @@
     //   text='Add'
     //   placement='left'
     // )
-    //   faicon.icon.clickable.title-icon(
+    //   faicon.icon.hover-hl.title-icon(
     //     icon='plus'
     //     @click='on_tile_plus'
     //   )

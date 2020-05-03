@@ -50,5 +50,5 @@ export default {
   position: relative // allows absolute position of subelements
   overflow: hidden
 
-  @include global
+  @include font
 </style>

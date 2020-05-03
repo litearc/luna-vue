@@ -1,5 +1,5 @@
 <template lang='pug'>
-#el_tileset_image.full-sz
+#el_tileset_image.full
   #toolbar.center
     ui-tooltip(text='Zoom Out')
       faicon.toolbar-icon(icon='search-minus')

@@ -14,10 +14,10 @@
     .dialog-box.flex-col(
       v-show='visible'
     )
-      .fix-sz.pg(style='margin-bottom: 8px') {{ message }}
-      .flex-row.bl
+      .fixed.pg(style='margin-bottom: 8px') {{ message }}
+      .flex-row.align-bl
         .expand
-        button.fix-sz(
+        button.fixed(
           v-for='(opt, i) in options'
           :key='i'
           :class='{ highlighted: highlight === i }'
@@ -70,7 +70,7 @@ export default
 @import ../theme
 
 .dialog-box
-  @include global
+  @include font
   
   position: fixed
   top: 50%

@@ -9,11 +9,11 @@
     )
     #icon-area
       .vcenter
-        faicon.icon.clickable(
+        faicon.icon.hover-hl(
           icon='file'
           @click='on_new_file'
         )
-        faicon.icon.clickable(
+        faicon.icon.hover-hl(
           icon='folder-open'
           @click='on_open_file'
         )

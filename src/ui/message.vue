@@ -8,13 +8,13 @@ transition(
     :style='style'
     v-show='visible'
   )
-    .flex-row.bl
-      faicon.icon.fix-sz(
+    .flex-row.align-bl
+      faicon.icon.fixed(
         v-if='type !== ""'
         :class='get_color()'
         :icon='get_icon()'
       )
-      span.fix-sz {{ this.message }}
+      span.fixed {{ this.message }}
 </template>
 
 <script>
@@ -90,7 +90,7 @@ export default
 @import ../theme
 
 .ui-message
-  @include global
+  @include font
 
   position: fixed
   text-align: center
