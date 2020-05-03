@@ -75,7 +75,7 @@ li
   padding-right: 12px
 
 li:hover > .item
-  color: $c-bright
+  color: $c-text-hl
 
 li:hover > .dmenu, li:hover > .ui-menu > .dmenu
   display: block

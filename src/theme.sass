@@ -29,16 +29,6 @@ $c-trans: rgb(0, 0, 0, 0)
 $c-semitrans: rgb(0, 0, 0, .5)
 
 // define colors for various elements from palette
-$c-text: $cS
-$c-dim: $cP
-$c-bright: $cT
-$c-pane: $cD
-$c-border: $cM
-$c-viewer: $cB
-$c-input: $cC
-$c-messsage-bg: $cE
-$c-dropdown: $cC
-
 $c-text: $cR
 $c-text-dim: $cO
 $c-text-hl: $cT
@@ -202,24 +192,29 @@ $font-size: 12px
 
 // ui elements :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+// colors
+$c-bg-input: $cC
+$c-bg-message: $cE
+$c-bg-dropdown: $cC
+
 // text input
 @mixin input
   @include font
-  background-color: $c-input
+  background-color: $c-bg-input
   border: 1px solid $c-bg-pane
   border-radius: 2px
-  color: $c-bright
+  color: $c-text-hl
   padding: 4px
 
   &.invisible
     background-color: $c-bg-pane
   &::placeholder
-    color: $c-dim
+    color: $c-text-dim
   &:hover
-    background-color: $c-input
+    background-color: $c-bg-input
   &:focus
     outline: none
-    background-color: $c-input
+    background-color: $c-bg-input
     border: 1px solid $c-prim
 
 // button
@@ -260,6 +255,8 @@ button
   text-align: center
   width: $icon-width
 
+// miscellaneous :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 // mainly for debugging
 .border-red
   border: 1px solid $c-red
@@ -286,5 +283,5 @@ button
   pointer-events: none
 
 .hover-hl:hover
-  color: $c-bright
+  color: $c-text-hl
 

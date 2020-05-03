@@ -67,7 +67,7 @@ export default
 
 .dropdown
   border-radius: 4px
-  background-color: $c-dropdown
+  background-color: $c-bg-dropdown
   padding: 4px 13px 4px 13px
   display: flex
   flex-direction: row

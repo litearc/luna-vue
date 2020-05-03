@@ -97,8 +97,8 @@ export default
   transform: translateX(-50%) // centers div on screen
   transition: all $dur-fade
   padding: 8px
-  background-color: $c-messsage-bg
-  border: 1px solid $c-messsage-bg
+  background-color: $c-bg-message
+  border: 1px solid $c-bg-message
   border-radius: 4px
 
 .fade-top-enter-active, .fade-top-leave-active, .fade-bottom-enter-active, .fade-bottom-leave-active

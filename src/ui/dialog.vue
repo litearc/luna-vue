@@ -79,7 +79,7 @@ export default
   min-width: 160px
   max-width: 320px
 
-  background-color: $c-pane
+  background-color: $c-bg-pane
   border-radius: 4px
   padding: 16px
 

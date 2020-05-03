@@ -109,7 +109,7 @@ export default
   padding: 12px
   width: 100%
   height: 100%
-  background-color: $c-pane
+  background-color: $c-bg-pane
 
 .space
   width: 8px
