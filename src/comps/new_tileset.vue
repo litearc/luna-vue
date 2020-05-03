@@ -1,21 +1,21 @@
 <template lang='pug'>
-#new_tileset.border-blue
-  .flex.flex-row.items-baseline
+#new_tileset
+  .flex-row.bl.spaced
     span File
-    ui-input.mx-2(
+    ui-input(
       placeholder='file not chosen'
       :value='fname'
       disabled
       mclass='expand'
     )
-    faicon.icon.hover-hl(
+    faicon.icon.clickable(
       icon='folder-open'
       @click='on_file_select'
     )
-  .grid.grid-cols-1.gap-1
-    .grid-11.font-bold Image
-    .grid-21
-      .flex.flex-row.items-baseline
+  .grid.hgap(style='grid-template-columns: 1fr 1fr; margin-top: 8px')
+    .g11.bold Image
+    .g21
+      .flex-row.bl.spaced
         span Width
         .expand
         ui-input(
@@ -26,8 +26,8 @@
           mstyle='width: 60px; text-align: right'
         )
         span px
-    .grid-31
-      .flex.flex-row.items-baseline
+    .g31
+      .flex-row.bl.spaced
         span Height
         .expand
         ui-input(
@@ -38,9 +38,9 @@
           mstyle='width: 60px; text-align: right'
         )
         span px
-    .grid-12.font-bold Tile
-    .grid-22
-      .flex.flex-row.items-baseline
+    .g12.bold Tile
+    .g22
+      .flex-row.bl.spaced
         span Width
         .expand
         ui-input(
@@ -48,8 +48,8 @@
           mstyle='width: 60px; text-align: right'
         )
         span px
-    .grid-32
-      .flex.flex-row.items-baseline
+    .g32
+      .flex-row.bl.spaced
         span Height
         .expand
         ui-input(
@@ -92,5 +92,4 @@ export default
 </script>
 
 <style scoped lang='sass'>
-@import ../style
 </style>

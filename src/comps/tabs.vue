@@ -1,23 +1,24 @@
 <template lang='pug'>
-#tabs.full
-  #tab-area.flex.flex-row
-    ui-tabs.flex-auto(
+#tabs.flex-col
+  #tab-area.flex-row
+    ui-tabs.expand(
       :tabs='tabs'
       :itab='itab'
       @tab_changed='on_tab_changed'
       @tab_closed='on_tab_closed'
     )
-    #icon-area.flex-none.flex.flex-row.items-center
-      faicon.icon.hover-hl(
-        icon='file'
-        @click='on_new_file'
-      )
-      faicon.icon.hover-hl(
-        icon='folder-open'
-        @click='on_open_file'
-      )
+    #icon-area
+      .vcenter
+        faicon.icon.clickable(
+          icon='file'
+          @click='on_new_file'
+        )
+        faicon.icon.clickable(
+          icon='folder-open'
+          @click='on_open_file'
+        )
 
-  #content.full.flex-auto.flex-center
+  #content.expand.center
     keep-alive
       component(
         v-if='curr_editor.type === "none"'
@@ -152,26 +153,26 @@ export default
 </script>
 
 <style scoped lang='sass'>
-@import ../style
+@import ../theme
 
-/* #tabs */
-/*   width: 100% */
-/*   height: 100% */
-/*  */
-/* #tab-area */
-/*   height: 24px */
-/*   background-color: $cB */
-/*  */
-/* #actions */
-/*   width: 120px */
-/*   height: 100% */
-/*  */
-/* #icon-area */
-/*   height: 100% */
-/*   padding-left: 6px */
-/*   padding-right: 6px */
-/*  */
-/*   & .icon:not(:first-child) */
-/*     margin-left: 8px */
+#tabs
+  width: 100%
+  height: 100%
+
+#tab-area
+  height: 24px
+  background-color: $cB
+
+#actions
+  width: 120px
+  height: 100%
+
+#icon-area
+  height: 100%
+  padding-left: 6px
+  padding-right: 6px
+
+  & .icon:not(:first-child)
+    margin-left: 8px
 </style>
 
