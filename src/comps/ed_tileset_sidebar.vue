@@ -22,12 +22,17 @@
         faicon.icon.hover-hl(
           icon='minus'
           @click='on_tileset_minus(i)'
-          style='margin-left: 2px'
         )
   .hdivider
   div
-    .tile-title TILE PROPERTIES
-    .tile-title TILE FLAGS
+    .tile-title(
+      :class='{active: tile_sec == 0}'
+      @click='tile_sec = 0'
+    ) TILE PROPERTIES
+    .tile-title(
+      :class="{active: tile_sec == 1}"
+      @click='tile_sec = 1'
+    ) TILE FLAGS
   #grid-tile
     template(v-for='(item,i) in tabs[itab].data.tile_props')
       ui-input(v-model='item.key')
@@ -53,7 +58,8 @@ export default
   data(){
     return {
       h: '15px',
-      fill: '#94989a'
+      fill: '#94989a',
+      tile_sec: 0, // 0: 'properties', 1: 'flags'
     }
   },
 
@@ -111,6 +117,9 @@ export default
   width: 50%
   display: inline-block
   font-weight: bold
+  color: $c-text-dim
   text-align: center
+  &.active
+    color: $c-text
 </style>
 

@@ -26,7 +26,13 @@ export default
 
   data(){
     return {
-      pub: process.env.BASE_URL
+      pub: process.env.BASE_URL,
+      im_width: null,
+      im_height: null,
+      tile_width: 1,
+      tile_height: 1,
+      nxtiles: null,
+      nytiles: null,
     }
   },
 
@@ -45,14 +51,46 @@ export default
     }
   },
 
+  created(){
+    let data = this.tabs[this.itab].data
+    this.tile_width = data.tile_width
+    this.tile_height = data.tile_height
+    this.im_width = data.im_width
+    this.im_height = data.im_height
+  },
+
   mounted(){
     // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
-    let { im_data, im_width, im_height } = this.tabs[this.itab].data
+    
+    // tileset image
+    let {
+      im_data,
+      im_width,
+      im_height,
+      tile_width,
+      tile_height
+    } = this.tabs[this.itab].data
+
+    let nx = Math.round(im_width/tile_width)
+    let ny = Math.round(im_height/tile_height)
+
     app = new PIXI.Application({width: im_width, height: im_height})
     this.$refs.root.appendChild(app.view)
     let tex = PIXI.Texture.fromBuffer(im_data, im_width, im_height)
     let spr = new PIXI.Sprite(tex)
+
+    // tile grid
+    let grid = new PIXI.Graphics()
+    grid.position.set(0, 0)
+    grid.lineStyle(1, 0xffffff)
+    for (let ix = 1; ix < nx; ix++)
+      grid.moveTo(tile_width*ix, 0).lineTo(tile_width*ix, im_width+1)
+    for (let iy = 1; iy < ny; iy++)
+      grid.moveTo(0, tile_height*iy).lineTo(im_height+1, tile_height*iy)
+    grid.alpha = .1
+    
     app.stage.addChild(spr)
+    app.stage.addChild(grid)
   },
 }
 </script>
