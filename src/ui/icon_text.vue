@@ -1,15 +1,15 @@
 <template lang='pug'>
-div.it-div(
+div(
   @click='$emit("click")'
-  :class='{ "hl-hover": hl==="all" }'
+  :class='{ "hover-hl": hl==="all" }'
 )
   span.it-icon
     faicon(
       :icon='icon'
-      :class='{ "hl-hover": hl==="icon" }'
+      :class='{ "hover-hl": hl==="icon" }'
     )
   span.it-text(
-    :class='{ "hl-hover": hl==="text" }'
+    :class='{ "hover-hl": hl==="text" }'
   ) {{ text }}
 </template>
 
@@ -25,7 +25,3 @@ export default
   },
 }
 </script>
-
-<style scoped lang='sass'>
-@import ../theme
-</style>

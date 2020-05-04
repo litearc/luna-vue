@@ -1,5 +1,5 @@
 <template lang='pug'>
-#tabs.flex-col
+#tabs.full.flex-col
   #tab-area.flex-row
     ui-tabs.expand(
       :tabs='tabs'
@@ -7,8 +7,8 @@
       @tab_changed='on_tab_changed'
       @tab_closed='on_tab_closed'
     )
-    #icon-area
-      .vcenter
+    #icon-area.full-h.px-8px
+      .vcenter.hspaced-8px
         faicon.icon.hover-hl(
           icon='file'
           @click='on_new_file'
@@ -155,24 +155,8 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 
-#tabs
-  width: 100%
-  height: 100%
-
 #tab-area
   height: 24px
   background-color: $cB
-
-#actions
-  width: 120px
-  height: 100%
-
-#icon-area
-  height: 100%
-  padding-left: 6px
-  padding-right: 6px
-
-  & .icon:not(:first-child)
-    margin-left: 8px
 </style>
 

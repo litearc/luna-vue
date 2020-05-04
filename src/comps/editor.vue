@@ -29,8 +29,3 @@ export default
 
 }
 </script>
-
-<style scoped lang='sass'>
-@import ../theme
-</style>
-

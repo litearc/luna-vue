@@ -70,7 +70,3 @@ export default
   mixins: [ image_sel_mixin ],
 }
 </script>
-
-<style scoped lang='sass'>
-</style>
-

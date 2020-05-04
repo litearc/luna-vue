@@ -1,16 +1,13 @@
 <template lang='pug'>
 #app.center.border-red-100
-
   page-intro(
     v-if='page == "intro"'
     @new_file_selected='page = "tabs"'
   )
-
   tabs(
     v-if='page == "tabs"'
     @all_tabs_closed='page = "intro"'
   )
-  
 </template>
 
 <script>
@@ -26,8 +23,7 @@ export default {
     }
   },
 
-  components:
-  {
+  components: {
     'page-intro': page_intro,
     'tabs': tabs,
   },

@@ -1,15 +1,14 @@
 <template lang='pug'>
 #ed_tileset_sidebar
-  .sb-title
-    span.bold.center TILESET PROPERTIES
+  .bold.full-w.text-center TILESET PROPERTIES
   #grid-tileset
-    .grid-head.bold Key
-    .grid-head.bold Value
+    .bold.ml-4px Key
+    .bold.ml-4px Value
     ui-tooltip(
       text='Add'
       placement='left'
     )
-      faicon.icon.hover-hl.title-icon(
+      faicon.icon.hover-hl(
         icon='plus'
         @click='on_tileset_plus'
       )
@@ -20,15 +19,15 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.hover-hl.title-icon(
+        faicon.icon.hover-hl(
           icon='minus'
           @click='on_tileset_minus(i)'
           style='margin-left: 2px'
         )
   .hdivider
-  .sb-title
-    .inline-block.bold(style='width: 50%; text-align: center') TILE PROPERTIES
-    .inline-block.bold(style='width: 50%; text-align: center') TILE FLAGS
+  div
+    .tile-title TILE PROPERTIES
+    .tile-title TILE FLAGS
   #grid-tile
     template(v-for='(item,i) in tabs[itab].data.tile_props')
       ui-input(v-model='item.key')
@@ -37,7 +36,7 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.hover-hl.title-icon(
+        faicon.icon.hover-hl(
           icon='minus'
           @click='on_tile_minus(i)'
           style='margin-left: 2px'
@@ -45,16 +44,6 @@
 </template>
 
 <script>
-    // span.bold Tile Properties
-    // .expand
-    // ui-tooltip(
-    //   text='Add'
-    //   placement='left'
-    // )
-    //   faicon.icon.hover-hl.title-icon(
-    //     icon='plus'
-    //     @click='on_tile_plus'
-    //   )
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default
@@ -111,13 +100,6 @@ export default
   height: 100%
   background-color: $c-bg-pane
 
-.space
-  width: 8px
-
-#icon:hover
-  color: red
-  /* border: 1px solid red */
-
 #grid-tileset, #grid-tile
   display: grid
   grid-template-columns: 1fr 1fr 0fr
@@ -125,7 +107,10 @@ export default
   grid-gap: 4px
   align-items: center
 
-  .grid-head
-    margin-left: 4px
+.tile-title
+  width: 50%
+  display: inline-block
+  font-weight: bold
+  text-align: center
 </style>
 
