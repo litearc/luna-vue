@@ -1,25 +1,32 @@
 <template lang='pug'>
-#el_tileset_image.full
+#el_tileset_image.full.flex-col
   #toolbar.center
     ui-tooltip(text='Zoom Out')
-      faicon.toolbar-icon(icon='search-minus')
+      faicon.toolbar-icon(
+        icon='search-minus'
+        @mousedown='on_zoom_out'
+      )
     .space
     ui-tooltip(text='Zoom In')
-      faicon.toolbar-icon(icon='search-plus')
+      faicon.toolbar-icon(
+        icon='search-plus'
+        @mousedown='on_zoom_in'
+      )
     .space
     ui-tooltip(text='Grid')
       ui-icon.toolbar-icon(icon='grid' height='12px' text base)
     .space
     ui-tooltip(text='Save')
       faicon.toolbar-icon(icon='save')
-  #image.center(ref='root')
+  #image-container.expand.border-red
+    #image.center(ref='root')
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-let app, cursor
-let s = 2
+let app, spr, grid, cursor
+let s = 1 // scale factor for image
 
 export default
 {
@@ -49,8 +56,23 @@ export default
 
   methods: {
     on_click(e){
-      cursor.x = s*this.tile_width*Math.floor(e.offsetX/(s*this.tile_width))
-      cursor.y = s*this.tile_height*Math.floor(e.offsetY/(s*this.tile_height))
+      cursor.x = this.tile_width*Math.floor(e.offsetX/(s*this.tile_width))
+      cursor.y = this.tile_height*Math.floor(e.offsetY/(s*this.tile_height))
+    },
+    on_zoom_out(){
+      s /= 1.5
+      this.resize_image()
+    },
+    on_zoom_in(){
+      s *= 1.5
+      this.resize_image()
+    },
+    resize_image(){
+      // spr.scale = {x:s, y:s}
+      // grid.scale = {x:s, y:s}
+      // app.view.style.width = `${Math.round(s*this.im_width)}px`
+      // app.view.style.height = `${Math.round(s*this.im_height)}px`
+      // console.log(`image size: ${app.view.style.width}, ${app.view.style.height}`)
     }
   },
 
@@ -80,12 +102,12 @@ export default
     app = new PIXI.Application({width: s*im_width, height: s*im_height})
     this.$refs.root.appendChild(app.view)
     let tex = PIXI.Texture.fromBuffer(im_data, im_width, im_height)
-    let spr = new PIXI.Sprite(tex)
+    spr = new PIXI.Sprite(tex)
     spr.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
     app.view.addEventListener('mousedown', this.on_click)
 
     // tile grid
-    let grid = new PIXI.Graphics()
+    grid = new PIXI.Graphics()
     grid.position.set(0, 0)
     grid.lineStyle(1, 0xffffff)
     for (let ix = 1; ix < nx; ix++)
@@ -95,10 +117,10 @@ export default
     grid.alpha = .1
 
     cursor = new PIXI.Graphics()
-    cursor.lineStyle(5, 0x000000)
+    cursor.lineStyle(4, 0x000000)
     cursor.beginFill(0xffffff, 0)
     cursor.drawRect(0, 0, s*tile_width, s*tile_height)
-    cursor.lineStyle(3, 0x5c99d6)
+    cursor.lineStyle(2, 0x5c99d6)
     cursor.beginFill(0xffffff, 0)
     cursor.drawRect(0, 0, s*tile_width, s*tile_height)
     cursor.endFill()
@@ -115,9 +137,9 @@ export default
 #toolbar
   display: absolute
   height: 24px
+  flex-shrink: 0 // don't collapse empty space when image is big
 
   .space
     width: 8px
-
 </style>
 

@@ -5,10 +5,10 @@ div.full
     :class='ui_class'
     :style='ui_style'
   )
-    #pane1.pane.expand(ref='pane1')
+    #pane1.pane(ref='pane1')
       slot(name='slot1')
     .splitter
-    #pane2.pane.expand
+    #pane2.pane
       slot(name='slot2')
 </template>
 
@@ -211,4 +211,7 @@ export default
     & > .splitter
       cursor: ns-resize
       z-index: 1000
+
+#pane1, #pane2
+  overflow: hidden
 </style>
