@@ -18,8 +18,8 @@
     .space
     ui-tooltip(text='Save')
       faicon.toolbar-icon(icon='save')
-  #image-container.expand.overflow-auto.border-red.center
-    canvas.fixed.border-green(ref='canvas')
+  #image-container.expand.flex.overflow-auto.border-red
+    canvas#canvas.fixed.block.margin-auto.border-green(ref='canvas')
 </template>
 
 <script>
