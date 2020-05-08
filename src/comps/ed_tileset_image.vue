@@ -18,8 +18,8 @@
     .space
     ui-tooltip(text='Save')
       faicon.toolbar-icon(icon='save')
-  #image-container.expand.border-red
-    #image.center(ref='root')
+  #image-container.expand.overflow-auto.border-red.center
+    canvas.fixed.border-green(ref='canvas')
 </template>
 
 <script>
@@ -68,6 +68,9 @@ export default
       this.resize_image()
     },
     resize_image(){
+      this.$refs.canvas.style.width = `${Math.round(s*this.im_width)}px`
+      this.$refs.canvas.style.height = `${Math.round(s*this.im_height)}px`
+
       // spr.scale = {x:s, y:s}
       // grid.scale = {x:s, y:s}
       // app.view.style.width = `${Math.round(s*this.im_width)}px`
@@ -99,8 +102,15 @@ export default
     let nx = Math.round(im_width/tile_width)
     let ny = Math.round(im_height/tile_height)
 
-    app = new PIXI.Application({width: s*im_width, height: s*im_height})
-    this.$refs.root.appendChild(app.view)
+    this.$refs.canvas.style.width = `${Math.round(s*this.im_width)}px`
+    this.$refs.canvas.style.height = `${Math.round(s*this.im_height)}px`
+
+    app = new PIXI.Application({
+      width: s*im_width,
+      height: s*im_height,
+      view: this.$refs.canvas
+    })
+    // this.$refs.root.appendChild(app.view)
     let tex = PIXI.Texture.fromBuffer(im_data, im_width, im_height)
     spr = new PIXI.Sprite(tex)
     spr.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
