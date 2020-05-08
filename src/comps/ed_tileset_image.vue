@@ -19,13 +19,15 @@
     ui-tooltip(text='Save')
       faicon.toolbar-icon(icon='save')
   #image-container.expand.flex.overflow-auto.border-red
-    canvas#canvas.fixed.block.margin-auto.border-green(ref='canvas')
+    canvas#canvas.no-shrink.block.margin-auto.border-green(ref='canvas')
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-let app, spr, grid, cursor
+let app, spr, grid, cursor, nx, ny
+let mw, mh, tw, th // image width / height, tile width / height
+let icx, icy // cursor x and y positions (column, row)
 let s = 1 // scale factor for image
 
 export default
@@ -56,8 +58,10 @@ export default
 
   methods: {
     on_click(e){
-      cursor.x = this.tile_width*Math.floor(e.offsetX/(s*this.tile_width))
-      cursor.y = this.tile_height*Math.floor(e.offsetY/(s*this.tile_height))
+      icx = Math.floor(e.offsetX/(s*tw))
+      icy = Math.floor(e.offsetY/(s*th))
+      cursor.x = s*tw*icx
+      cursor.y = s*th*icy
     },
     on_zoom_out(){
       s /= 1.5
@@ -68,14 +72,38 @@ export default
       this.resize_image()
     },
     resize_image(){
-      this.$refs.canvas.style.width = `${Math.round(s*this.im_width)}px`
-      this.$refs.canvas.style.height = `${Math.round(s*this.im_height)}px`
+      nx = Math.round(s*this.im_width)
+      ny = Math.round(s*this.im_height)
+      this.$refs.canvas.width = nx
+      this.$refs.canvas.height = ny
+      app.view.style.width = `${nx}px`
+      app.view.style.height = `${ny}px`
+      spr.scale = {x:s, y:s}
 
-      // spr.scale = {x:s, y:s}
-      // grid.scale = {x:s, y:s}
-      // app.view.style.width = `${Math.round(s*this.im_width)}px`
-      // app.view.style.height = `${Math.round(s*this.im_height)}px`
-      // console.log(`image size: ${app.view.style.width}, ${app.view.style.height}`)
+      grid.clear()
+      this.draw_grid()
+      cursor.clear()
+      this.draw_cursor()
+    },
+    draw_grid(){
+      grid.position.set(0, 0)
+      grid.lineStyle(1, 0xffffff)
+      for (let ix = 1; ix < nx; ix++)
+        grid.moveTo(s*tw*ix, 0).lineTo(s*tw*ix, s*mh+1)
+      for (let iy = 1; iy < ny; iy++)
+        grid.moveTo(0, s*th*iy).lineTo(s*mw+1, s*th*iy)
+      grid.alpha = .1
+    },
+    draw_cursor(){
+      cursor.x = s*tw*icx
+      cursor.y = s*th*icy
+      cursor.lineStyle(4, 0x000000)
+      cursor.beginFill(0xffffff, 0)
+      cursor.drawRect(0, 0, s*tw, s*th)
+      cursor.lineStyle(2, 0x5c99d6)
+      cursor.beginFill(0xffffff, 0)
+      cursor.drawRect(0, 0, s*tw, s*th)
+      cursor.endFill()
     }
   },
 
@@ -85,55 +113,38 @@ export default
     this.tile_height = data.tile_height
     this.im_width = data.im_width
     this.im_height = data.im_height
+
+    mw = this.im_width
+    mh = this.im_height
+    tw = this.tile_width
+    th = this.tile_height
+    nx = Math.round(mw/tw)
+    ny = Math.round(mh/th)
+    icx = 0
+    icy = 0
   },
 
   mounted(){
     // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
     
-    // tileset image
-    let {
-      im_data,
-      im_width,
-      im_height,
-      tile_width,
-      tile_height
-    } = this.tabs[this.itab].data
-
-    let nx = Math.round(im_width/tile_width)
-    let ny = Math.round(im_height/tile_height)
-
-    this.$refs.canvas.style.width = `${Math.round(s*this.im_width)}px`
-    this.$refs.canvas.style.height = `${Math.round(s*this.im_height)}px`
+    let { im_data } = this.tabs[this.itab].data
+    this.$refs.canvas.style.width = `${Math.round(s*mw)}px`
+    this.$refs.canvas.style.height = `${Math.round(s*mh)}px`
 
     app = new PIXI.Application({
-      width: s*im_width,
-      height: s*im_height,
-      view: this.$refs.canvas
+      width: s*mw,
+      height: s*mh,
+      view: this.$refs.canvas,
     })
-    // this.$refs.root.appendChild(app.view)
-    let tex = PIXI.Texture.fromBuffer(im_data, im_width, im_height)
+    let tex = PIXI.Texture.fromBuffer(im_data, mw, mh)
     spr = new PIXI.Sprite(tex)
     spr.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
     app.view.addEventListener('mousedown', this.on_click)
 
-    // tile grid
     grid = new PIXI.Graphics()
-    grid.position.set(0, 0)
-    grid.lineStyle(1, 0xffffff)
-    for (let ix = 1; ix < nx; ix++)
-      grid.moveTo(s*tile_width*ix, 0).lineTo(s*tile_width*ix, s*im_height+1)
-    for (let iy = 1; iy < ny; iy++)
-      grid.moveTo(0, s*tile_height*iy).lineTo(s*im_width+1, s*tile_height*iy)
-    grid.alpha = .1
-
+    this.draw_grid()
     cursor = new PIXI.Graphics()
-    cursor.lineStyle(4, 0x000000)
-    cursor.beginFill(0xffffff, 0)
-    cursor.drawRect(0, 0, s*tile_width, s*tile_height)
-    cursor.lineStyle(2, 0x5c99d6)
-    cursor.beginFill(0xffffff, 0)
-    cursor.drawRect(0, 0, s*tile_width, s*tile_height)
-    cursor.endFill()
+    this.draw_cursor()
     
     app.stage.addChild(spr)
     app.stage.addChild(grid)
