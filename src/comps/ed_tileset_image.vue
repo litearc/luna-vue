@@ -18,8 +18,8 @@
     .space
     ui-tooltip(text='Save')
       faicon.toolbar-icon(icon='save')
-  #image-container.expand.flex.overflow-auto.border-red
-    canvas#canvas.no-shrink.block.margin-auto.border-green(ref='canvas')
+  #image-container.expand.flex.overflow-auto
+    canvas#canvas.no-shrink.block.margin-auto(ref='canvas')
 </template>
 
 <script>
@@ -64,11 +64,17 @@ export default
       cursor.y = s*th*icy
     },
     on_zoom_out(){
-      s /= 1.5
+      if (s <= .25) return // min zoom
+      s /= 2
+      if (s >= 1)
+        s = Math.round(s)
       this.resize_image()
     },
     on_zoom_in(){
-      s *= 1.5
+      if (s >= 4) return // max zoom
+      s *= 2
+      if (s >= 1)
+        s = Math.round(s)
       this.resize_image()
     },
     resize_image(){
