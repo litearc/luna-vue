@@ -6,7 +6,7 @@ input.ui-input(
   spellcheck='false'
   @input='$emit("input", $event.target.value)'
   @focus='$emit("focus", $event)'
-  @blur='$emit("blue", $event)'
+  @blur='$emit("blur", $event)'
   :class='el_class'
   :style='el_style'
 )

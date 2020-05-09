@@ -27,14 +27,24 @@
   div
     .tile-title(
       :class='{active: tile_sec == 0}'
-      @click='tile_sec = 0'
-    ) TILE PROPERTIES
+      @click='set_tile_sec(0)'
+      ) TILE PROPERTIES
     .tile-title(
       :class="{active: tile_sec == 1}"
-      @click='tile_sec = 1'
+      @click='set_tile_sec(1)'
     ) TILE FLAGS
   #grid-tile
-    template(v-for='(item,i) in tabs[itab].data.tile_props')
+    .bold.ml-4px Key
+    .bold.ml-4px Value
+    ui-tooltip(
+      text='Add'
+      placement='left'
+    )
+      faicon.icon.hover-hl(
+        icon='plus'
+        @click='on_tile_plus'
+      )
+    template(v-for='(item,i) in tabs[itab].data.tile_props[curr_tile]')
       ui-input(v-model='item.key')
       ui-input(v-model='item.val')
       ui-tooltip(
@@ -44,12 +54,13 @@
         faicon.icon.hover-hl(
           icon='minus'
           @click='on_tile_minus(i)'
-          style='margin-left: 2px'
         )
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import { bus } from './editor_tileset.vue'
+let tileset_props, tile_props
 
 export default
 {
@@ -65,6 +76,7 @@ export default
 
   props: {
     itab: {},
+    curr_tile: { default: 0 },
   },
 
   computed: {
@@ -79,21 +91,26 @@ export default
       'remove',
     ]),
     on_tileset_plus(){
-      this.push([this.tabs[this.itab].data.tileset_props, {key:'', val:''}])
+      this.push([tileset_props, {key:'', val:''}])
     },
     on_tileset_minus(i){
-      this.remove([this.tabs[this.itab].data.tileset_props, i])
+      this.remove([tileset_props, i])
     },
     on_tile_plus(){
-      this.push([this.tabs[this.itab].data.tile_props, {key:'', val:''}])
+      this.push([tile_props[this.curr_tile], {key:'', val:''}])
     },
     on_tile_minus(i){
-      this.remove([this.tabs[this.itab].data.tile_props, i])
+      this.remove([tile_props[this.curr_tile], i])
     },
+    set_tile_sec(i){
+      this.tile_sec = i
+      bus.$emit('tile_sec_changed', i)
+    }
   },
 
   created(){
-    console.log(this.tabs[this.itab].data)
+    tileset_props = this.tabs[this.itab].data.tileset_props
+    tile_props = this.tabs[this.itab].data.tile_props
   },
 }
 </script>

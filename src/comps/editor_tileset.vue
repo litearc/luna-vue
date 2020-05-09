@@ -8,10 +8,12 @@
     ed-tileset-image(
       slot='slot1'
       :itab='itab'
+      @tile_changed='change_tile'
     )
     ed-tileset-sidebar(
       slot='slot2'
       :itab='itab'
+      :curr_tile='curr_tile'
     )
 </template>
 
@@ -19,12 +21,18 @@
 import ed_tileset_image from './ed_tileset_image.vue'
 import ed_tileset_sidebar from './ed_tileset_sidebar.vue'
 
+// use bus to communicate between tileset image and sidebar
+import Vue from 'vue'
+export const bus = new Vue()
+
 export default
 {
   name: 'editor_tileset',
 
   data(){
-    return {}
+    return {
+      curr_tile: 0, // tile-index, row-major
+    }
   },
 
   props: {
@@ -34,6 +42,12 @@ export default
   components: {
     'ed-tileset-image': ed_tileset_image,
     'ed-tileset-sidebar': ed_tileset_sidebar,
+  },
+
+  methods: {
+    change_tile(i){
+      this.curr_tile = i
+    }
   },
 }
 </script>

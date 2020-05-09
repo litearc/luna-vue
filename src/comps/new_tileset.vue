@@ -77,6 +77,9 @@ export default
   methods:
   {
     editor_data(){
+      let ntiles = Math.round((this.im_width*this.im_height) /
+        (this.tile_width*this.tile_height))
+
       return {
         tile_width : this.tile_width,
         tile_height : this.tile_height,
@@ -84,7 +87,7 @@ export default
         im_height : this.im_height,
         im_data : this.im_data,
         tileset_props: [ {key:'name', val:'forest'} ],
-        tile_props: [],
+        tile_props: Array(ntiles).fill(0).map(x => [])
       }
     }
   },

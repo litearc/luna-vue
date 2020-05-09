@@ -25,9 +25,11 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-let app, spr, grid, cursor, nx, ny
+import { bus } from './editor_tileset.vue'
+let app, spr, grid, cursor, cursor2, nx, ny
 let mw, mh, tw, th // image width / height, tile width / height
 let icx, icy // cursor x and y positions (column, row)
+let iax, iay // auto-tile top-left position (column, row)
 let s = 1 // scale factor for image
 
 export default
@@ -41,8 +43,7 @@ export default
       im_height: null,
       tile_width: 1,
       tile_height: 1,
-      nxtiles: null,
-      nytiles: null,
+      tile_sec: 0,
     }
   },
 
@@ -58,10 +59,34 @@ export default
 
   methods: {
     on_click(e){
-      icx = Math.floor(e.offsetX/(s*tw))
-      icy = Math.floor(e.offsetY/(s*th))
-      cursor.x = s*tw*icx
-      cursor.y = s*th*icy
+      let ix ,iy
+      if (this.tile_sec == 0){
+        icx = Math.floor(e.offsetX/(s*tw))
+        icy = Math.floor(e.offsetY/(s*th))
+        ix = icx
+        iy = icy
+      } else {
+        iax = Math.floor(e.offsetX/(s*tw))-1
+        iay = Math.floor(e.offsetY/(s*th))-2
+        ix = iax
+        iy = iay
+      }
+      cursor.x = s*tw*ix
+      cursor.y = s*th*iy
+      if (this.tile_sec == 0)
+        this.$emit('tile_changed', icy*nx+icx)
+    },
+    on_mousemove(e){
+      let ix = (this.tile_sec == 0) ? Math.floor(e.offsetX/(s*tw)) : Math.floor(e.offsetX/(s*tw))-1
+      let iy = (this.tile_sec == 0) ? Math.floor(e.offsetY/(s*tw)) : Math.floor(e.offsetY/(s*th))-2
+      cursor2.x = s*tw*ix
+      cursor2.y = s*th*iy
+    },
+    on_mouseout(){
+      cursor2.alpha = 0
+    },
+    on_mouseenter(){
+      cursor2.alpha = .5
     },
     on_zoom_out(){
       if (s <= .25) return // min zoom
@@ -78,20 +103,19 @@ export default
       this.resize_image()
     },
     resize_image(){
-      nx = Math.round(s*this.im_width)
-      ny = Math.round(s*this.im_height)
-      this.$refs.canvas.width = nx
-      this.$refs.canvas.height = ny
-      app.view.style.width = `${nx}px`
-      app.view.style.height = `${ny}px`
+      let npx = Math.round(s*this.im_width)
+      let npy = Math.round(s*this.im_height)
+      this.$refs.canvas.width = npx
+      this.$refs.canvas.height = npy
+      app.view.style.width = `${npx}px`
+      app.view.style.height = `${npy}px`
       spr.scale = {x:s, y:s}
 
-      grid.clear()
       this.draw_grid()
-      cursor.clear()
       this.draw_cursor()
     },
     draw_grid(){
+      grid.clear()
       grid.position.set(0, 0)
       grid.lineStyle(1, 0xffffff)
       for (let ix = 1; ix < nx; ix++)
@@ -101,16 +125,41 @@ export default
       grid.alpha = .1
     },
     draw_cursor(){
-      cursor.x = s*tw*icx
-      cursor.y = s*th*icy
+      let ix, iy, w, h
+      if (this.tile_sec == 0){
+        ix = icx
+        iy = icy
+        w = 1
+        h = 1
+      } else {
+        ix = iax
+        iy = iay
+        w = 3
+        h = 4
+      }
+      cursor.x = s*tw*ix
+      cursor.y = s*th*iy
+      cursor.clear()
       cursor.lineStyle(4, 0x000000)
       cursor.beginFill(0xffffff, 0)
-      cursor.drawRect(0, 0, s*tw, s*th)
+      cursor.drawRect(0, 0, w*s*tw, h*s*th)
       cursor.lineStyle(2, 0x5c99d6)
       cursor.beginFill(0xffffff, 0)
-      cursor.drawRect(0, 0, s*tw, s*th)
+      cursor.drawRect(0, 0, w*s*tw, h*s*th)
       cursor.endFill()
-    }
+
+      cursor2.clear()
+      cursor2.lineStyle(4, 0x000000)
+      cursor2.beginFill(0xffffff, 0)
+      cursor2.drawRect(0, 0, w*s*tw, h*s*th)
+      cursor2.lineStyle(2, 0x5c99d6)
+      cursor2.beginFill(0xffffff, 0)
+      cursor2.drawRect(0, 0, w*s*tw, h*s*th)
+      cursor2.endFill()
+      cursor2.x = 0
+      cursor2.y = 0
+      cursor2.alpha = .5
+    },
   },
 
   created(){
@@ -128,6 +177,14 @@ export default
     ny = Math.round(mh/th)
     icx = 0
     icy = 0
+    iax = 0
+    iay = 0
+
+    bus.$on('tile_sec_changed', (i) => {
+      cursor.clear()
+      this.tile_sec = i
+      this.draw_cursor()
+    })
   },
 
   mounted(){
@@ -146,14 +203,19 @@ export default
     spr = new PIXI.Sprite(tex)
     spr.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
     app.view.addEventListener('mousedown', this.on_click)
+    app.view.addEventListener('mousemove', this.on_mousemove)
+    app.view.addEventListener('mouseout', this.on_mouseout)
+    app.view.addEventListener('mouseenter', this.on_mouseenter)
 
     grid = new PIXI.Graphics()
     this.draw_grid()
     cursor = new PIXI.Graphics()
+    cursor2 = new PIXI.Graphics()
     this.draw_cursor()
     
     app.stage.addChild(spr)
     app.stage.addChild(grid)
+    app.stage.addChild(cursor2)
     app.stage.addChild(cursor)
   },
 }
