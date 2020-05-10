@@ -87,7 +87,8 @@ export default
         im_height : this.im_height,
         im_data : this.im_data,
         tileset_props: [ {key:'name', val:'forest'} ],
-        tile_props: Array(ntiles).fill(0).map(x => [])
+        tile_props: Array(ntiles).fill(0).map(x => []),
+        tile_flags: [],
       }
     }
   },

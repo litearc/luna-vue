@@ -4,6 +4,7 @@ input.ui-input(
   v-bind='$attrs'
   :value='value'
   spellcheck='false'
+  @keydown.enter='blur()'
   @input='$emit("input", $event.target.value)'
   @focus='$emit("focus", $event)'
   @blur='$emit("blur", $event)'
@@ -20,6 +21,7 @@ export default
  
   props: {
     value: {},
+    small: { type: Boolean, default: false },
     mclass: { default: null },
     mstyle: { default: null },
   },
@@ -27,7 +29,10 @@ export default
   computed:
   {
     el_class(){
-      return (this.mclass === null) ? {} : this.mclass
+      let c = {
+        small: this.small
+      }
+      return (this.mclass === null) ? c : this.mclass
     },
 
     el_style(){
@@ -35,7 +40,7 @@ export default
     },
   }, // computed
 
-  method:
+  methods:
   {
     focus(){ this.$refs.el.focus() },
     blur(){ this.$refs.el.blur() },
@@ -58,4 +63,6 @@ export default
     -webkit-appearance: none
 
   min-width: 1px
+  &.small
+    height: 22px
 </style>

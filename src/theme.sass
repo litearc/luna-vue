@@ -250,15 +250,18 @@ button
 
 // icons. for some reason, can't select faicon directly, so all faicon have a
 // .icon class, which we use to select them
-.icon
+@mixin icon
   position: relative
   top: 1px // font-awesome icons are a little high by default
-
   &.selected
     color: $c-prim
 
+.icon
+  @include icon
+
 // icon text (text with an icon to the left)
 .it-icon
+  @include icon
   display: inline-block
   text-align: center
   width: $icon-width
@@ -272,6 +275,10 @@ button
 .py-8px
   padding-top: 8px
   padding-bottom: 8px
+.pl-4px
+  padding-left: 4px
+.pr-4px
+  padding-right: 4px
 
 // margins
 .mx-8px
@@ -279,6 +286,10 @@ button
   margin-right: 8px
 .my-8px
   margin-top: 8px
+  margin-bottom: 8px
+.mt-8px
+  margin-top: 8px
+.mb-8px
   margin-bottom: 8px
 .ml-4px
   margin-left: 4px
@@ -337,4 +348,10 @@ button
   overflow: auto
 .overflow-hidden
   overflow: hidden
+
+// line height
+.line-height-1_5
+  line-height: 1.5
+.line-height-1_75
+  line-height: 1.75
 

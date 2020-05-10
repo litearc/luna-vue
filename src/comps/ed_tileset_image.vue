@@ -181,7 +181,7 @@ export default
 
     bus.$on('tile_sec_changed', (i) => {
       this.tile_sec = i
-      console.log('tile sec changed to ' + i)
+      cur.alpha = 0
       this.draw_cursor()
     })
   },

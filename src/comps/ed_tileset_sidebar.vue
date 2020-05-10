@@ -33,7 +33,7 @@
       :class="{active: tile_sec == tile_mode.flags}"
       @click='set_tile_sec(tile_mode.flags)'
     ) TILE FLAGS
-  #grid-tile
+  #grid-tile(v-if='tile_sec == tile_mode.props')
     .bold.ml-4px Key
     .bold.ml-4px Value
     ui-tooltip(
@@ -55,13 +55,47 @@
           icon='minus'
           @click='on_tile_minus(i)'
         )
+  #flags(v-if='tile_sec == tile_mode.flags')
+    .flex-row.my-8px
+      .bold.ml-4px Flag
+      .expand
+      ui-tooltip(
+        text='Add'
+        placement='left'
+      )
+        faicon.icon.hover-hl(
+          icon='plus'
+          @click='on_tile_flag_plus'
+        )
+    div
+      .flex-row.align-bl(
+        v-for='(item,i) in tabs[itab].data.tile_flags'
+        @mousedown='select_tile_flag(i)'
+      )
+        faicon.it-icon(
+          icon='tag'
+          :class='{selected: iflag == i}'
+        )
+        ui-input#tile-flag.invisible.mr-4px(
+          small
+          v-model='item.name'
+          :class='{selected: iflag == i, "expand": true}'
+        )
+        ui-tooltip(
+          text='Remove'
+          placement='left'
+        )
+          faicon.icon.hover-hl(
+            icon='minus'
+            @click='on_tile_flag_minus(i)'
+          )
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
-let tileset_props, tile_props
+let tileset_props, tile_props, tile_flags
 
 export default
 {
@@ -73,6 +107,7 @@ export default
       fill: '#94989a',
       tile_sec: 0, // 0: 'properties', 1: 'flags'
       tile_mode,
+      iflag: null,
     }
   },
 
@@ -104,15 +139,24 @@ export default
     on_tile_minus(i){
       this.remove([tile_props[this.curr_tile], i])
     },
+    on_tile_flag_plus(){
+      this.push([tile_flags, {name:'new tag'}])
+    },
+    on_tile_flag_minus(i){
+    },
     set_tile_sec(i){
       this.tile_sec = i
       bus.$emit('tile_sec_changed', i)
-    }
+    },
+    select_tile_flag(i){
+      this.iflag = i
+    },
   },
 
   created(){
     tileset_props = this.tabs[this.itab].data.tileset_props
     tile_props = this.tabs[this.itab].data.tile_props
+    tile_flags = this.tabs[this.itab].data.tile_flags
   },
 }
 </script>
@@ -140,5 +184,8 @@ export default
   text-align: center
   &.active
     color: $c-text
+
+#tile-flag.selected:not(:focus)
+  color: $c-blue
 </style>
 
