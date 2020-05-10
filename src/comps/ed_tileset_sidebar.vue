@@ -26,12 +26,12 @@
   .hdivider
   div
     .tile-title(
-      :class='{active: tile_sec == 0}'
-      @click='set_tile_sec(0)'
+      :class='{active: tile_sec == tile_mode.props}'
+      @click='set_tile_sec(tile_mode.props)'
       ) TILE PROPERTIES
     .tile-title(
-      :class="{active: tile_sec == 1}"
-      @click='set_tile_sec(1)'
+      :class="{active: tile_sec == tile_mode.flags}"
+      @click='set_tile_sec(tile_mode.flags)'
     ) TILE FLAGS
   #grid-tile
     .bold.ml-4px Key
@@ -59,6 +59,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
 let tileset_props, tile_props
 
@@ -71,6 +72,7 @@ export default
       h: '15px',
       fill: '#94989a',
       tile_sec: 0, // 0: 'properties', 1: 'flags'
+      tile_mode,
     }
   },
 

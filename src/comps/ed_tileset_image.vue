@@ -25,12 +25,27 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
+import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
-let app, spr, grid, cursor, cursor2, nx, ny
+
+let app, im, grid, sel, cur
+let nx, ny         // number of tiles along x, y
 let mw, mh, tw, th // image width / height, tile width / height
-let icx, icy // cursor x and y positions (column, row)
-let iax, iay // auto-tile top-left position (column, row)
-let s = 1 // scale factor for image
+let isx, isy       // sel x and y positions (column, row)
+let icx, icy       // auto-tile top-left position (column, row)
+let s = 1          // scale factor for image
+
+// draws a box for pixi graphics `g` with width `w`, height `h`
+function draw_box(g, w, h){
+  g.clear()
+  g.lineStyle(4, 0x000000)
+  g.beginFill(0xffffff, 0)
+  g.drawRect(0, 0, w, h)
+  g.lineStyle(2, 0x5c99d6)
+  g.beginFill(0xffffff, 0)
+  g.drawRect(0, 0, w, h)
+  g.endFill()
+}
 
 export default
 {
@@ -59,35 +74,37 @@ export default
 
   methods: {
     on_click(e){
-      let ix ,iy
-      if (this.tile_sec == 0){
-        icx = Math.floor(e.offsetX/(s*tw))
-        icy = Math.floor(e.offsetY/(s*th))
-        ix = icx
-        iy = icy
-      } else {
-        iax = Math.floor(e.offsetX/(s*tw))-1
-        iay = Math.floor(e.offsetY/(s*th))-2
-        ix = iax
-        iy = iay
+      let ix = Math.floor(e.offsetX/(s*tw))
+        , iy = Math.floor(e.offsetY/(s*th))
+      if (this.tile_sec == tile_mode.props){
+        isx = ix, isy = iy
+        this.$emit('tile_changed', isy*nx+isx)
       }
-      cursor.x = s*tw*ix
-      cursor.y = s*th*iy
-      if (this.tile_sec == 0)
-        this.$emit('tile_changed', icy*nx+icx)
+      if (this.tile_sec == tile_mode.terra){
+        ix -= 1, iy -= 2
+        icx = ix, icy = iy
+      }
+      sel.x = ix*s*tw
+      sel.y = iy*s*th
     },
+
     on_mousemove(e){
-      let ix = (this.tile_sec == 0) ? Math.floor(e.offsetX/(s*tw)) : Math.floor(e.offsetX/(s*tw))-1
-      let iy = (this.tile_sec == 0) ? Math.floor(e.offsetY/(s*tw)) : Math.floor(e.offsetY/(s*th))-2
-      cursor2.x = s*tw*ix
-      cursor2.y = s*th*iy
+      let ix = Math.floor(e.offsetX/(s*tw))
+        , iy = Math.floor(e.offsetY/(s*tw)) 
+      if (this.tile_sec == tile_mode.terra)
+        ix -= 1, iy -= 2 
+      cur.x = s*tw*ix
+      cur.y = s*th*iy
     },
+
+    // make cursor disappear when mouse exits canvas
     on_mouseout(){
-      cursor2.alpha = 0
+      cur.alpha = 0
     },
     on_mouseenter(){
-      cursor2.alpha = .5
+      cur.alpha = .5
     },
+
     on_zoom_out(){
       if (s <= .25) return // min zoom
       s /= 2
@@ -102,18 +119,19 @@ export default
         s = Math.round(s)
       this.resize_image()
     },
+
     resize_image(){
-      let npx = Math.round(s*this.im_width)
-      let npy = Math.round(s*this.im_height)
+      let npx = Math.round(s*mw)
+      let npy = Math.round(s*mh)
       this.$refs.canvas.width = npx
       this.$refs.canvas.height = npy
       app.view.style.width = `${npx}px`
       app.view.style.height = `${npy}px`
-      spr.scale = {x:s, y:s}
-
+      im.scale = {x:s, y:s}
       this.draw_grid()
       this.draw_cursor()
     },
+
     draw_grid(){
       grid.clear()
       grid.position.set(0, 0)
@@ -124,41 +142,22 @@ export default
         grid.moveTo(0, s*th*iy).lineTo(s*mw+1, s*th*iy)
       grid.alpha = .1
     },
+
     draw_cursor(){
       let ix, iy, w, h
-      if (this.tile_sec == 0){
-        ix = icx
-        iy = icy
-        w = 1
-        h = 1
-      } else {
-        ix = iax
-        iy = iay
-        w = 3
-        h = 4
+      if (this.tile_sec == tile_mode.props){
+        ix = isx, iy = isy
+        w = 1, h = 1
       }
-      cursor.x = s*tw*ix
-      cursor.y = s*th*iy
-      cursor.clear()
-      cursor.lineStyle(4, 0x000000)
-      cursor.beginFill(0xffffff, 0)
-      cursor.drawRect(0, 0, w*s*tw, h*s*th)
-      cursor.lineStyle(2, 0x5c99d6)
-      cursor.beginFill(0xffffff, 0)
-      cursor.drawRect(0, 0, w*s*tw, h*s*th)
-      cursor.endFill()
-
-      cursor2.clear()
-      cursor2.lineStyle(4, 0x000000)
-      cursor2.beginFill(0xffffff, 0)
-      cursor2.drawRect(0, 0, w*s*tw, h*s*th)
-      cursor2.lineStyle(2, 0x5c99d6)
-      cursor2.beginFill(0xffffff, 0)
-      cursor2.drawRect(0, 0, w*s*tw, h*s*th)
-      cursor2.endFill()
-      cursor2.x = 0
-      cursor2.y = 0
-      cursor2.alpha = .5
+      if (this.tile_sec == tile_mode.terra){
+        ix = icx, iy = icy
+        w = 3, h = 4
+      }
+      sel.x = s*tw*ix
+      sel.y = s*th*iy
+      draw_box(sel, w*s*tw, h*s*th)
+      draw_box(cur, w*s*tw, h*s*th)
+      cur.alpha = .5
     },
   },
 
@@ -175,14 +174,14 @@ export default
     th = this.tile_height
     nx = Math.round(mw/tw)
     ny = Math.round(mh/th)
+    isx = 0
+    isy = 0
     icx = 0
     icy = 0
-    iax = 0
-    iay = 0
 
     bus.$on('tile_sec_changed', (i) => {
-      cursor.clear()
       this.tile_sec = i
+      console.log('tile sec changed to ' + i)
       this.draw_cursor()
     })
   },
@@ -200,8 +199,8 @@ export default
       view: this.$refs.canvas,
     })
     let tex = PIXI.Texture.fromBuffer(im_data, mw, mh)
-    spr = new PIXI.Sprite(tex)
-    spr.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
+    im = new PIXI.Sprite(tex)
+    im.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
     app.view.addEventListener('mousedown', this.on_click)
     app.view.addEventListener('mousemove', this.on_mousemove)
     app.view.addEventListener('mouseout', this.on_mouseout)
@@ -209,14 +208,14 @@ export default
 
     grid = new PIXI.Graphics()
     this.draw_grid()
-    cursor = new PIXI.Graphics()
-    cursor2 = new PIXI.Graphics()
+    sel = new PIXI.Graphics()
+    cur = new PIXI.Graphics()
     this.draw_cursor()
     
-    app.stage.addChild(spr)
+    app.stage.addChild(im)
     app.stage.addChild(grid)
-    app.stage.addChild(cursor2)
-    app.stage.addChild(cursor)
+    app.stage.addChild(cur)
+    app.stage.addChild(sel)
   },
 }
 </script>
