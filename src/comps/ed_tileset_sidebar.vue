@@ -70,11 +70,11 @@
     div
       .flex-row.align-bl(
         v-for='(item,i) in tabs[itab].data.tile_flags'
-        @mousedown='select_tile_flag(i)'
       )
         faicon.it-icon(
           icon='tag'
           :class='{selected: iflag == i}'
+          @mousedown='select_tile_flag(i)'
         )
         ui-input#tile-flag.invisible.mr-4px(
           small
@@ -114,6 +114,7 @@ export default
   props: {
     itab: {},
     curr_tile: { default: 0 },
+    ntiles: {},
   },
 
   computed: {
@@ -140,9 +141,17 @@ export default
       this.remove([tile_props[this.curr_tile], i])
     },
     on_tile_flag_plus(){
-      this.push([tile_flags, {name:'new tag'}])
+      this.push([tile_flags, {name:'new tag', tiles:Array(this.ntiles).fill(false)}])
+      if (tile_flags.length == 1)
+        this.iflag = 0
     },
     on_tile_flag_minus(i){
+      this.remove([tile_flags, i])
+      if (tile_flags.length == 0)
+        this.iflag = null
+      if (this.iflag > tile_flags.length)
+        this.iflag = tile_flags.length-1
+      bus.$emit('tile_flag_changed', this.iflag)
     },
     set_tile_sec(i){
       this.tile_sec = i
@@ -150,6 +159,7 @@ export default
     },
     select_tile_flag(i){
       this.iflag = i
+      bus.$emit('tile_flag_changed', i)
     },
   },
 

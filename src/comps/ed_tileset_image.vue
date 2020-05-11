@@ -28,7 +28,8 @@ import * as PIXI from 'pixi.js'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
-let app, im, grid, sel, cur
+let app, im, grid, sel, cur, flags
+let flag = []      // array of flags
 let nx, ny         // number of tiles along x, y
 let mw, mh, tw, th // image width / height, tile width / height
 let isx, isy       // sel x and y positions (column, row)
@@ -144,6 +145,10 @@ export default
     },
 
     draw_cursor(){
+      sel.clear()
+      cur.clear()
+      if (this.tile_sec == tile_mode.flags)
+        return
       let ix, iy, w, h
       if (this.tile_sec == tile_mode.props){
         ix = isx, iy = isy
@@ -158,6 +163,9 @@ export default
       draw_box(sel, w*s*tw, h*s*th)
       draw_box(cur, w*s*tw, h*s*th)
       cur.alpha = .5
+    },
+
+    update_flags(){
     },
   },
 
@@ -179,10 +187,15 @@ export default
     icx = 0
     icy = 0
 
+    this.$emit('set_ntiles', nx*ny)
+
     bus.$on('tile_sec_changed', (i) => {
       this.tile_sec = i
       cur.alpha = 0
       this.draw_cursor()
+    })
+
+    bus.$on('tile_flag_changed', (i) => {
     })
   },
 
@@ -197,6 +210,7 @@ export default
       width: s*mw,
       height: s*mh,
       view: this.$refs.canvas,
+      antialias: true,
     })
     let tex = PIXI.Texture.fromBuffer(im_data, mw, mh)
     im = new PIXI.Sprite(tex)
@@ -211,11 +225,25 @@ export default
     sel = new PIXI.Graphics()
     cur = new PIXI.Graphics()
     this.draw_cursor()
+
+    flags = new PIXI.Graphics()
+    for (let ix = 0; ix < nx; ix++){
+      for (let iy = 0; iy < ny; iy++){
+        let i = iy*nx+ix
+        flag[i] = new PIXI.Graphics()
+        flag[i].lineStyle(1, 0x000000)
+        flag[i].beginFill(0x5c99d6, 1)
+        flag[i].drawCircle((ix+.5)*tw, (iy+.5)*th, 4)
+        flag[i].alpha = .5
+        flags.addChild(flag[i])
+      }
+    }
     
     app.stage.addChild(im)
     app.stage.addChild(grid)
     app.stage.addChild(cur)
     app.stage.addChild(sel)
+    app.stage.addChild(flags)
   },
 }
 </script>

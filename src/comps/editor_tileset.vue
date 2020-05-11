@@ -9,11 +9,13 @@
       slot='slot1'
       :itab='itab'
       @tile_changed='change_tile'
+      @set_ntiles='set_ntiles'
     )
     ed-tileset-sidebar(
       slot='slot2'
       :itab='itab'
       :curr_tile='curr_tile'
+      :ntiles='ntiles'
     )
 </template>
 
@@ -32,6 +34,7 @@ export default
   data(){
     return {
       curr_tile: 0, // tile-index, row-major
+      ntiles: null, // set in ed-tileset-image
     }
   },
 
@@ -47,7 +50,10 @@ export default
   methods: {
     change_tile(i){
       this.curr_tile = i
-    }
+    },
+    set_ntiles(n){
+      this.ntiles = n
+    },
   },
 }
 </script>
