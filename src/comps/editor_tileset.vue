@@ -8,18 +8,22 @@
     ed-tileset-image(
       slot='slot1'
       :itab='itab'
+      :iflag='iflag'
       @tile_changed='change_tile'
       @set_ntiles='set_ntiles'
     )
     ed-tileset-sidebar(
       slot='slot2'
       :itab='itab'
+      :iflag='iflag'
       :curr_tile='curr_tile'
       :ntiles='ntiles'
+      @set_iflag='set_iflag'
     )
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import ed_tileset_image from './ed_tileset_image.vue'
 import ed_tileset_sidebar from './ed_tileset_sidebar.vue'
 
@@ -35,7 +39,14 @@ export default
     return {
       curr_tile: 0, // tile-index, row-major
       ntiles: null, // set in ed-tileset-image
+      iflag: null,
     }
+  },
+
+  computed: {
+    ...mapState([
+      'tabs',
+    ])
   },
 
   props: {
@@ -51,9 +62,16 @@ export default
     change_tile(i){
       this.curr_tile = i
     },
+    set_iflag(i){
+      this.iflag = i
+    },
     set_ntiles(n){
       this.ntiles = n
     },
+  },
+
+  created(){
+    this.iflag = (this.tabs[this.itab].data.tile_flags.length == 0) ? null : 0
   },
 }
 </script>

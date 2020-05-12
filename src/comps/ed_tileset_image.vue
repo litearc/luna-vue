@@ -28,13 +28,14 @@ import * as PIXI from 'pixi.js'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
-let app, im, grid, sel, cur, flags
+let app, im, grid, sel, cur, flags, cur_flag
 let flag = []      // array of flags
 let nx, ny         // number of tiles along x, y
 let mw, mh, tw, th // image width / height, tile width / height
 let isx, isy       // sel x and y positions (column, row)
 let icx, icy       // auto-tile top-left position (column, row)
 let s = 1          // scale factor for image
+let tile_flags
 
 // draws a box for pixi graphics `g` with width `w`, height `h`
 function draw_box(g, w, h){
@@ -70,13 +71,28 @@ export default
   },
 
   props: {
+    iflag: {},
     itab: {},
+  },
+
+  watch: {
+    iflag(v){
+      let ntiles = nx*ny
+      for (let i = 0; i < ntiles; i++){
+        flag[i].visible = (v === null) ? false : tile_flags[v][i]
+      }
+    }
   },
 
   methods: {
     on_click(e){
       let ix = Math.floor(e.offsetX/(s*tw))
         , iy = Math.floor(e.offsetY/(s*th))
+      if (this.tile_sec == tile_mode.flags && this.iflag != null){
+        let i = iy*nx+ix
+        tile_flags[this.iflag][i] = !tile_flags[this.iflag][i]
+        flag[i].visible = tile_flags[this.iflag][i]
+      }
       if (this.tile_sec == tile_mode.props){
         isx = ix, isy = iy
         this.$emit('tile_changed', isy*nx+isx)
@@ -92,6 +108,16 @@ export default
     on_mousemove(e){
       let ix = Math.floor(e.offsetX/(s*tw))
         , iy = Math.floor(e.offsetY/(s*tw)) 
+      if (this.tile_sec == tile_mode.flags){
+        cur_flag.clear()
+        cur_flag.lineStyle(1, 0x000000)
+        cur_flag.beginFill(0x5c99d6, 1)
+        cur_flag.drawCircle(s*.5*tw, s*.5*th, s*4)
+        cur_flag.alpha = .5
+        cur_flag.x = s*ix*tw
+        cur_flag.y = s*iy*th
+        return
+      }
       if (this.tile_sec == tile_mode.terra)
         ix -= 1, iy -= 2 
       cur.x = s*tw*ix
@@ -100,10 +126,16 @@ export default
 
     // make cursor disappear when mouse exits canvas
     on_mouseout(){
-      cur.alpha = 0
+      if (this.tile_sec == tile_mode.flags)
+        cur_flag.visible = false
+      if (this.tile_sec == tile_mode.props || this.tile_sec == tile_mode.terra)
+        cur.visible = false
     },
     on_mouseenter(){
-      cur.alpha = .5
+      if (this.tile_sec == tile_mode.flags)
+        cur_flag.visible = true
+      if (this.tile_sec == tile_mode.props || this.tile_sec == tile_mode.terra)
+        cur.visible = true
     },
 
     on_zoom_out(){
@@ -131,6 +163,7 @@ export default
       im.scale = {x:s, y:s}
       this.draw_grid()
       this.draw_cursor()
+      this.draw_flags()
     },
 
     draw_grid(){
@@ -165,6 +198,22 @@ export default
       cur.alpha = .5
     },
 
+    draw_flags(){
+      for (let ix = 0; ix < nx; ix++){
+        for (let iy = 0; iy < ny; iy++){
+          let i = iy*nx+ix
+          flag[i].clear()
+          flag[i].lineStyle(1, 0x000000)
+          flag[i].beginFill(0x5c99d6, 1)
+          flag[i].drawCircle(s*(ix+.5)*tw, s*(iy+.5)*th, s*4)
+          if (this.iflag === null ||
+              tile_flags[this.iflag][i] === false)
+            flag[i].visible = false
+          flags.addChild(flag[i])
+        }
+      }
+    },
+
     update_flags(){
     },
   },
@@ -187,15 +236,12 @@ export default
     icx = 0
     icy = 0
 
+    tile_flags = this.tabs[this.itab].data.tile_flags
     this.$emit('set_ntiles', nx*ny)
-
     bus.$on('tile_sec_changed', (i) => {
       this.tile_sec = i
       cur.alpha = 0
       this.draw_cursor()
-    })
-
-    bus.$on('tile_flag_changed', (i) => {
     })
   },
 
@@ -225,25 +271,24 @@ export default
     sel = new PIXI.Graphics()
     cur = new PIXI.Graphics()
     this.draw_cursor()
-
     flags = new PIXI.Graphics()
-    for (let ix = 0; ix < nx; ix++){
-      for (let iy = 0; iy < ny; iy++){
-        let i = iy*nx+ix
-        flag[i] = new PIXI.Graphics()
-        flag[i].lineStyle(1, 0x000000)
-        flag[i].beginFill(0x5c99d6, 1)
-        flag[i].drawCircle((ix+.5)*tw, (iy+.5)*th, 4)
-        flag[i].alpha = .5
-        flags.addChild(flag[i])
-      }
-    }
-    
+    cur_flag = new PIXI.Graphics()
+    for (let i = 0; i < nx*ny; i++)
+      flag[i] = new PIXI.Graphics()
+    this.draw_flags()
+
+    cur_flag.lineStyle(1, 0x000000)
+    cur_flag.beginFill(0x5c99d6, 1)
+    cur_flag.drawCircle(s*.5*tw, s*.5*th, s*4)
+    cur_flag.alpha = .5
+    cur_flag.visible = false
+
     app.stage.addChild(im)
     app.stage.addChild(grid)
     app.stage.addChild(cur)
     app.stage.addChild(sel)
     app.stage.addChild(flags)
+    app.stage.addChild(cur_flag)
   },
 }
 </script>

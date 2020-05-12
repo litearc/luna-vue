@@ -4,6 +4,7 @@ inheritAttrs
 data
 props
 computed
+watch
 components
 methods
 created

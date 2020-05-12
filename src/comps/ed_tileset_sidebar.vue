@@ -107,11 +107,11 @@ export default
       fill: '#94989a',
       tile_sec: 0, // 0: 'properties', 1: 'flags'
       tile_mode,
-      iflag: null,
     }
   },
 
   props: {
+    iflag: {},
     itab: {},
     curr_tile: { default: 0 },
     ntiles: {},
@@ -143,14 +143,14 @@ export default
     on_tile_flag_plus(){
       this.push([tile_flags, {name:'new tag', tiles:Array(this.ntiles).fill(false)}])
       if (tile_flags.length == 1)
-        this.iflag = 0
+        this.$emit('set_iflag', 0)
     },
     on_tile_flag_minus(i){
       this.remove([tile_flags, i])
       if (tile_flags.length == 0)
-        this.iflag = null
-      if (this.iflag > tile_flags.length)
-        this.iflag = tile_flags.length-1
+        this.$emit('set_iflag', null)
+      if (this.iflag >= tile_flags.length)
+        this.$emit('set_iflag', tile_flags.length-1)
       bus.$emit('tile_flag_changed', this.iflag)
     },
     set_tile_sec(i){
@@ -158,8 +158,7 @@ export default
       bus.$emit('tile_sec_changed', i)
     },
     select_tile_flag(i){
-      this.iflag = i
-      bus.$emit('tile_flag_changed', i)
+      this.$emit('set_iflag', i)
     },
   },
 
