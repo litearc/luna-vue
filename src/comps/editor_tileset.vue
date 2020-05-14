@@ -7,18 +7,21 @@
   )
     ed-tileset-image(
       slot='slot1'
-      :itab='itab'
       :iflag='iflag'
-      @tile_changed='change_tile'
+      :itab='itab'
+      :tile_sec='tile_sec'
+      @set_curr_tile='set_curr_tile'
       @set_ntiles='set_ntiles'
     )
     ed-tileset-sidebar(
       slot='slot2'
-      :itab='itab'
-      :iflag='iflag'
       :curr_tile='curr_tile'
+      :iflag='iflag'
+      :itab='itab'
       :ntiles='ntiles'
+      :tile_sec='tile_sec'
       @set_iflag='set_iflag'
+      @set_tile_sec='set_tile_sec'
     )
 </template>
 
@@ -30,6 +33,7 @@ import ed_tileset_sidebar from './ed_tileset_sidebar.vue'
 // use bus to communicate between tileset image and sidebar
 import Vue from 'vue'
 export const bus = new Vue()
+import { tile_mode } from '../const.js'
 
 export default
 {
@@ -38,8 +42,9 @@ export default
   data(){
     return {
       curr_tile: 0, // tile-index, row-major
-      ntiles: null, // set in ed-tileset-image
       iflag: null,
+      ntiles: null, // set in ed-tileset-image
+      tile_sec: tile_mode.props,
     }
   },
 
@@ -59,7 +64,7 @@ export default
   },
 
   methods: {
-    change_tile(i){
+    set_curr_tile(i){
       this.curr_tile = i
     },
     set_iflag(i){
@@ -68,6 +73,9 @@ export default
     set_ntiles(n){
       this.ntiles = n
     },
+    set_tile_sec(i){
+      this.tile_sec = i
+    }
   },
 
   created(){

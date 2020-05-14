@@ -41,6 +41,11 @@ export default new Vuex.Store({
       Vue.delete(obj, key)
     },
 
+    // flips a boolean item from an array or object.
+    flip(s, [obj, key]){
+      Vue.set(obj, key, !obj[key])
+    },
+
   },
 
   actions:

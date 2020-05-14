@@ -42,7 +42,7 @@
     )
       faicon.icon.hover-hl(
         icon='plus'
-        @click='on_tile_plus'
+        @click='on_tile_prop_plus'
       )
     template(v-for='(item,i) in tabs[itab].data.tile_props[curr_tile]')
       ui-input(v-model='item.key')
@@ -53,7 +53,7 @@
       )
         faicon.icon.hover-hl(
           icon='minus'
-          @click='on_tile_minus(i)'
+          @click='on_tile_prop_minus(i)'
         )
   #flags(v-if='tile_sec == tile_mode.flags')
     .flex-row.my-8px
@@ -74,7 +74,7 @@
         faicon.it-icon(
           icon='tag'
           :class='{selected: iflag == i}'
-          @mousedown='select_tile_flag(i)'
+          @mousedown='set_iflag(i)'
         )
         ui-input#tile-flag.invisible.mr-4px(
           small
@@ -103,18 +103,16 @@ export default
 
   data(){
     return {
-      h: '15px',
-      fill: '#94989a',
-      tile_sec: 0, // 0: 'properties', 1: 'flags'
       tile_mode,
     }
   },
 
   props: {
+    curr_tile: { default: 0 },
     iflag: {},
     itab: {},
-    curr_tile: { default: 0 },
     ntiles: {},
+    tile_sec: {},
   },
 
   computed: {
@@ -134,10 +132,10 @@ export default
     on_tileset_minus(i){
       this.remove([tileset_props, i])
     },
-    on_tile_plus(){
+    on_tile_prop_plus(){
       this.push([tile_props[this.curr_tile], {key:'', val:''}])
     },
-    on_tile_minus(i){
+    on_tile_prop_minus(i){
       this.remove([tile_props[this.curr_tile], i])
     },
     on_tile_flag_plus(){
@@ -149,15 +147,13 @@ export default
       this.remove([tile_flags, i])
       if (tile_flags.length == 0)
         this.$emit('set_iflag', null)
-      if (this.iflag >= tile_flags.length)
+      else if (this.iflag >= tile_flags.length)
         this.$emit('set_iflag', tile_flags.length-1)
-      bus.$emit('tile_flag_changed', this.iflag)
     },
     set_tile_sec(i){
-      this.tile_sec = i
-      bus.$emit('tile_sec_changed', i)
+      this.$emit('set_tile_sec', i)
     },
-    select_tile_flag(i){
+    set_iflag(i){
       this.$emit('set_iflag', i)
     },
   },

@@ -28,8 +28,9 @@ import * as PIXI from 'pixi.js'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
-let app, im, grid, sel, cur, flags, cur_flag
+let app, im, grid, sel, cur, flags, cur_flag // pixi graphics
 let flag = []      // array of flags
+let ix, iy         // current tile mouse is over
 let nx, ny         // number of tiles along x, y
 let mw, mh, tw, th // image width / height, tile width / height
 let isx, isy       // sel x and y positions (column, row)
@@ -60,7 +61,6 @@ export default
       im_height: null,
       tile_width: 1,
       tile_height: 1,
-      tile_sec: 0,
     }
   },
 
@@ -73,55 +73,63 @@ export default
   props: {
     iflag: {},
     itab: {},
+    tile_sec: {},
   },
 
   watch: {
     iflag(v){
+      // update flags for all tiles
       let ntiles = nx*ny
-      for (let i = 0; i < ntiles; i++){
+      for (let i = 0; i < ntiles; i++)
         flag[i].visible = (v === null) ? false : tile_flags[v][i]
-      }
+    },
+    tile_sec(i){
+      this.upd_all()
     }
   },
 
   methods: {
+    ...mapMutations([
+      'flip',
+    ]),
+
     on_click(e){
-      let ix = Math.floor(e.offsetX/(s*tw))
-        , iy = Math.floor(e.offsetY/(s*th))
-      if (this.tile_sec == tile_mode.flags && this.iflag != null){
-        let i = iy*nx+ix
-        tile_flags[this.iflag][i] = !tile_flags[this.iflag][i]
-        flag[i].visible = tile_flags[this.iflag][i]
+      switch (this.tile_sec){
+        case tile_mode.flags:
+          if (this.iflag === null) return
+          let i = iy*nx+ix
+          this.flip([tile_flags[this.iflag], i])
+          flag[i].visible = tile_flags[this.iflag][i]
+          return
+        case tile_mode.props:
+          isx = ix, isy = iy
+          sel.x = isx*s*tw, sel.y = isy*s*th
+          this.$emit('set_curr_tile', isy*nx+isx)
+          break
+        case tile_mode.terra:
+          icx = ix-1, icy = iy-2
+          sel.x = icx*s*tw, sel.y = icy*s*th
+          break
       }
-      if (this.tile_sec == tile_mode.props){
-        isx = ix, isy = iy
-        this.$emit('tile_changed', isy*nx+isx)
-      }
-      if (this.tile_sec == tile_mode.terra){
-        ix -= 1, iy -= 2
-        icx = ix, icy = iy
-      }
-      sel.x = ix*s*tw
-      sel.y = iy*s*th
     },
 
     on_mousemove(e){
-      let ix = Math.floor(e.offsetX/(s*tw))
-        , iy = Math.floor(e.offsetY/(s*tw)) 
-      if (this.tile_sec == tile_mode.flags){
-        cur_flag.clear()
-        cur_flag.lineStyle(1, 0x000000)
-        cur_flag.beginFill(0x5c99d6, 1)
-        cur_flag.drawCircle(s*.5*tw, s*.5*th, s*4)
-        cur_flag.alpha = .5
-        cur_flag.x = s*ix*tw
-        cur_flag.y = s*iy*th
-        return
+      ix = Math.floor(e.offsetX/(s*tw))
+      iy = Math.floor(e.offsetY/(s*tw)) 
+      switch (this.tile_sec){
+        case tile_mode.flags:
+          cur_flag.x = s*ix*tw
+          cur_flag.y = s*iy*th
+          break
+        case tile_mode.props:
+          cur.x = s*tw*ix
+          cur.y = s*th*iy
+          break
+        case tile_mode.terra:
+          cur.x = s*tw*(ix-1)
+          cur.y = s*th*(iy-2)
+          break
       }
-      if (this.tile_sec == tile_mode.terra)
-        ix -= 1, iy -= 2 
-      cur.x = s*tw*ix
-      cur.y = s*th*iy
     },
 
     // make cursor disappear when mouse exits canvas
@@ -132,7 +140,7 @@ export default
         cur.visible = false
     },
     on_mouseenter(){
-      if (this.tile_sec == tile_mode.flags)
+      if (this.tile_sec == tile_mode.flags && this.iflag !== null)
         cur_flag.visible = true
       if (this.tile_sec == tile_mode.props || this.tile_sec == tile_mode.terra)
         cur.visible = true
@@ -161,44 +169,53 @@ export default
       app.view.style.width = `${npx}px`
       app.view.style.height = `${npy}px`
       im.scale = {x:s, y:s}
-      this.draw_grid()
-      this.draw_cursor()
-      this.draw_flags()
+      this.upd_all()
     },
 
-    draw_grid(){
+    upd_grid(){
       grid.clear()
       grid.position.set(0, 0)
       grid.lineStyle(1, 0xffffff)
-      for (let ix = 1; ix < nx; ix++)
-        grid.moveTo(s*tw*ix, 0).lineTo(s*tw*ix, s*mh+1)
-      for (let iy = 1; iy < ny; iy++)
-        grid.moveTo(0, s*th*iy).lineTo(s*mw+1, s*th*iy)
+      for (let i = 1; i < nx; i++)
+        grid.moveTo(s*tw*i, 0).lineTo(s*tw*i, s*mh+1)
+      for (let i = 1; i < ny; i++)
+        grid.moveTo(0, s*th*i).lineTo(s*mw+1, s*th*i)
       grid.alpha = .1
     },
 
-    draw_cursor(){
+    upd_all(){
+      this.upd_grid()
+      this.upd_boxes()
+      this.upd_flags()
+    },
+
+    upd_boxes(){
       sel.clear()
       cur.clear()
       if (this.tile_sec == tile_mode.flags)
         return
-      let ix, iy, w, h
+      let w, h
       if (this.tile_sec == tile_mode.props){
-        ix = isx, iy = isy
+        sel.x = s*tw*isx, sel.y = s*th*isy
         w = 1, h = 1
       }
       if (this.tile_sec == tile_mode.terra){
-        ix = icx, iy = icy
+        sel.x = s*tw*icx, sel.y = s*th*icy
         w = 3, h = 4
       }
-      sel.x = s*tw*ix
-      sel.y = s*th*iy
       draw_box(sel, w*s*tw, h*s*th)
       draw_box(cur, w*s*tw, h*s*th)
       cur.alpha = .5
     },
 
-    draw_flags(){
+    upd_flags(){
+      flags.visible = (this.tile_sec === tile_mode.flags)
+      cur_flag.clear()
+      cur_flag.lineStyle(1, 0x000000)
+      cur_flag.beginFill(0x5c99d6, 1)
+      cur_flag.drawCircle(s*.5*tw, s*.5*th, s*4)
+      cur_flag.alpha = .5
+      cur_flag.visible = false
       for (let ix = 0; ix < nx; ix++){
         for (let iy = 0; iy < ny; iy++){
           let i = iy*nx+ix
@@ -212,9 +229,6 @@ export default
           flags.addChild(flag[i])
         }
       }
-    },
-
-    update_flags(){
     },
   },
 
@@ -238,11 +252,6 @@ export default
 
     tile_flags = this.tabs[this.itab].data.tile_flags
     this.$emit('set_ntiles', nx*ny)
-    bus.$on('tile_sec_changed', (i) => {
-      this.tile_sec = i
-      cur.alpha = 0
-      this.draw_cursor()
-    })
   },
 
   mounted(){
@@ -267,21 +276,15 @@ export default
     app.view.addEventListener('mouseenter', this.on_mouseenter)
 
     grid = new PIXI.Graphics()
-    this.draw_grid()
+    this.upd_grid()
     sel = new PIXI.Graphics()
     cur = new PIXI.Graphics()
-    this.draw_cursor()
+    this.upd_boxes()
     flags = new PIXI.Graphics()
     cur_flag = new PIXI.Graphics()
     for (let i = 0; i < nx*ny; i++)
       flag[i] = new PIXI.Graphics()
-    this.draw_flags()
-
-    cur_flag.lineStyle(1, 0x000000)
-    cur_flag.beginFill(0x5c99d6, 1)
-    cur_flag.drawCircle(s*.5*tw, s*.5*th, s*4)
-    cur_flag.alpha = .5
-    cur_flag.visible = false
+    this.upd_flags()
 
     app.stage.addChild(im)
     app.stage.addChild(grid)
