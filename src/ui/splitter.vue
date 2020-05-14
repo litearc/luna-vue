@@ -14,6 +14,7 @@ div.full
 
 <script>
 let on = window.addEventListener
+let off = window.removeEventListener
 let dist = 10 // pixels, activate splitter
 
 function to_px(s, w){
@@ -105,6 +106,54 @@ export default
       }
       return [min, max]
     },
+
+    on_mousemove(ev){
+      let el = this.$refs.splitter
+      let tot_size = (this.dir === 'horizontal') ?
+        el.offsetWidth : el.offsetHeight
+      let pane1 = this.$refs.pane1
+      let pos = el.getBoundingClientRect()
+      let mouse_pos = (this.dir === 'horizontal') ? ev.x-pos.left : ev.y-pos.top
+      let splitter_pos = (this.dir === 'horizontal') ?
+        pane1.offsetWidth : pane1.offsetHeight
+      this.near = (Math.abs(mouse_pos-splitter_pos) < 10)
+
+      let r = this.ok_range()
+      if (r === null || !this.resizing) return
+
+      if (mouse_pos < r[0]) mouse_pos = r[0]
+      if (mouse_pos > r[1]) mouse_pos = r[1]
+
+      switch (this.mode){
+        case 'A':
+          this.pane1_sz = `${mouse_pos}px`
+          this.pane2_sz = `1fr`
+          break
+        case 'B':
+          this.pane1_sz = `1fr`
+          this.pane2_sz = `${tot_size-mouse_pos}px`
+          break
+        case 'C':
+          this.pane1_sz = `${mouse_pos/tot_size}fr`
+          this.pane2_sz = `${1-mouse_pos/tot_size}fr`
+          break
+      }
+    },
+
+    on_mousedown(){
+      this.resizing = true
+      document.documentElement.style.cursor = ''
+      document.body.classList.remove('no-pointer-events')
+      document.body.classList.remove('non-selectable')
+    },
+
+    on_mouseup(){
+      this.resizing = false
+      if (!this.near) return
+      document.documentElement.style.cursor = 'grabbing'
+      document.body.classList.add('no-pointer-events')
+      document.body.classList.add('non-selectable')
+    },
   }, // methods
 
   mounted(){
@@ -136,56 +185,16 @@ export default
       }
     }
 
-    on('mousemove', ev => {
-      let el = this.$refs.splitter
-      let tot_size = (this.dir === 'horizontal') ?
-        el.offsetWidth : el.offsetHeight
-      let pane1 = this.$refs.pane1
-      let pos = el.getBoundingClientRect()
-      let mouse_pos = (this.dir === 'horizontal') ? ev.x-pos.left : ev.y-pos.top
-      let splitter_pos = (this.dir === 'horizontal') ?
-        pane1.offsetWidth : pane1.offsetHeight
-      this.near = (Math.abs(mouse_pos-splitter_pos) < 10)
-
-      let r = this.ok_range()
-      if (r === null || !this.resizing) return
-
-      if (mouse_pos < r[0]) mouse_pos = r[0]
-      if (mouse_pos > r[1]) mouse_pos = r[1]
-
-      switch (this.mode){
-        case 'A':
-          this.pane1_sz = `${mouse_pos}px`
-          this.pane2_sz = `1fr`
-          break
-        case 'B':
-          this.pane1_sz = `1fr`
-          this.pane2_sz = `${tot_size-mouse_pos}px`
-          break
-        case 'C':
-          this.pane1_sz = `${mouse_pos/tot_size}fr`
-          this.pane2_sz = `${1-mouse_pos/tot_size}fr`
-          break
-      }
-    })
-
-    on('mouseup', () => {
-      this.resizing = false
-      document.documentElement.style.cursor = ''
-      document.body.classList.remove('no-pointer-events')
-      document.body.classList.remove('non-selectable')
-    })
-
-    on('mousedown', ev => {
-      if (!this.near) return
-      this.resizing = true
-      document.documentElement.style.cursor = 'grabbing'
-      document.body.classList.add('no-pointer-events')
-      document.body.classList.add('non-selectable')
-    })
-
-    // todo: remove these listeners on destruction
+    on('mousemove', this.on_mousemove)
+    on('mouseup', this.on_mouseup)
+    on('mousedown', this.on_mousedown)
   },
+
+  destroyed(){
+    off('mousemove', this.on_mousemove)
+    off('mouseup', this.on_mouseup)
+    off('mousedown', this.on_mousedown)
+  }
 }
 </script>
 
