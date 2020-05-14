@@ -4,5 +4,6 @@
 export const tile_mode = {
   props: 0,
   flags: 1,
-  terra: 2,
+  collisions: 2,
+  terra: 3,
 }

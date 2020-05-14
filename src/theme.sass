@@ -310,11 +310,11 @@ button
 
 .hdivider
   width: 100%
-  margin: 8px 0
+  margin: 12px 0
   border: 1px solid $cH
 .vdivider
   height: 100%
-  margin: 0 8px
+  margin: 0 12px
   border: 1px solid $cH
 
 .block
@@ -354,4 +354,15 @@ button
   line-height: 1.5
 .line-height-1_75
   line-height: 1.75
+
+// custom scrollbars
+::-webkit-scrollbar
+  width: 8px
+  height: 8px
+::-webkit-scrollbar-track
+  background: $c-bg-dark
+::-webkit-scrollbar-thumb
+  background: $c-text
+::-webkit-scrollbar-thumb:hover
+  background: $c-prim
 

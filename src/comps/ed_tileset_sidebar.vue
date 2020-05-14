@@ -24,15 +24,24 @@
           @click='on_tileset_minus(i)'
         )
   .hdivider
+  .bold.full-w.text-center.mb-8px TILE PROPERTIES
   div
     .tile-title(
       :class='{active: tile_sec == tile_mode.props}'
       @click='set_tile_sec(tile_mode.props)'
-      ) TILE PROPERTIES
+      ) PROPS
     .tile-title(
       :class="{active: tile_sec == tile_mode.flags}"
       @click='set_tile_sec(tile_mode.flags)'
-    ) TILE FLAGS
+    ) FLAGS
+    .tile-title(
+      :class="{active: tile_sec == tile_mode.collisions}"
+      @click='set_tile_sec(tile_mode.collisions)'
+    ) COLLISIONS
+    .tile-title(
+      :class="{active: tile_sec == tile_mode.terra}"
+      @click='set_tile_sec(tile_mode.terra)'
+    ) TERRA
   #grid-tile(v-if='tile_sec == tile_mode.props')
     .bold.ml-4px Key
     .bold.ml-4px Value
@@ -182,7 +191,7 @@ export default
   align-items: center
 
 .tile-title
-  width: 50%
+  width: 25%
   display: inline-block
   font-weight: bold
   color: $c-text-dim

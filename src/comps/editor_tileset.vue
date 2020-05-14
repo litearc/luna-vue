@@ -1,8 +1,8 @@
 <template lang='pug'>
 #editor_tileset
   ui-splitter#splitter(
-    min2='250px'
-    max2='400px'
+    min2='400px'
+    max2='500px'
     mode='B'
   )
     ed-tileset-image(
