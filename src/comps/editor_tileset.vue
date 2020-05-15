@@ -9,6 +9,7 @@
       slot='slot1'
       :iflag='iflag'
       :itab='itab'
+      :iterra='iterra'
       :tile_sec='tile_sec'
       @set_curr_tile='set_curr_tile'
       @set_ntiles='set_ntiles'
@@ -18,9 +19,11 @@
       :curr_tile='curr_tile'
       :iflag='iflag'
       :itab='itab'
+      :iterra='iterra'
       :ntiles='ntiles'
       :tile_sec='tile_sec'
       @set_iflag='set_iflag'
+      @set_iterra='set_iterra'
       @set_tile_sec='set_tile_sec'
     )
 </template>
@@ -43,6 +46,7 @@ export default
     return {
       curr_tile: 0, // tile-index, row-major
       iflag: null,
+      iterra: null,
       ntiles: null, // set in ed-tileset-image
       tile_sec: tile_mode.props,
     }
@@ -69,6 +73,9 @@ export default
     },
     set_iflag(i){
       this.iflag = i
+    },
+    set_iterra(i){
+      this.iterra = i
     },
     set_ntiles(n){
       this.ntiles = n

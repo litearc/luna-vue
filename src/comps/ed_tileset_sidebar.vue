@@ -98,13 +98,47 @@
             icon='minus'
             @click='on_tile_flag_minus(i)'
           )
+  #terra(v-if='tile_sec == tile_mode.terra')
+    .flex-row.my-8px
+      .bold.ml-4px Terra
+      .expand
+      ui-tooltip(
+        text='Add'
+        placement='left'
+      )
+        faicon.icon.hover-hl(
+          icon='plus'
+          @click='on_tile_terra_plus'
+        )
+    div
+      .flex-row.align-bl(
+        v-for='(item,i) in tabs[itab].data.tile_terra'
+      )
+        faicon.it-icon(
+          icon='tag'
+          :class='{selected: iterra == i}'
+          @mousedown='set_iterra(i)'
+        )
+        ui-input#tile-terra.invisible.mr-4px(
+          small
+          v-model='item.name'
+          :class='{selected: iterra == i, "expand": true}'
+        )
+        ui-tooltip(
+          text='Remove'
+          placement='left'
+        )
+          faicon.icon.hover-hl(
+            icon='minus'
+            @click='on_tile_terra_minus(i)'
+          )
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
-let tileset_props, tile_props, tile_flags
+let tileset_props, tile_props, tile_flags, tile_terra
 
 export default
 {
@@ -120,6 +154,7 @@ export default
     curr_tile: { default: 0 },
     iflag: {},
     itab: {},
+    iterra: {},
     ntiles: {},
     tile_sec: {},
   },
@@ -159,11 +194,26 @@ export default
       else if (this.iflag >= tile_flags.length)
         this.$emit('set_iflag', tile_flags.length-1)
     },
+    on_tile_terra_plus(){
+      this.push([tile_terra, {name:'new terra', pos:{x:0, y:0}}])
+      if (tile_terra.length == 1)
+        this.$emit('set_iterra', 0)
+    },
+    on_tile_terra_minus(i){
+      this.remove([tile_terra, i])
+      if (tile_terra.length == 0)
+        this.$emit('set_iterra', null)
+      else if (this.iterra >= tile_terra.length)
+        this.$emit('set_iterra', tile_terra.length-1)
+    },
     set_tile_sec(i){
       this.$emit('set_tile_sec', i)
     },
     set_iflag(i){
       this.$emit('set_iflag', i)
+    },
+    set_iterra(i){
+      this.$emit('set_iterra', i)
     },
   },
 
@@ -171,6 +221,7 @@ export default
     tileset_props = this.tabs[this.itab].data.tileset_props
     tile_props = this.tabs[this.itab].data.tile_props
     tile_flags = this.tabs[this.itab].data.tile_flags
+    tile_terra = this.tabs[this.itab].data.tile_terra
   },
 }
 </script>
@@ -199,7 +250,7 @@ export default
   &.active
     color: $c-text
 
-#tile-flag.selected:not(:focus)
+#tile-flag.selected:not(:focus), #tile-terra.selected:not(:focus)
   color: $c-blue
 </style>
 

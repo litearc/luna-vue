@@ -36,7 +36,7 @@ let mw, mh, tw, th // image width / height, tile width / height
 let isx, isy       // sel x and y positions (column, row)
 let icx, icy       // auto-tile top-left position (column, row)
 let s = 1          // scale factor for image
-let tile_flags
+let tile_flags, tile_terra
 
 // draws a box for pixi graphics `g` with width `w`, height `h`
 function draw_box(g, w, h){
@@ -73,6 +73,7 @@ export default
   props: {
     iflag: {},
     itab: {},
+    iterra: {},
     tile_sec: {},
   },
 
@@ -83,6 +84,13 @@ export default
       for (let i = 0; i < ntiles; i++)
         flag[i].visible = (v === null) ? false : tile_flags[v][i]
     },
+    iterra(v){
+      let vis = (v !== null)
+      sel.visible = vis
+      if (!vis) return
+      sel.x = tile_terra[v].pos.x
+      sel.y = tile_terra[v].pos.y
+    },
     tile_sec(i){
       this.upd_all()
     }
@@ -91,6 +99,7 @@ export default
   methods: {
     ...mapMutations([
       'flip',
+      'set_prop',
     ]),
 
     on_click(e){
@@ -107,8 +116,11 @@ export default
           this.$emit('set_curr_tile', isy*nx+isx)
           break
         case tile_mode.terra:
+          if (this.iterra === null) return
           icx = ix-1, icy = iy-2
           sel.x = icx*s*tw, sel.y = icy*s*th
+          this.set_prop([tile_terra[this.iterra].pos, 'x', sel.x])
+          this.set_prop([tile_terra[this.iterra].pos, 'y', sel.y])
           break
       }
     },
@@ -142,7 +154,8 @@ export default
     on_mouseenter(){
       if (this.tile_sec == tile_mode.flags && this.iflag !== null)
         cur_flag.visible = true
-      if (this.tile_sec == tile_mode.props || this.tile_sec == tile_mode.terra)
+      if (this.tile_sec == tile_mode.props ||
+        (this.tile_sec == tile_mode.terra && this.iterra !== null))
         cur.visible = true
     },
 
@@ -202,6 +215,8 @@ export default
       if (this.tile_sec == tile_mode.terra){
         sel.x = s*tw*icx, sel.y = s*th*icy
         w = 3, h = 4
+        if (this.iterra === null)
+          sel.visible = false, cur.visible = false
       }
       draw_box(sel, w*s*tw, h*s*th)
       draw_box(cur, w*s*tw, h*s*th)
@@ -251,6 +266,7 @@ export default
     icy = 0
 
     tile_flags = this.tabs[this.itab].data.tile_flags
+    tile_terra = this.tabs[this.itab].data.tile_terra
     this.$emit('set_ntiles', nx*ny)
   },
 

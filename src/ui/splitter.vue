@@ -141,18 +141,18 @@ export default
     },
 
     on_mousedown(){
+      if (!this.near) return
       this.resizing = true
-      document.documentElement.style.cursor = ''
-      document.body.classList.remove('no-pointer-events')
-      document.body.classList.remove('non-selectable')
+      document.documentElement.style.cursor = 'grabbing'
+      document.body.classList.add('no-pointer-events')
+      document.body.classList.add('non-selectable')
     },
 
     on_mouseup(){
       this.resizing = false
-      if (!this.near) return
-      document.documentElement.style.cursor = 'grabbing'
-      document.body.classList.add('no-pointer-events')
-      document.body.classList.add('non-selectable')
+      document.documentElement.style.cursor = ''
+      document.body.classList.remove('no-pointer-events')
+      document.body.classList.remove('non-selectable')
     },
   }, // methods
 
