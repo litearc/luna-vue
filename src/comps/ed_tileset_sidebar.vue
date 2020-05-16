@@ -13,8 +13,8 @@
         @click='on_tileset_plus'
       )
     template(v-for='(item,i) in tabs[itab].data.tileset_props')
-      ui-input(v-model='item.key')
-      ui-input(v-model='item.val')
+      ui-input(v-model='item.key' small)
+      ui-input(v-model='item.val' small)
       ui-tooltip(
         text='Remove'
         placement='left'
@@ -35,13 +35,17 @@
       @click='set_tile_sec(tile_mode.flags)'
     ) FLAGS
     .tile-title(
-      :class="{active: tile_sec == tile_mode.collisions}"
-      @click='set_tile_sec(tile_mode.collisions)'
-    ) COLLISIONS
+      :class="{active: tile_sec == tile_mode.coll}"
+      @click='set_tile_sec(tile_mode.coll)'
+    ) COLLISION
     .tile-title(
       :class="{active: tile_sec == tile_mode.terra}"
       @click='set_tile_sec(tile_mode.terra)'
     ) TERRA
+    .tile-title(
+      :class="{active: tile_sec == tile_mode.anim}"
+      @click='set_tile_sec(tile_mode.anim)'
+    ) ANIM
   #grid-tile(v-if='tile_sec == tile_mode.props')
     .bold.ml-4px Key
     .bold.ml-4px Value
@@ -54,8 +58,8 @@
         @click='on_tile_prop_plus'
       )
     template(v-for='(item,i) in tabs[itab].data.tile_props[curr_tile]')
-      ui-input(v-model='item.key')
-      ui-input(v-model='item.val')
+      ui-input(v-model='item.key' small)
+      ui-input(v-model='item.val' small)
       ui-tooltip(
         text='Remove'
         placement='left'
@@ -65,7 +69,7 @@
           @click='on_tile_prop_minus(i)'
         )
   #flags(v-if='tile_sec == tile_mode.flags')
-    .flex-row.my-8px
+    .flex-row.mt-8px
       .bold.ml-4px Flag
       .expand
       ui-tooltip(
@@ -98,40 +102,44 @@
             icon='minus'
             @click='on_tile_flag_minus(i)'
           )
-  #terra(v-if='tile_sec == tile_mode.terra')
-    .flex-row.my-8px
-      .bold.ml-4px Terra
-      .expand
-      ui-tooltip(
-        text='Add'
-        placement='left'
+  #grid-terra(v-if='tile_sec == tile_mode.terra')
+    .bold Terra
+    .bold Collision
+    ui-tooltip(
+      text='Add'
+      placement='left'
+    )
+      faicon.icon.hover-hl(
+        icon='plus'
+        @click='on_tile_terra_plus'
       )
-        faicon.icon.hover-hl(
-          icon='plus'
-          @click='on_tile_terra_plus'
-        )
-    div
-      .flex-row.align-bl(
-        v-for='(item,i) in tabs[itab].data.tile_terra'
-      )
+    template(v-for='(item,i) in tabs[itab].data.tile_terra')
+      .flex-row.align-bl
         faicon.it-icon(
           icon='tag'
           :class='{selected: iterra == i}'
           @mousedown='set_iterra(i)'
         )
-        ui-input#tile-terra.invisible.mr-4px(
+        ui-input#tile-terra.invisible(
           small
           v-model='item.name'
           :class='{selected: iterra == i, "expand": true}'
         )
-        ui-tooltip(
-          text='Remove'
-          placement='left'
+      .flex-row.align-bl
+        faicon.mr-4px(
+          :icon='["far", "dot-circle"]'
         )
-          faicon.icon.hover-hl(
-            icon='minus'
-            @click='on_tile_terra_minus(i)'
-          )
+        faicon(
+          :icon='["far", "times-circle"]'
+        )
+      ui-tooltip(
+        text='Remove'
+        placement='left'
+      )
+        faicon.icon.hover-hl(
+          icon='minus'
+          @click='on_tile_terra_minus(i)'
+        )
 </template>
 
 <script>
@@ -234,15 +242,16 @@ export default
   height: 100%
   background-color: $c-bg-pane
 
-#grid-tileset, #grid-tile
+#grid-tileset, #grid-tile, #grid-terra
   display: grid
   grid-template-columns: 1fr 1fr 0fr
   margin-top: 8px
-  grid-gap: 4px
+  grid-column-gap: 4px
+  grid-row-gap: 0px
   align-items: center
 
 .tile-title
-  width: 25%
+  width: 20%
   display: inline-block
   font-weight: bold
   color: $c-text-dim

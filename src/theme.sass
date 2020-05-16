@@ -95,6 +95,8 @@ $font-size: 12px
 
 .align-bl
   align-items: baseline
+.align-initial
+  align-items: initial
 
 .fixed
   flex-grow: 0
@@ -146,6 +148,10 @@ $font-size: 12px
 .grid
   display: grid
 
+  &.hgap-0
+    grid-column-gap: 0
+  &.vgap-0
+    grid-row-gap: 0
   &.hgap-20px
     grid-column-gap: 20px
   &.vgap-20px

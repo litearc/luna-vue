@@ -92,6 +92,8 @@ export default
       sel.y = tile_terra[v].pos.y
     },
     tile_sec(i){
+      if (i === tile_mode.props)
+        sel.visible = true
       this.upd_all()
     }
   },

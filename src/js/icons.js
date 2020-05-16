@@ -53,7 +53,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
+  faCircle as faCircleRegular,
+  faDotCircle as faDotCircleRegular,
   faSquare as faSquareRegular,
+  faTimesCircle as faTimesCircleRegular,
 } from '@fortawesome/free-regular-svg-icons'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -70,8 +73,10 @@ library.add(faCaretUp)
 library.add(faCheckCircle)
 library.add(faCheckSquare)
 library.add(faCircle)
+library.add(faCircleRegular)
 library.add(faCog)
 library.add(faDotCircle)
+library.add(faDotCircleRegular)
 library.add(faEraser)
 library.add(faExclamationCircle)
 library.add(faEye)
@@ -105,6 +110,7 @@ library.add(faSquareRegular)
 library.add(faSyncAlt)
 library.add(faTag)
 library.add(faTimesCircle)
+library.add(faTimesCircleRegular)
 library.add(faTimes)
 library.add(faUndo)
 

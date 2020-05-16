@@ -4,6 +4,7 @@
 export const tile_mode = {
   props: 0,
   flags: 1,
-  collisions: 2,
+  coll: 2, // collision
   terra: 3,
+  anim: 4, // animation
 }
