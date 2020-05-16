@@ -144,7 +144,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
-import { tile_mode } from '../const.js'
+import { tile_mode, coll_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
 let tileset_props, tile_props, tile_flags, tile_terra
 
@@ -203,7 +203,7 @@ export default
         this.$emit('set_iflag', tile_flags.length-1)
     },
     on_tile_terra_plus(){
-      this.push([tile_terra, {name:'new terra', pos:{x:0, y:0}}])
+      this.push([tile_terra, {name:'new terra', pos:{x:0, y:0}, coll: coll_type.none}])
       if (tile_terra.length == 1)
         this.$emit('set_iterra', 0)
     },

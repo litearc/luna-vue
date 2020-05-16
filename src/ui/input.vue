@@ -1,8 +1,11 @@
 <template lang='pug'>
+// reason for the "size='1'" below:
+// https://stackoverflow.com/questions/29470676/why-doesnt-the-input-element-respect-min-width
 input.ui-input(
   ref='el'
   v-bind='$attrs'
   :value='value'
+  size='1'
   spellcheck='false'
   @keydown.enter='blur()'
   @input='$emit("input", $event.target.value)'

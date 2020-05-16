@@ -8,3 +8,10 @@ export const tile_mode = {
   terra: 3,
   anim: 4, // animation
 }
+
+// collision types
+export const coll_type = {
+  none: 0,
+  all: 1,
+  custom: 2,
+}
