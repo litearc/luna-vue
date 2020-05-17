@@ -1,11 +1,11 @@
 <template lang='pug'>
 .ui-radio
-  div(
+  .flex-row.align-bl(
     v-for='(item,i) in items'
     :key='i'
     @click='on_click(i)'
   )
-    span.it-icon(style='display: inline-block')
+    span.inline-block
       faicon.selected(
         v-if='selected == i'
         icon='dot-circle'

@@ -4,10 +4,10 @@
   )
   .dmenu
     li(v-for='(item,i) in items' :key='i')
-      .item.flex-row(@click.stop='item_clicked(i)')
+      .item.flex-row.align-bl(@click.stop='item_clicked(i)')
         span {{ item.name }}
         .expand
-        faicon.icon(
+        faicon(
           v-if='item.contents !== null'
           icon='caret-right'
         )

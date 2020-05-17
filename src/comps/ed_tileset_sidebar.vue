@@ -8,10 +8,11 @@
       text='Add'
       placement='left'
     )
-      faicon.icon.hover-hl(
-        icon='plus'
-        @click='on_tileset_plus'
-      )
+      .flex-row.align-bl
+        faicon.hover-hl(
+          icon='plus'
+          @click='on_tileset_plus'
+        )
     template(v-for='(item,i) in tabs[itab].data.tileset_props')
       ui-input(v-model='item.key' small)
       ui-input(v-model='item.val' small)
@@ -19,10 +20,11 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.hover-hl(
-          icon='minus'
-          @click='on_tileset_minus(i)'
-        )
+        .flex-row.align-bl
+          faicon.hover-hl(
+            icon='minus'
+            @click='on_tileset_minus(i)'
+          )
   .hdivider
   .bold.full-w.text-center.mb-8px TILE PROPERTIES
   div
@@ -53,10 +55,11 @@
       text='Add'
       placement='left'
     )
-      faicon.icon.hover-hl(
-        icon='plus'
-        @click='on_tile_prop_plus'
-      )
+      .flex-row.align-bl
+        faicon.hover-hl(
+          icon='plus'
+          @click='on_tile_prop_plus'
+        )
     template(v-for='(item,i) in tabs[itab].data.tile_props[curr_tile]')
       ui-input(v-model='item.key' small)
       ui-input(v-model='item.val' small)
@@ -64,10 +67,11 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.hover-hl(
-          icon='minus'
-          @click='on_tile_prop_minus(i)'
-        )
+        .flex-row.align-bl
+          faicon.hover-hl(
+            icon='minus'
+            @click='on_tile_prop_minus(i)'
+          )
   #flags(v-if='tile_sec == tile_mode.flags')
     .flex-row.mt-8px
       .bold.ml-4px Flag
@@ -76,10 +80,11 @@
         text='Add'
         placement='left'
       )
-        faicon.icon.hover-hl(
-          icon='plus'
-          @click='on_tile_flag_plus'
-        )
+        .flex-row.align-bl
+          faicon.hover-hl(
+            icon='plus'
+            @click='on_tile_flag_plus'
+          )
     div
       .flex-row.align-bl(
         v-for='(item,i) in tabs[itab].data.tile_flags'
@@ -98,7 +103,7 @@
           text='Remove'
           placement='left'
         )
-          faicon.icon.hover-hl(
+          faicon.hover-hl(
             icon='minus'
             @click='on_tile_flag_minus(i)'
           )
@@ -109,10 +114,11 @@
       text='Add'
       placement='left'
     )
-      faicon.icon.hover-hl(
-        icon='plus'
-        @click='on_tile_terra_plus'
-      )
+      .flex-row.align-bl
+        faicon.hover-hl(
+          icon='plus'
+          @click='on_tile_terra_plus'
+        )
     template(v-for='(item,i) in tabs[itab].data.tile_terra')
       .flex-row.align-bl
         faicon.it-icon(
@@ -136,10 +142,11 @@
         text='Remove'
         placement='left'
       )
-        faicon.icon.hover-hl(
-          icon='minus'
-          @click='on_tile_terra_minus(i)'
-        )
+        .flex-row.align-bl
+          faicon.hover-hl(
+            icon='minus'
+            @click='on_tile_terra_minus(i)'
+          )
 </template>
 
 <script>

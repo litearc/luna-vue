@@ -9,7 +9,7 @@ transition(
     v-show='visible'
   )
     .flex-row.align-bl
-      faicon.icon.fixed(
+      faicon.fixed(
         v-if='type !== ""'
         :class='get_color()'
         :icon='get_icon()'

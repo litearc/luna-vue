@@ -7,7 +7,7 @@
     @click='on_click(i)'
   )
     .vcenter
-      span.flex-row.full-w
+      span.flex-row.full-w.align-bl
         span {{ tab.name }}
         .expand
         faicon.icon.hover-hl(
