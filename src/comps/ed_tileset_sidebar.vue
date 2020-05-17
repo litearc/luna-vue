@@ -9,7 +9,7 @@
       placement='left'
     )
       .flex-row.align-bl
-        faicon.hover-hl(
+        faicon.icon.hover-hl(
           icon='plus'
           @click='on_tileset_plus'
         )
@@ -21,7 +21,7 @@
         placement='left'
       )
         .flex-row.align-bl
-          faicon.hover-hl(
+          faicon.icon.hover-hl(
             icon='minus'
             @click='on_tileset_minus(i)'
           )
@@ -56,7 +56,7 @@
       placement='left'
     )
       .flex-row.align-bl
-        faicon.hover-hl(
+        faicon.icon.hover-hl(
           icon='plus'
           @click='on_tile_prop_plus'
         )
@@ -68,7 +68,7 @@
         placement='left'
       )
         .flex-row.align-bl
-          faicon.hover-hl(
+          faicon.icon.hover-hl(
             icon='minus'
             @click='on_tile_prop_minus(i)'
           )
@@ -81,7 +81,7 @@
         placement='left'
       )
         .flex-row.align-bl
-          faicon.hover-hl(
+          faicon.icon.hover-hl(
             icon='plus'
             @click='on_tile_flag_plus'
           )
@@ -89,7 +89,7 @@
       .flex-row.align-bl(
         v-for='(item,i) in tabs[itab].data.tile_flags'
       )
-        faicon.it-icon(
+        faicon.icon.it-icon(
           icon='tag'
           :class='{selected: iflag == i}'
           @mousedown='set_iflag(i)'
@@ -103,7 +103,7 @@
           text='Remove'
           placement='left'
         )
-          faicon.hover-hl(
+          faicon.icon.hover-hl(
             icon='minus'
             @click='on_tile_flag_minus(i)'
           )
@@ -115,13 +115,13 @@
       placement='left'
     )
       .flex-row.align-bl
-        faicon.hover-hl(
+        faicon.icon.hover-hl(
           icon='plus'
           @click='on_tile_terra_plus'
         )
     template(v-for='(item,i) in tabs[itab].data.tile_terra')
       .flex-row.align-bl
-        faicon.it-icon(
+        faicon.icon.it-icon(
           icon='tag'
           :class='{selected: iterra == i}'
           @mousedown='set_iterra(i)'
@@ -132,18 +132,22 @@
           :class='{selected: iterra == i, "expand": true}'
         )
       .flex-row.align-bl
-        faicon.mr-4px(
+        faicon.icon.mr-4px(
+          :class='{inactive: item.coll !== coll_type.none}'
           :icon='["far", "dot-circle"]'
+          @click='set_coll_type(item, coll_type.none)'
         )
-        faicon(
+        faicon.icon(
+          :class='{inactive: item.coll !== coll_type.all}'
           :icon='["far", "times-circle"]'
+          @click='set_coll_type(item, coll_type.all)'
         )
       ui-tooltip(
         text='Remove'
         placement='left'
       )
         .flex-row.align-bl
-          faicon.hover-hl(
+          faicon.icon.hover-hl(
             icon='minus'
             @click='on_tile_terra_minus(i)'
           )
@@ -161,6 +165,7 @@ export default
 
   data(){
     return {
+      coll_type,
       tile_mode,
     }
   },
@@ -184,6 +189,7 @@ export default
     ...mapMutations([
       'push',
       'remove',
+      'set_prop',
     ]),
     on_tileset_plus(){
       this.push([tileset_props, {key:'', val:''}])
@@ -220,6 +226,9 @@ export default
         this.$emit('set_iterra', null)
       else if (this.iterra >= tile_terra.length)
         this.$emit('set_iterra', tile_terra.length-1)
+    },
+    set_coll_type(item, type){
+      this.set_prop([item, 'coll', type])
     },
     set_tile_sec(i){
       this.$emit('set_tile_sec', i)

@@ -6,11 +6,11 @@
     @click='on_click(i)'
   )
     span.item-icon(style='display: inline-block')
-      faicon.checked(
+      faicon.icon.checked(
         v-if='checked[i]'
         icon='check-square'
       )
-      faicon.unchecked(
+      faicon.icon.unchecked(
         v-else
         icon='square'
       )

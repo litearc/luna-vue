@@ -11,7 +11,7 @@ ui-dropdown(
     span.fixed {{ items[isel] }}
     .expand
     span.fixed
-      faicon(icon='caret-down')
+      faicon.icon(icon='caret-down')
 </template>
 
 <script>

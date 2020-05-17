@@ -6,11 +6,11 @@
     @click='on_click(i)'
   )
     span.inline-block
-      faicon.selected(
+      faicon.icon.selected(
         v-if='selected == i'
         icon='dot-circle'
       )
-      faicon.unselected(
+      faicon.icon.unselected(
         v-else
         icon='circle'
       )

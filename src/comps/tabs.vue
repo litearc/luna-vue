@@ -9,11 +9,11 @@
     )
     #icon-area.full-h.px-8px
       .vcenter.hspaced-8px
-        faicon.hover-hl(
+        faicon.icon.hover-hl(
           icon='file'
           @click='on_new_file'
         )
-        faicon.hover-hl(
+        faicon.icon.hover-hl(
           icon='folder-open'
           @click='on_open_file'
         )

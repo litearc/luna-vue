@@ -7,7 +7,7 @@
       .item.flex-row.align-bl(@click.stop='item_clicked(i)')
         span {{ item.name }}
         .expand
-        faicon(
+        faicon.icon(
           v-if='item.contents !== null'
           icon='caret-right'
         )

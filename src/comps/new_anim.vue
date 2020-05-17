@@ -8,7 +8,7 @@
       disabled
       mclass='expand'
     )
-    faicon.hover-hl(
+    faicon.icon.hover-hl(
       icon='folder-open'
       @click='on_file_select'
     )

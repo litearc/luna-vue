@@ -4,7 +4,7 @@ div(
   :class='{ "hover-hl": hl==="all" }'
 )
   span.it-icon
-    faicon(
+    faicon.icon(
       :icon='icon'
       :class='{ "hover-hl": hl==="icon" }'
     )

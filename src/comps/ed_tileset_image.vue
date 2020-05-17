@@ -2,13 +2,13 @@
 #el_tileset_image.full.flex-col
   #toolbar.center
     ui-tooltip(text='Zoom Out')
-      faicon.toolbar-icon(
+      faicon.icon.toolbar-icon(
         icon='search-minus'
         @mousedown='on_zoom_out'
       )
     .space
     ui-tooltip(text='Zoom In')
-      faicon.toolbar-icon(
+      faicon.icon.toolbar-icon(
         icon='search-plus'
         @mousedown='on_zoom_in'
       )
@@ -17,7 +17,7 @@
       ui-icon.toolbar-icon(icon='grid' height='12px' text base)
     .space
     ui-tooltip(text='Save')
-      faicon.toolbar-icon(icon='save')
+      faicon.icon.toolbar-icon(icon='save')
   #image-container.expand.flex.overflow-auto
     canvas#canvas.no-shrink.block.margin-auto(ref='canvas')
 </template>

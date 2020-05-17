@@ -254,17 +254,30 @@ button
     &:hover
       background-color: darken($c-prim, 10%)
 
-// icons. for some reason, can't select faicon directly, so all faicon have a
-// .icon class, which we use to select them
-@mixin icon
+@mixin dy-1
+  position: relative
+  top: 1px // font-awesome icons are a little high by default
+.dy-1
+  @include dy-1
+
+@mixin -dy-1
+  position: relative
+  top: -1px // font-awesome icons are a little high by default
+.-dy-1
+  @include -dy-1
+
+.icon
+  &.selected
+    color: $c-prim
+  &.inactive
+    color: $c-text-dim
+
+// icon text (text with an icon to the left)
+.it-icon
   position: relative
   top: 1px // font-awesome icons are a little high by default
   &.selected
     color: $c-prim
-
-// icon text (text with an icon to the left)
-.it-icon
-  @include icon
   display: inline-block
   text-align: center
   width: $icon-width
