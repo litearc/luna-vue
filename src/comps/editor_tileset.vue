@@ -17,11 +17,13 @@
     ed-tileset-sidebar(
       slot='slot2'
       :curr_tile='curr_tile'
+      :ianim='ianim'
       :iflag='iflag'
       :itab='itab'
       :iterra='iterra'
       :ntiles='ntiles'
       :tile_sec='tile_sec'
+      @set_ianim='set_ianim'
       @set_iflag='set_iflag'
       @set_iterra='set_iterra'
       @set_tile_sec='set_tile_sec'
@@ -45,6 +47,7 @@ export default
   data(){
     return {
       curr_tile: 0, // tile-index, row-major
+      ianim: null,
       iflag: null,
       iterra: null,
       ntiles: null, // set in ed-tileset-image
@@ -70,6 +73,9 @@ export default
   methods: {
     set_curr_tile(i){
       this.curr_tile = i
+    },
+    set_ianim(i){
+      this.ianim = i
     },
     set_iflag(i){
       this.iflag = i

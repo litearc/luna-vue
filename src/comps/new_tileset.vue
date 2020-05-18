@@ -90,6 +90,7 @@ export default
         tile_props: Array(ntiles).fill(0).map(x => []),
         tile_flags: [],
         tile_terra: [],
+        tile_anim: [],
       }
     }
   },

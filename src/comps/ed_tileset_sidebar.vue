@@ -1,7 +1,7 @@
 <template lang='pug'>
 #ed_tileset_sidebar
   .bold.full-w.text-center TILESET PROPERTIES
-  #grid-tileset
+  #tileset
     .bold.ml-4px Key
     .bold.ml-4px Value
     ui-tooltip(
@@ -27,6 +27,7 @@
           )
   .hdivider
   .bold.full-w.text-center.mb-8px TILE PROPERTIES
+
   div
     .tile-title(
       :class='{active: tile_sec == tile_mode.props}'
@@ -48,7 +49,8 @@
       :class="{active: tile_sec == tile_mode.anim}"
       @click='set_tile_sec(tile_mode.anim)'
     ) ANIM
-  #grid-tile(v-if='tile_sec == tile_mode.props')
+
+  #tiles(v-if='tile_sec == tile_mode.props')
     .bold.ml-4px Key
     .bold.ml-4px Value
     ui-tooltip(
@@ -72,6 +74,7 @@
             icon='minus'
             @click='on_tile_prop_minus(i)'
           )
+
   #flags(v-if='tile_sec == tile_mode.flags')
     .flex-row.mt-8px
       .bold.ml-4px Flag
@@ -107,7 +110,8 @@
             icon='minus'
             @click='on_tile_flag_minus(i)'
           )
-  #grid-terra(v-if='tile_sec == tile_mode.terra')
+
+  #terra(v-if='tile_sec == tile_mode.terra')
     .bold Terra
     .bold Collision
     ui-tooltip(
@@ -151,13 +155,63 @@
             icon='minus'
             @click='on_tile_terra_minus(i)'
           )
+
+  #anim(v-if='tile_sec == tile_mode.anim')
+    .flex-row.align-bl
+      ui-checkbox.mt-8px.mr-8px(
+        :items='["Use one duration for all frames"]'
+        @clicked='set_anim_use_one_dur'
+      )
+      ui-input.expand(
+        small
+        right
+        :disabled='!anim_use_one_dur'
+        type='number'
+        placeholder='ms'
+      )
+
+    .flex-row.mt-8px
+      .bold.ml-4px Anim
+      .expand
+      ui-tooltip(
+        text='Add'
+        placement='left'
+      )
+        .flex-row.align-bl
+          faicon.icon.hover-hl(
+            icon='plus'
+            @click='on_tile_anim_plus'
+          )
+    div
+      .flex-row.align-bl(
+        v-for='(item,i) in tabs[itab].data.tile_anim'
+      )
+        faicon.icon.it-icon(
+          icon='tag'
+          :class='{selected: ianim == i}'
+          @mousedown='set_ianim(i)'
+        )
+        ui-input#tile-flag.invisible.mr-4px(
+          small
+          v-model='item.name'
+          :class='{selected: ianim == i, "expand": true}'
+        )
+        ui-tooltip(
+          text='Remove'
+          placement='left'
+        )
+          faicon.icon.hover-hl(
+            icon='minus'
+            @click='on_tile_anim_minus(i)'
+          )
+
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { tile_mode, coll_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
-let tileset_props, tile_props, tile_flags, tile_terra
+let tileset_props, tile_props, tile_flags, tile_terra, tile_anim
 
 export default
 {
@@ -165,6 +219,7 @@ export default
 
   data(){
     return {
+      anim_use_one_dur: false,
       coll_type,
       tile_mode,
     }
@@ -172,6 +227,7 @@ export default
 
   props: {
     curr_tile: { default: 0 },
+    ianim: {},
     iflag: {},
     itab: {},
     iterra: {},
@@ -196,6 +252,12 @@ export default
     },
     on_tileset_minus(i){
       this.remove([tileset_props, i])
+    },
+    on_tile_anim_plus(){
+      this.push([tile_anim, {name:'new anim', tiles:[], dur:[]}])
+    },
+    on_tile_anim_minus(i){
+      this.remove([tile_anim, i])
     },
     on_tile_prop_plus(){
       this.push([tile_props[this.curr_tile], {key:'', val:''}])
@@ -233,12 +295,18 @@ export default
     set_tile_sec(i){
       this.$emit('set_tile_sec', i)
     },
+    set_ianim(i){
+      this.$emit('set_ianim', i)
+    },
     set_iflag(i){
       this.$emit('set_iflag', i)
     },
     set_iterra(i){
       this.$emit('set_iterra', i)
     },
+    set_anim_use_one_dur(v){
+      this.anim_use_one_dur = v[0]
+    }
   },
 
   created(){
@@ -246,6 +314,7 @@ export default
     tile_props = this.tabs[this.itab].data.tile_props
     tile_flags = this.tabs[this.itab].data.tile_flags
     tile_terra = this.tabs[this.itab].data.tile_terra
+    tile_anim = this.tabs[this.itab].data.tile_anim
   },
 }
 </script>
@@ -258,7 +327,7 @@ export default
   height: 100%
   background-color: $c-bg-pane
 
-#grid-tileset, #grid-tile, #grid-terra
+#tileset, #tiles, #terra
   display: grid
   grid-template-columns: 1fr 1fr 0fr
   margin-top: 8px

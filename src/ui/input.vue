@@ -25,6 +25,7 @@ export default
   props: {
     value: {},
     small: { type: Boolean, default: false },
+    right: { type: Boolean, default: false },
     mclass: { default: null },
     mstyle: { default: null },
   },
@@ -33,7 +34,8 @@ export default
   {
     el_class(){
       let c = {
-        small: this.small
+        small: this.small,
+        right: this.right,
       }
       return (this.mclass === null) ? c : this.mclass
     },
@@ -68,4 +70,6 @@ export default
   min-width: 1px
   &.small
     height: 22px
+  &.right
+    text-align: right
 </style>
