@@ -50,35 +50,10 @@
       @click='set_tile_sec(tile_mode.anim)'
     ) ANIM
 
-  #tiles(v-if='tile_sec == tile_mode.props')
-    .bold.ml-4px Key
-    .bold.ml-4px Value
-    ui-tooltip(
-      text='Add'
-      placement='left'
-    )
-      .flex-row.align-bl
-        faicon.icon.hover-hl(
-          icon='plus'
-          @click='on_tile_prop_plus'
-        )
-    template(v-for='(item,i) in tabs[itab].data.tile_props[curr_tile]')
-      ui-input(v-model='item.key' small)
-      ui-input(v-model='item.val' small)
-      ui-tooltip(
-        text='Remove'
-        placement='left'
-      )
-        .flex-row.align-bl
-          faicon.icon.hover-hl(
-            icon='minus'
-            @click='on_tile_prop_minus(i)'
-          )
-
-  #flags(v-if='tile_sec == tile_mode.flags')
-    .flex-row.mt-8px
-      .bold.ml-4px Flag
-      .expand
+  keep-alive
+    #tiles(v-if='tile_sec == tile_mode.props')
+      .bold.ml-4px Key
+      .bold.ml-4px Value
       ui-tooltip(
         text='Add'
         placement='left'
@@ -86,93 +61,62 @@
         .flex-row.align-bl
           faicon.icon.hover-hl(
             icon='plus'
-            @click='on_tile_flag_plus'
+            @click='on_tile_prop_plus'
           )
-    div
-      .flex-row.align-bl(
-        v-for='(item,i) in tabs[itab].data.tile_flags'
-      )
-        faicon.icon.it-icon(
-          icon='tag'
-          :class='{selected: iflag == i}'
-          @mousedown='set_iflag(i)'
-        )
-        ui-input#tile-flag.invisible.mr-4px(
-          small
-          v-model='item.name'
-          :class='{selected: iflag == i, "expand": true}'
-        )
+      template(v-for='(item,i) in tabs[itab].data.tile_props[curr_tile]')
+        ui-input(v-model='item.key' small)
+        ui-input(v-model='item.val' small)
         ui-tooltip(
           text='Remove'
           placement='left'
         )
-          faicon.icon.hover-hl(
-            icon='minus'
-            @click='on_tile_flag_minus(i)'
+          .flex-row.align-bl
+            faicon.icon.hover-hl(
+              icon='minus'
+              @click='on_tile_prop_minus(i)'
+            )
+
+  keep-alive
+    #flags(v-if='tile_sec == tile_mode.flags')
+      .flex-row.mt-8px
+        .bold.ml-4px Flag
+        .expand
+        ui-tooltip(
+          text='Add'
+          placement='left'
+        )
+          .flex-row.align-bl
+            faicon.icon.hover-hl(
+              icon='plus'
+              @click='on_tile_flag_plus'
+            )
+      div
+        .flex-row.align-bl(
+          v-for='(item,i) in tabs[itab].data.tile_flags'
+        )
+          faicon.icon.it-icon(
+            icon='tag'
+            :class='{selected: iflag == i}'
+            @mousedown='set_iflag(i)'
           )
-
-  #terra(v-if='tile_sec == tile_mode.terra')
-    .bold Terra
-    .bold Collision
-    ui-tooltip(
-      text='Add'
-      placement='left'
-    )
-      .flex-row.align-bl
-        faicon.icon.hover-hl(
-          icon='plus'
-          @click='on_tile_terra_plus'
-        )
-    template(v-for='(item,i) in tabs[itab].data.tile_terra')
-      .flex-row.align-bl
-        faicon.icon.it-icon(
-          icon='tag'
-          :class='{selected: iterra == i}'
-          @mousedown='set_iterra(i)'
-        )
-        ui-input#tile-terra.invisible(
-          small
-          v-model='item.name'
-          :class='{selected: iterra == i, "expand": true}'
-        )
-      .flex-row.align-bl
-        faicon.icon.mr-4px(
-          :class='{inactive: item.coll !== coll_type.none}'
-          :icon='["far", "dot-circle"]'
-          @click='set_coll_type(item, coll_type.none)'
-        )
-        faicon.icon(
-          :class='{inactive: item.coll !== coll_type.all}'
-          :icon='["far", "times-circle"]'
-          @click='set_coll_type(item, coll_type.all)'
-        )
-      ui-tooltip(
-        text='Remove'
-        placement='left'
-      )
-        .flex-row.align-bl
-          faicon.icon.hover-hl(
-            icon='minus'
-            @click='on_tile_terra_minus(i)'
+          ui-input#tile-flag.invisible.mr-4px(
+            small
+            v-model='item.name'
+            :class='{selected: iflag == i, "expand": true}'
           )
+          ui-tooltip(
+            text='Remove'
+            placement='left'
+          )
+            faicon.icon.hover-hl(
+              icon='minus'
+              @click='on_tile_flag_minus(i)'
+            )
 
-  #anim(v-if='tile_sec == tile_mode.anim')
-    .flex-row.align-bl
-      ui-checkbox.mt-8px.mr-8px(
-        :items='["Use one duration for all frames"]'
-        @clicked='set_anim_use_one_dur'
-      )
-      ui-input.expand(
-        small
-        right
-        :disabled='!anim_use_one_dur'
-        type='number'
-        placeholder='ms'
-      )
-
-    .flex-row.mt-8px
-      .bold.ml-4px Anim
-      .expand
+  keep-alive
+    #terra(v-if='tile_sec == tile_mode.terra')
+      .bold Terra
+      .bold Collision
       ui-tooltip(
         text='Add'
         placement='left'
@@ -180,37 +124,110 @@
         .flex-row.align-bl
           faicon.icon.hover-hl(
             icon='plus'
-            @click='on_tile_anim_plus'
+            @click='on_tile_terra_plus'
           )
-    div
-      .flex-row.align-bl(
-        v-for='(item,i) in tabs[itab].data.tile_anim'
-      )
-        faicon.icon.it-icon(
-          icon='tag'
-          :class='{selected: ianim == i}'
-          @mousedown='set_ianim(i)'
+      template(v-for='(item,i) in tabs[itab].data.tile_terra')
+        .flex-row.align-bl
+          faicon.icon.it-icon(
+            icon='tag'
+            :class='{selected: iterra == i}'
+            @mousedown='set_iterra(i)'
+          )
+          ui-input#tile-terra.invisible(
+            small
+            v-model='item.name'
+            :class='{selected: iterra == i, "expand": true}'
+          )
+        .flex-row.align-bl
+          faicon.icon.mr-4px(
+            :class='{inactive: item.coll !== coll_type.none}'
+            :icon='["far", "dot-circle"]'
+            @click='set_coll_type(item, coll_type.none)'
+          )
+          faicon.icon(
+            :class='{inactive: item.coll !== coll_type.all}'
+            :icon='["far", "times-circle"]'
+            @click='set_coll_type(item, coll_type.all)'
+          )
+        ui-tooltip(
+          text='Remove'
+          placement='left'
         )
-        ui-input#tile-flag.invisible.mr-4px(
+          .flex-row.align-bl
+            faicon.icon.hover-hl(
+              icon='minus'
+              @click='on_tile_terra_minus(i)'
+            )
+
+  keep-alive
+    #anim(v-if='tile_sec == tile_mode.anim')
+      .flex-row.align-bl
+        ui-checkbox.mt-8px.mr-8px(
+          :items='["Use one duration for all frames"]'
+          @clicked='set_anim_use_one_dur'
+        )
+        ui-input.expand(
           small
-          v-model='item.name'
-          :class='{selected: ianim == i, "expand": true}'
+          right
+          :disabled='!anim_use_one_dur'
+          type='number'
+          placeholder='ms'
         )
+
+      .flex-row.full-w.align-center.mt-8px
+        canvas#anim-tiles.no-shrink.block.expand.mr-8px.border-red(ref='anim_tiles')
         ui-tooltip(
           text='Remove'
           placement='left'
         )
           faicon.icon.hover-hl(
             icon='minus'
-            @click='on_tile_anim_minus(i)'
           )
+
+      .flex-row.mt-8px
+        .bold.ml-4px Anim
+        .expand
+        ui-tooltip(
+          text='Add'
+          placement='left'
+        )
+          .flex-row.align-bl
+            faicon.icon.hover-hl(
+              icon='plus'
+              @click='on_tile_anim_plus'
+            )
+      div
+        .flex-row.align-bl(
+          v-for='(item,i) in tabs[itab].data.tile_anim'
+        )
+          faicon.icon.it-icon(
+            icon='tag'
+            :class='{selected: ianim == i}'
+            @mousedown='set_ianim(i)'
+          )
+          ui-input#tile-flag.invisible.mr-4px(
+            small
+            v-model='item.name'
+            :class='{selected: ianim == i, "expand": true}'
+          )
+          ui-tooltip(
+            text='Remove'
+            placement='left'
+          )
+            faicon.icon.hover-hl(
+              icon='minus'
+              @click='on_tile_anim_minus(i)'
+            )
 
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import * as PIXI from 'pixi.js'
 import { tile_mode, coll_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
+
+let tw, th // tile width / height
 let tileset_props, tile_props, tile_flags, tile_terra, tile_anim
 
 export default
@@ -241,6 +258,29 @@ export default
     ]),
   },
 
+  watch: {
+    tile_sec(i){
+      if (i === tile_mode.anim){
+        this.$nextTick(() => {
+          let ntiles = (this.ianim === null) ? 1 :
+            tile_anim[this.ianim].tiles.length
+          let npx = ntiles*tw
+          let npy = th
+          let app = new PIXI.Application({
+            width: npx,
+            height: npy,
+            view: this.$refs.anim_tiles,
+            antialias: true,
+          })
+          this.$refs.anim_tiles.width = npx
+          this.$refs.anim_tiles.height = npy
+          app.view.style.width = `${npx}px`
+          app.view.style.height = `${npy}px`
+        })
+      }
+    }
+  },
+
   methods: {
     ...mapMutations([
       'push',
@@ -255,9 +295,12 @@ export default
     },
     on_tile_anim_plus(){
       this.push([tile_anim, {name:'new anim', tiles:[], dur:[]}])
+      if (tile_anim.length == 1)
+        this.$emit('set_ianim', 0)
     },
     on_tile_anim_minus(i){
       this.remove([tile_anim, i])
+      // todo: check index
     },
     on_tile_prop_plus(){
       this.push([tile_props[this.curr_tile], {key:'', val:''}])
@@ -310,11 +353,14 @@ export default
   },
 
   created(){
-    tileset_props = this.tabs[this.itab].data.tileset_props
-    tile_props = this.tabs[this.itab].data.tile_props
-    tile_flags = this.tabs[this.itab].data.tile_flags
-    tile_terra = this.tabs[this.itab].data.tile_terra
-    tile_anim = this.tabs[this.itab].data.tile_anim
+    let data = this.tabs[this.itab].data
+    tw = data.tile_width
+    th = data.tile_height
+    tileset_props = data.tileset_props
+    tile_props = data.tile_props
+    tile_flags = data.tile_flags
+    tile_terra = data.tile_terra
+    tile_anim =  data.tile_anim
   },
 }
 </script>
@@ -346,5 +392,9 @@ export default
 
 #tile-flag.selected:not(:focus), #tile-terra.selected:not(:focus)
   color: $c-blue
+
+/* #anim-tiles */
+/*   height: 20px */
+
 </style>
 

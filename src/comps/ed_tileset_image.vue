@@ -28,7 +28,7 @@ import * as PIXI from 'pixi.js'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
-let app, im, grid, sel, cur, flags, cur_flag // pixi graphics
+let app, im, grid, sel, cur, flags, cur_flag, tiles // pixi graphics
 let flag = []      // array of flags
 let ix, iy         // current tile mouse is over
 let nx, ny         // number of tiles along x, y
@@ -285,7 +285,19 @@ export default
       view: this.$refs.canvas,
       antialias: true,
     })
-    let tex = PIXI.Texture.fromBuffer(im_data, mw, mh)
+
+    let base = PIXI.BaseTexture.fromBuffer(im_data, mw, mh)
+
+    // extract tiles
+    tiles = []
+    let i = 0
+    for (let xi = 0; xi < nx; xi++)
+      for (let yi = 0; yi < ny; yi++)
+        tiles[i++] = new PIXI.Sprite(new PIXI.Texture(base,
+          new PIXI.Rectangle(xi*tw, yi*th, tw, th)))
+
+    // let tex = PIXI.Texture.fromBuffer(im_data, mw, mh)
+    let tex = new PIXI.Texture(base)
     im = new PIXI.Sprite(tex)
     im.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
     app.view.addEventListener('mousedown', this.on_click)
