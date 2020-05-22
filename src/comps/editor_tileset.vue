@@ -11,22 +11,17 @@
       :itab='itab'
       :iterra='iterra'
       :tile_sec='tile_sec'
-      @set_curr_tile='set_curr_tile'
-      @set_ntiles='set_ntiles'
     )
     ed-tileset-sidebar(
       slot='slot2'
-      :curr_tile='curr_tile'
       :ianim='ianim'
       :iflag='iflag'
       :itab='itab'
       :iterra='iterra'
+      :itile='itile'
       :ntiles='ntiles'
       :tile_sec='tile_sec'
-      @set_ianim='set_ianim'
-      @set_iflag='set_iflag'
-      @set_iterra='set_iterra'
-      @set_tile_sec='set_tile_sec'
+      @set_tile_sec='tile_sec = arguments[0]'
     )
 </template>
 
@@ -46,10 +41,10 @@ export default
 
   data(){
     return {
-      curr_tile: 0, // tile-index, row-major
       ianim: null,
       iflag: null,
       iterra: null,
+      itile: 0, // tile-index, row-major
       ntiles: null, // set in ed-tileset-image
       tile_sec: tile_mode.props,
     }
@@ -70,29 +65,14 @@ export default
     'ed-tileset-sidebar': ed_tileset_sidebar,
   },
 
-  methods: {
-    set_curr_tile(i){
-      this.curr_tile = i
-    },
-    set_ianim(i){
-      this.ianim = i
-    },
-    set_iflag(i){
-      this.iflag = i
-    },
-    set_iterra(i){
-      this.iterra = i
-    },
-    set_ntiles(n){
-      this.ntiles = n
-    },
-    set_tile_sec(i){
-      this.tile_sec = i
-    }
-  },
-
   created(){
     this.iflag = (this.tabs[this.itab].data.tile_flags.length == 0) ? null : 0
+    bus.$on('set_ianim', (i) => { this.ianim = i })
+    bus.$on('set_iflag', (i) => { this.iflag = i })
+    bus.$on('set_iterra', (i) => { this.iterra = i })
+    bus.$on('set_itile', (i) => { this.itile = i })
+    bus.$on('set_ntiles', (i) => { this.ntiles = i })
+    bus.$on('set_tile_sec', (i) => { this.tile_sec = i })
   },
 }
 </script>
@@ -100,7 +80,7 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 
-#editor_tileset, #image-area, #bar-area
+#editor_tileset
   width: 100%
   height: 100%
 </style>
