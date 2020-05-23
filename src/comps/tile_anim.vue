@@ -15,9 +15,10 @@
         ui-input.expand(
           small
           right
-          :disabled='!use_one_dur'
+          :disabled='ianim === null'
           type='number'
           placeholder='ms'
+          v-model='frame_dur_model'
         )
 
       .flex-row.full-w.align-center.mt-8px
@@ -93,6 +94,16 @@ export default
     ...mapState([
       'tabs',
     ]),
+    // https://stackoverflow.com/questions/35210901/binding-method-result-to-v-model-with-vue-js
+    frame_dur_model: {
+      get(){
+        return (this.ianim === null) ? '' : this.anims[this.ianim].frame_dur
+      },
+      set(v){
+        if (this.ianim !== null)
+          this.anims[this.ianim].frame_dur = v
+      },
+    },
   },
 
   methods: {
@@ -110,11 +121,11 @@ export default
         bus.$emit('set_ianim', 0)
     },
     on_minus(i){
-      this.remove([this.anims, i])
       if (this.anims.length == 0)
         bus.$emit('set_ianim', null)
-      else if (this.iflag >= this.anims.length)
+      else if (this.ianim >= this.anims.length)
         bus.$emit('set_ianim', this.anims.length-1)
+      this.remove([this.anims, i])
     },
     set_ianim(i){
       bus.$emit('set_ianim', i)
