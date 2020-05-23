@@ -10,7 +10,7 @@
       .flex-row.align-bl
         faicon.icon.hover-hl(
           icon='plus'
-          @click='add'
+          @click='on_plus'
         )
   div
     .flex-row.align-bl(
@@ -32,7 +32,7 @@
       )
         faicon.icon.hover-hl(
           icon='minus'
-          @click='remove(i)'
+          @click='on_minus(i)'
         )
 </template>
 
@@ -51,6 +51,7 @@ export default
   },
 
   props: {
+    iflag: {},
     itab: {},
     ntiles: {},
   },
@@ -66,7 +67,7 @@ export default
       'push',
       'remove',
     ]),
-    add(){
+    on_plus(){
       this.push([this.flags, {
         name:'new flag',
         tiles:Array(this.ntiles).fill(false)
@@ -74,12 +75,12 @@ export default
       if (this.flags.length == 1)
         bus.$emit('set_iflag', 0)
     },
-    remove(i){
+    on_minus(i){
       this.remove([this.flags, i])
       if (this.flags.length == 0)
-        this.$emit('set_iflag', null)
+        bus.$emit('set_iflag', null)
       else if (this.iflag >= this.flags.length)
-        this.$emit('set_iflag', this.flags.length-1)
+        bus.$emit('set_iflag', this.flags.length-1)
     },
     set_iflag(i){
       bus.$emit('set_iflag', i)
@@ -87,12 +88,15 @@ export default
   },
 
   created(){
-    this.flags = this.tabs[this.itab].data.flags
+    this.flags = this.tabs[this.itab].data.tile_flags
   },
 }
 </script>
 
 <style scoped lang='sass'>
 @import ../theme
+
+#tile-flag.selected:not(:focus), #tile-terra.selected:not(:focus)
+  color: $c-blue
 </style>
 

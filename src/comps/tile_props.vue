@@ -1,5 +1,5 @@
 <template lang='pug'>
-#tile_tiles
+#tile_tiles.key-value-grid
   .bold.ml-4px Key
   .bold.ml-4px Value
   ui-tooltip(
@@ -9,9 +9,9 @@
     .flex-row.align-bl
       faicon.icon.hover-hl(
         icon='plus'
-        @click='add'
+        @click='on_plus'
       )
-  template(v-for='(item,i) in props[curr_tile]')
+  template(v-for='(item,i) in props[itile]')
     ui-input(v-model='item.key' small)
     ui-input(v-model='item.val' small)
     ui-tooltip(
@@ -21,7 +21,7 @@
       .flex-row.align-bl
         faicon.icon.hover-hl(
           icon='minus'
-          @click='remove(i)'
+          @click='on_minus(i)'
         )
 </template>
 
@@ -40,8 +40,8 @@ export default
   },
 
   props: {
-    curr_tile: {},
     itab: {},
+    itile: {},
   },
 
   computed: {
@@ -55,11 +55,11 @@ export default
       'push',
       'remove',
     ]),
-    add(){
-      this.push([props[this.curr_tile], {key:'', val:''}])
+    on_plus(){
+      this.push([this.props[this.itile], {key:'', val:''}])
     },
-    remove(i){
-      this.remove([props[this.curr_tile], i])
+    on_minus(i){
+      this.remove([this.props[this.itile], i])
     },
   },
 

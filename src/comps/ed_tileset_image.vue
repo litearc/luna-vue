@@ -115,7 +115,7 @@ export default
         case tile_mode.props:
           isx = ix, isy = iy
           sel.x = isx*s*tw, sel.y = isy*s*th
-          this.$emit('set_curr_tile', isy*nx+isx)
+          this.$emit('set_itile', isy*nx+isx)
           break
         case tile_mode.terra:
           if (this.iterra === null) return

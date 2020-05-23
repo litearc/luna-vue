@@ -33,7 +33,7 @@
       .flex-row.align-bl
         faicon.icon.hover-hl(
           icon='plus'
-          @click='add'
+          @click='on_plus'
         )
   div
     .flex-row.align-bl(
@@ -55,7 +55,7 @@
       )
         faicon.icon.hover-hl(
           icon='minus'
-          @click='remove(i)'
+          @click='on_minus(i)'
         )
 </template>
 
@@ -76,6 +76,7 @@ export default
 
   props: {
     ianim: {},
+    itab: {},
   },
 
   computed: {
@@ -89,7 +90,7 @@ export default
       'push',
       'remove',
     ]),
-    add(){
+    on_plus(){
       this.push([this.flags, {
         name:'new flag',
         tiles:Array(this.ntiles).fill(false),
@@ -97,7 +98,7 @@ export default
       if (this.flags.length == 1)
         bus.$emit('set_iflag', 0)
     },
-    remove(i){
+    on_minus(i){
       this.remove([this.flags, i])
       if (this.flags.length == 0)
         bus.$emit('set_iflag', null)

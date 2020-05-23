@@ -11,6 +11,7 @@
       :itab='itab'
       :iterra='iterra'
       :tile_sec='tile_sec'
+      @set_itile='itile = arguments[0]'
     )
     ed-tileset-sidebar(
       slot='slot2'
@@ -70,7 +71,6 @@ export default
     bus.$on('set_ianim', (i) => { this.ianim = i })
     bus.$on('set_iflag', (i) => { this.iflag = i })
     bus.$on('set_iterra', (i) => { this.iterra = i })
-    bus.$on('set_itile', (i) => { this.itile = i })
     bus.$on('set_ntiles', (i) => { this.ntiles = i })
     bus.$on('set_tile_sec', (i) => { this.tile_sec = i })
   },

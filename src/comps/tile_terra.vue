@@ -1,5 +1,5 @@
 <template lang='pug'>
-#tile_terra
+#tile_terra.key-value-grid
   .bold Terra
   .bold Collision
   ui-tooltip(
@@ -63,6 +63,7 @@ export default
 
   props: {
     itab: {},
+    iterra: {},
   },
 
   computed: {

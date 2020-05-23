@@ -50,6 +50,21 @@
       @click='set_tile_sec(tile_mode.anim)'
     ) ANIM
 
+  keep-alive
+    // it seems we can just pass all the props, and the component ignores extra
+    // ones. this is way easier than creating a prop component, e.g. 'sec_props'
+    // which only contains the props for the current section, and passing it
+    // like: v-bind='sec_props'
+    component(
+      :is='curr_tile_comp'
+      :ianim='ianim'
+      :iflag='iflag'
+      :itab='itab'
+      :iterra='iterra'
+      :itile='itile'
+      :ntiles='ntiles'
+    )
+
 </template>
 
 <script>
@@ -60,6 +75,13 @@ import tile_coll from './tile_coll.vue'
 import tile_flags from './tile_flags.vue'
 import tile_props from './tile_props.vue'
 import tile_terra from './tile_terra.vue'
+let tile_comps = [
+  tile_props,
+  tile_flags,
+  tile_coll,
+  tile_terra,
+  tile_anim,
+]
 
 export default
 {
@@ -69,6 +91,7 @@ export default
     return {
       tile_mode,
       tileset_props: null,
+      curr_tile_comp: null,
     }
   },
 
@@ -109,11 +132,13 @@ export default
     },
     set_tile_sec(i){
       this.$emit('set_tile_sec', i)
+      this.curr_tile_comp = tile_comps[i]
     },
   },
 
   created(){
     this.tileset_props = this.tabs[this.itab].data.tileset_props
+    this.curr_tile_comp = tile_comps[this.tile_sec]
   }
 }
 </script>
