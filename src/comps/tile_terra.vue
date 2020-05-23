@@ -9,7 +9,7 @@
     .flex-row.align-bl
       faicon.icon.hover-hl(
         icon='plus'
-        @click='add'
+        @click='on_plus'
       )
   template(v-for='(item,i) in terra')
     .flex-row.align-bl
@@ -41,7 +41,7 @@
       .flex-row.align-bl
         faicon.icon.hover-hl(
           icon='minus'
-          @click='remove(i)'
+          @click='on_minus(i)'
         )
 </template>
 
@@ -78,7 +78,7 @@ export default
       'remove',
       'set_prop',
     ]),
-    add(){
+    on_plus(){
       this.push([this.terra, {
         name:'new terra',
         pos:{x:0, y:0},
@@ -87,7 +87,7 @@ export default
       if (this.terra.length == 1)
         bus.$emit('set_iterra', 0)
     },
-    remove(i){
+    on_minus(i){
       this.remove([this.terra, i])
       if (this.terra.length == 0)
         bus.$emit('set_iterra', null)

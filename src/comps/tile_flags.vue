@@ -96,7 +96,7 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 
-#tile-flag.selected:not(:focus), #tile-terra.selected:not(:focus)
+.selected:not(:focus)
   color: $c-blue
 </style>
 

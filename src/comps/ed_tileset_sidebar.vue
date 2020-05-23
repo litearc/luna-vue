@@ -63,6 +63,7 @@
       :iterra='iterra'
       :itile='itile'
       :ntiles='ntiles'
+      :tile_size='tile_size'
     )
 
 </template>
@@ -90,6 +91,7 @@ export default
   data(){
     return {
       tile_mode,
+      tile_size: null,
       tileset_props: null,
       curr_tile_comp: null,
     }
@@ -137,7 +139,9 @@ export default
   },
 
   created(){
-    this.tileset_props = this.tabs[this.itab].data.tileset_props
+    let data = this.tabs[this.itab].data
+    this.tile_size = {x: data.tile_width, y: data.tile_height}
+    this.tileset_props = data.tileset_props
     this.curr_tile_comp = tile_comps[this.tile_sec]
   }
 }

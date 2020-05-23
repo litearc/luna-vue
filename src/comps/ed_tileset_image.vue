@@ -71,6 +71,7 @@ export default
   },
 
   props: {
+    ianim: {},
     iflag: {},
     itab: {},
     iterra: {},
@@ -92,8 +93,11 @@ export default
       sel.y = tile_terra[v].pos.y
     },
     tile_sec(i){
-      if (i === tile_mode.props)
+      if (i === tile_mode.props
+       || (i === tile_mode.terra && this.iterra !== null))
         sel.visible = true
+      if (i === tile_mode.anim)
+        sel.visible = false
       this.upd_all()
     }
   },
@@ -124,6 +128,8 @@ export default
           this.set_prop([tile_terra[this.iterra].pos, 'x', sel.x])
           this.set_prop([tile_terra[this.iterra].pos, 'y', sel.y])
           break
+        case tile_mode.anim:
+          break
       }
     },
 
@@ -136,6 +142,7 @@ export default
           cur_flag.y = s*iy*th
           break
         case tile_mode.props:
+        case tile_mode.anim:
           cur.x = s*tw*ix
           cur.y = s*th*iy
           break
@@ -150,15 +157,18 @@ export default
     on_mouseout(){
       if (this.tile_sec == tile_mode.flags)
         cur_flag.visible = false
-      if (this.tile_sec == tile_mode.props || this.tile_sec == tile_mode.terra)
-        cur.visible = false
+      if ( this.tile_sec == tile_mode.props
+        || this.tile_sec == tile_mode.terra
+        || this.tile_sec == tile_mode.anim
+      ) cur.visible = false
     },
     on_mouseenter(){
       if (this.tile_sec == tile_mode.flags && this.iflag !== null)
         cur_flag.visible = true
-      if (this.tile_sec == tile_mode.props ||
-        (this.tile_sec == tile_mode.terra && this.iterra !== null))
-        cur.visible = true
+      if ( this.tile_sec == tile_mode.props
+        || (this.tile_sec == tile_mode.terra && this.iterra !== null)
+        || (this.tile_sec == tile_mode.anim && this.ianim !== null)
+      ) cur.visible = true
     },
 
     on_zoom_out(){
@@ -213,6 +223,12 @@ export default
       if (this.tile_sec == tile_mode.props){
         sel.x = s*tw*isx, sel.y = s*th*isy
         w = 1, h = 1
+      }
+      if (this.tile_sec == tile_mode.anim){
+        sel.x = s*tw*isx, sel.y = s*th*isy
+        w = 1, h = 1
+        if (this.ianim === null)
+          sel.visible = false, cur.visible = false
       }
       if (this.tile_sec == tile_mode.terra){
         sel.x = s*tw*icx, sel.y = s*th*icy

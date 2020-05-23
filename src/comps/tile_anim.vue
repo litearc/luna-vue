@@ -1,27 +1,34 @@
 <template lang='pug'>
 #tile_anim
-  .flex-row.align-bl
-    ui-checkbox.mt-8px.mr-8px(
-      :items='["Use one duration for all frames"]'
-      @clicked='use_one_dur = arguments[0]'
-    )
-    ui-input.expand(
-      small
-      right
-      :disabled='!use_one_dur'
-      type='number'
-      placeholder='ms'
-    )
+  .flex-row.mt-8px
+    div.mr-8px
+      // make the canvas zero-size so it doesn't expand the flex-row -
+      // we use the height of the flex-row to set the canvas dimensions
+      canvas.zero-size(ref='canvas_preview')
+    div.expand(ref='right')
+      .flex-row.align-bl
+        // ui-checkbox.mt-8px.mr-8px(
+        //   :items='["Use one duration for all frames"]'
+        //   @clicked='use_one_dur = arguments[0]'
+        // )
+        span.mr-8px.ml-4px Frame duration
+        ui-input.expand(
+          small
+          right
+          :disabled='!use_one_dur'
+          type='number'
+          placeholder='ms'
+        )
 
-  .flex-row.full-w.align-center.mt-8px
-    canvas.no-shrink.block.expand.mr-8px.border-red(ref='anim_tiles')
-    ui-tooltip(
-      text='Remove'
-      placement='left'
-    )
-      faicon.icon.hover-hl(
-        icon='minus'
-      )
+      .flex-row.full-w.align-center.mt-8px
+        canvas.no-shrink.block.expand.mr-8px(ref='canvas')
+        ui-tooltip(
+          text='Remove'
+          placement='left'
+        )
+          faicon.icon.hover-hl(
+            icon='minus'
+          )
 
   .flex-row.mt-8px
     .bold.ml-4px Anim
@@ -44,7 +51,7 @@
         :class='{selected: ianim == i}'
         @mousedown='set_ianim(i)'
       )
-      ui-input#tile-flag.invisible.mr-4px(
+      ui-input.invisible.mr-4px(
         small
         v-model='item.name'
         :class='{selected: ianim == i, "expand": true}'
@@ -61,7 +68,9 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
+let app, app_preview, ianim
 
 export default
 {
@@ -70,13 +79,14 @@ export default
   data(){
     return {
       anims: null,
-      use_one_dur: false,
+      use_one_dur: true,
     }
   },
 
   props: {
     ianim: {},
     itab: {},
+    tile_size: {},
   },
 
   computed: {
@@ -91,33 +101,65 @@ export default
       'remove',
     ]),
     on_plus(){
-      this.push([this.flags, {
-        name:'new flag',
-        tiles:Array(this.ntiles).fill(false),
+      this.push([this.anims, {
+        name: 'new anim',
+        tiles: [],
+        frame_dur: 200,
       }])
-      if (this.flags.length == 1)
-        bus.$emit('set_iflag', 0)
+      if (this.anims.length == 1)
+        bus.$emit('set_ianim', 0)
     },
     on_minus(i){
-      this.remove([this.flags, i])
-      if (this.flags.length == 0)
-        bus.$emit('set_iflag', null)
-      else if (this.iflag >= this.flags.length)
-        bus.$emit('set_iflag', this.flags.length-1)
+      this.remove([this.anims, i])
+      if (this.anims.length == 0)
+        bus.$emit('set_ianim', null)
+      else if (this.iflag >= this.anims.length)
+        bus.$emit('set_ianim', this.anims.length-1)
     },
-    set_iflag(i){
-      bus.$emit('set_iflag', i)
+    set_ianim(i){
+      bus.$emit('set_ianim', i)
     }
   },
 
   created(){
     this.anims = this.tabs[this.itab].data.tile_anim
+    ianim = (this.anims.length > 0) ? 0 : null
+    bus.$emit('set_ianim', ianim)
   },
 
+  mounted(){
+    let nanims = (ianim === null) ? 0 : nanims = this.anims[ianim].tiles.length
+    let nx = nanims*this.tile_size.x
+    let ny = this.tile_size.y
+    this.$refs.canvas.style.width = `${nx}px`
+    this.$refs.canvas.style.height = `${ny}px`
+
+    app = new PIXI.Application({
+      width: nx,
+      height: ny,
+      view: this.$refs.canvas,
+      antialias: true,
+      backgroundColor: 0x1d1e1f,
+    })
+
+    let h = this.$refs.right.offsetHeight-1 // not sure why the -1 is needed
+    this.$refs.canvas_preview.style.width = `${h}px`
+    this.$refs.canvas_preview.style.height = `${h}px`
+    app_preview = new PIXI.Application({
+      width: h,
+      height: h,
+      view: this.$refs.canvas_preview,
+      antialias: true,
+      backgroundColor: 0x1d1e1f,
+    })
+  }
 }
 </script>
 
 <style scoped lang='sass'>
 @import ../theme
+
+.selected:not(:focus)
+  color: $c-blue
 </style>
 

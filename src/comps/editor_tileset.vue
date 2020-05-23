@@ -7,6 +7,7 @@
   )
     ed-tileset-image(
       slot='slot1'
+      :ianim='ianim'
       :iflag='iflag'
       :itab='itab'
       :iterra='iterra'
