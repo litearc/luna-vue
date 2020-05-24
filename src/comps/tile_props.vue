@@ -11,7 +11,7 @@
         icon='plus'
         @click='on_plus'
       )
-  template(v-for='(item,i) in props[itile]')
+  template(v-for='(item,i) in o.props[o.itile]')
     ui-input(v-model='item.key' small)
     ui-input(v-model='item.val' small)
     ui-tooltip(
@@ -28,26 +28,14 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { bus } from './editor_tileset.vue'
+let o
 
 export default
 {
   name: 'tile_props',
 
-  data(){
-    return {
-      props: null,
-    }
-  },
-
   props: {
-    itab: {},
-    itile: {},
-  },
-
-  computed: {
-    ...mapState([
-      'tabs',
-    ]),
+    o: {},
   },
 
   methods: {
@@ -56,15 +44,15 @@ export default
       'remove',
     ]),
     on_plus(){
-      this.push([this.props[this.itile], {key:'', val:''}])
+      this.push([o.props[o.itile], {key:'', val:''}])
     },
     on_minus(i){
-      this.remove([this.props[this.itile], i])
+      this.remove([o.props[o.itile], i])
     },
   },
 
   created(){
-    this.props = this.tabs[this.itab].data.tile_props
+    o = this.o
   },
 }
 </script>

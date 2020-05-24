@@ -61,6 +61,7 @@
 
 <script>
 import image_sel_mixin from '../mixins/image_sel'
+import { tile_mode } from '../const.js'
 
 export default
 {
@@ -81,16 +82,23 @@ export default
         (this.tile_width*this.tile_height))
 
       return {
-        tile_width : this.tile_width,
-        tile_height : this.tile_height,
-        im_width : this.im_width,
-        im_height : this.im_height,
+        tile_w : this.tile_width,
+        tile_h : this.tile_height,
+        im_w : this.im_width,
+        im_h : this.im_height,
         im_data : this.im_data,
-        tileset_props: [ {key:'name', val:'forest'} ],
-        tile_props: Array(ntiles).fill(0).map(x => []),
-        tile_flags: [],
-        tile_terra: [],
-        tile_anim: [],
+        tileset_props: [ {key:'name', val:''} ],
+
+        // these are all "tile" data (omit "tile" in variable names for brevity)
+        props: Array(ntiles).fill(0).map(x => []),
+        flags: [],
+        terra: [],
+        anims: [],
+        sec: tile_mode.props,
+        itile: 0, // currently selected tile
+        iflag: null,
+        iterra: null,
+        ianim: null,
       }
     }
   },

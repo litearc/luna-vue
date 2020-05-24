@@ -11,17 +11,17 @@
         icon='plus'
         @click='on_plus'
       )
-  template(v-for='(item,i) in terra')
+  template(v-for='(item,i) in o.terra')
     .flex-row.align-bl
       faicon.icon.it-icon(
         icon='tag'
-        :class='{selected: iterra == i}'
+        :class='{selected: o.iterra == i}'
         @mousedown='set_iterra(i)'
       )
       ui-input.invisible(
         small
         v-model='item.name'
-        :class='{selected: iterra == i, "expand": true}'
+        :class='{selected: o.iterra == i, "expand": true}'
       )
     .flex-row.align-bl
       faicon.icon.mr-4px(
@@ -49,6 +49,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { bus } from './editor_tileset.vue'
 import { coll_type } from '../const.js'
+let o
 
 export default
 {
@@ -56,20 +57,12 @@ export default
 
   data(){
     return {
-      terra: null,
       coll_type,
     }
   },
 
   props: {
-    itab: {},
-    iterra: {},
-  },
-
-  computed: {
-    ...mapState([
-      'tabs',
-    ]),
+    o: {},
   },
 
   methods: {
@@ -79,28 +72,28 @@ export default
       'set_prop',
     ]),
     on_plus(){
-      this.push([this.terra, {
+      this.push([o.terra, {
         name:'new terra',
-        pos:{x:0, y:0},
+        pos: {x:0, y:0},
         coll: coll_type.none,
       }])
-      if (this.terra.length == 1)
-        bus.$emit('set_iterra', 0)
+      if (o.terra.length == 1)
+        this.set_prop([o, 'iterra', 0])
     },
     on_minus(i){
-      this.remove([this.terra, i])
-      if (this.terra.length == 0)
-        bus.$emit('set_iterra', null)
-      else if (this.iterra >= this.terra.length)
-        bus.$emit('set_iterra', this.terra.length-1)
+      this.remove([o.terra, i])
+      if (o.terra.length == 0)
+        this.set_prop([o, 'iterra', null])
+      else if (o.iterra >= o.terra.length)
+        this.set_prop([o, 'iterra', o.terra.length-1])
     },
     set_iterra(i){
-      bus.$emit('set_iterra', i)
+      this.set_prop([o, 'iterra', i])
     }
   },
 
   created(){
-    this.terra = this.tabs[this.itab].data.tile_terra
+    o = this.o
   },
 }
 </script>

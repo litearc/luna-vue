@@ -29,7 +29,7 @@
       component(
         v-else
         :is='tab_comp[itab]'
-        :itab='itab'
+        :o='tabs[itab].data'
       )
 </template>
 

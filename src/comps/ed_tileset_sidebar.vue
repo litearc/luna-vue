@@ -13,7 +13,7 @@
           icon='plus'
           @click='add_tileset_prop'
         )
-    template(v-for='(item,i) in tabs[itab].data.tileset_props')
+    template(v-for='(item,i) in o.tileset_props')
       ui-input(v-model='item.key' small)
       ui-input(v-model='item.val' small)
       ui-tooltip(
@@ -30,23 +30,23 @@
 
   div
     .tile-title(
-      :class='{active: tile_sec == tile_mode.props}'
+      :class='{active: o.sec == tile_mode.props}'
       @click='set_tile_sec(tile_mode.props)'
       ) PROPS
     .tile-title(
-      :class="{active: tile_sec == tile_mode.flags}"
+      :class="{active: o.sec == tile_mode.flags}"
       @click='set_tile_sec(tile_mode.flags)'
     ) FLAGS
     .tile-title(
-      :class="{active: tile_sec == tile_mode.coll}"
+      :class="{active: o.sec == tile_mode.coll}"
       @click='set_tile_sec(tile_mode.coll)'
     ) COLLISION
     .tile-title(
-      :class="{active: tile_sec == tile_mode.terra}"
+      :class="{active: o.sec == tile_mode.terra}"
       @click='set_tile_sec(tile_mode.terra)'
     ) TERRA
     .tile-title(
-      :class="{active: tile_sec == tile_mode.anim}"
+      :class="{active: o.sec == tile_mode.anim}"
       @click='set_tile_sec(tile_mode.anim)'
     ) ANIM
 
@@ -57,13 +57,7 @@
     // like: v-bind='sec_props'
     component(
       :is='curr_tile_comp'
-      :ianim='ianim'
-      :iflag='iflag'
-      :itab='itab'
-      :iterra='iterra'
-      :itile='itile'
-      :ntiles='ntiles'
-      :tile_size='tile_size'
+      :o='o'
     )
 
 </template>
@@ -83,6 +77,7 @@ let tile_comps = [
   tile_terra,
   tile_anim,
 ]
+let o
 
 export default
 {
@@ -90,27 +85,13 @@ export default
 
   data(){
     return {
-      tile_mode,
-      tile_size: null,
-      tileset_props: null,
       curr_tile_comp: null,
+      tile_mode,
     }
   },
 
   props: {
-    ianim: {},
-    iflag: {},
-    itab: {},
-    iterra: {},
-    itile: { default: 0 },
-    ntiles: {},
-    tile_sec: {},
-  },
-
-  computed: {
-    ...mapState([
-      'tabs',
-    ]),
+    o: {},
   },
 
   components: {
@@ -125,24 +106,23 @@ export default
     ...mapMutations([
       'push',
       'remove',
+      'set_prop',
     ]),
     add_tileset_prop(){
-      this.push([this.tileset_props, {key:'', val:''}])
+      this.push([o.tileset_props, {key:'', val:''}])
     },
     remove_tileset_prop(i){
-      this.remove([this.tileset_props, i])
+      this.remove([o.tileset_props, i])
     },
     set_tile_sec(i){
-      this.$emit('set_tile_sec', i)
+      this.set_prop([o, 'sec', i])
       this.curr_tile_comp = tile_comps[i]
     },
   },
 
   created(){
-    let data = this.tabs[this.itab].data
-    this.tile_size = {x: data.tile_width, y: data.tile_height}
-    this.tileset_props = data.tileset_props
-    this.curr_tile_comp = tile_comps[this.tile_sec]
+    o = this.o
+    this.curr_tile_comp = tile_comps[o.sec]
   }
 }
 </script>

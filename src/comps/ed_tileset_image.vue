@@ -36,7 +36,7 @@ let mw, mh, tw, th // image width / height, tile width / height
 let isx, isy       // sel x and y positions (column, row)
 let icx, icy       // auto-tile top-left position (column, row)
 let s = 1          // scale factor for image
-let tile_flags, tile_terra
+let o
 
 // draws a box for pixi graphics `g` with width `w`, height `h`
 function draw_box(g, w, h){
@@ -54,28 +54,20 @@ export default
 {
   name: 'ed_tileset_image',
 
-  data(){
-    return {
-      pub: process.env.BASE_URL,
-      im_width: null,
-      im_height: null,
-      tile_width: 1,
-      tile_height: 1,
-    }
-  },
-
-  computed: {
-    ...mapState([
-      'tabs',
-    ])
-  },
+  // data(){
+  //   return {
+  //     pub: process.env.BASE_URL,
+  //   }
+  // },
 
   props: {
-    ianim: {},
-    iflag: {},
-    itab: {},
-    iterra: {},
-    tile_sec: {},
+    o: {},
+  },
+
+  computed:{
+    iflag(){ return this.o.iflag },
+    iterra(){ return this.o.iterra },
+    sec(){ return this.o.sec },
   },
 
   watch: {
@@ -83,18 +75,18 @@ export default
       // update flags for all tiles
       let ntiles = nx*ny
       for (let i = 0; i < ntiles; i++)
-        flag[i].visible = (v === null) ? false : tile_flags[v][i]
+        flag[i].visible = (v === null) ? false : o.flags[v][i]
     },
     iterra(v){
       let vis = (v !== null)
       sel.visible = vis
       if (!vis) return
-      sel.x = tile_terra[v].pos.x
-      sel.y = tile_terra[v].pos.y
+      sel.x = o.terra[v].pos.x
+      sel.y = o.terra[v].pos.y
     },
-    tile_sec(i){
+    sec(i){
       if (i === tile_mode.props
-       || (i === tile_mode.terra && this.iterra !== null))
+       || (i === tile_mode.terra && o.iterra !== null))
         sel.visible = true
       if (i === tile_mode.anim)
         sel.visible = false
@@ -109,24 +101,24 @@ export default
     ]),
 
     on_click(e){
-      switch (this.tile_sec){
+      switch (o.sec){
         case tile_mode.flags:
-          if (this.iflag === null) return
+          if (o.iflag === null) return
           let i = iy*nx+ix
-          this.flip([tile_flags[this.iflag], i])
-          flag[i].visible = tile_flags[this.iflag][i]
+          this.flip([o.flags[o.iflag], i])
+          flag[i].visible = o.flags[o.iflag][i]
           return
         case tile_mode.props:
           isx = ix, isy = iy
           sel.x = isx*s*tw, sel.y = isy*s*th
-          this.$emit('set_itile', isy*nx+isx)
+          this.set_prop([o, 'itile', isy*nx+isx])
           break
         case tile_mode.terra:
-          if (this.iterra === null) return
+          if (o.iterra === null) return
           icx = ix-1, icy = iy-2
           sel.x = icx*s*tw, sel.y = icy*s*th
-          this.set_prop([tile_terra[this.iterra].pos, 'x', sel.x])
-          this.set_prop([tile_terra[this.iterra].pos, 'y', sel.y])
+          this.set_prop([o.terra[o.iterra].pos, 'x', sel.x])
+          this.set_prop([o.terra[o.iterra].pos, 'y', sel.y])
           break
         case tile_mode.anim:
           break
@@ -136,7 +128,7 @@ export default
     on_mousemove(e){
       ix = Math.floor(e.offsetX/(s*tw))
       iy = Math.floor(e.offsetY/(s*tw)) 
-      switch (this.tile_sec){
+      switch (this.sec){
         case tile_mode.flags:
           cur_flag.x = s*ix*tw
           cur_flag.y = s*iy*th
@@ -155,19 +147,19 @@ export default
 
     // make cursor disappear when mouse exits canvas
     on_mouseout(){
-      if (this.tile_sec == tile_mode.flags)
+      if (o.sec == tile_mode.flags)
         cur_flag.visible = false
-      if ( this.tile_sec == tile_mode.props
-        || this.tile_sec == tile_mode.terra
-        || this.tile_sec == tile_mode.anim
+      if ( o.sec == tile_mode.props
+        || o.sec == tile_mode.terra
+        || o.sec == tile_mode.anim
       ) cur.visible = false
     },
     on_mouseenter(){
-      if (this.tile_sec == tile_mode.flags && this.iflag !== null)
+      if (o.sec == tile_mode.flags && o.iflag !== null)
         cur_flag.visible = true
-      if ( this.tile_sec == tile_mode.props
-        || (this.tile_sec == tile_mode.terra && this.iterra !== null)
-        || (this.tile_sec == tile_mode.anim && this.ianim !== null)
+      if ( o.sec == tile_mode.props
+        || (o.sec == tile_mode.terra && o.iterra !== null)
+        || (o.sec == tile_mode.anim && o.ianim !== null)
       ) cur.visible = true
     },
 
@@ -217,23 +209,23 @@ export default
     upd_boxes(){
       sel.clear()
       cur.clear()
-      if (this.tile_sec == tile_mode.flags)
+      if (o.sec == tile_mode.flags)
         return
       let w, h
-      if (this.tile_sec == tile_mode.props){
+      if (o.sec == tile_mode.props){
         sel.x = s*tw*isx, sel.y = s*th*isy
         w = 1, h = 1
       }
-      if (this.tile_sec == tile_mode.anim){
+      if (o.sec == tile_mode.anim){
         sel.x = s*tw*isx, sel.y = s*th*isy
         w = 1, h = 1
-        if (this.ianim === null)
+        if (o.ianim === null)
           sel.visible = false, cur.visible = false
       }
-      if (this.tile_sec == tile_mode.terra){
+      if (o.sec == tile_mode.terra){
         sel.x = s*tw*icx, sel.y = s*th*icy
         w = 3, h = 4
-        if (this.iterra === null)
+        if (o.iterra === null)
           sel.visible = false, cur.visible = false
       }
       draw_box(sel, w*s*tw, h*s*th)
@@ -242,7 +234,7 @@ export default
     },
 
     upd_flags(){
-      flags.visible = (this.tile_sec === tile_mode.flags)
+      flags.visible = (o.sec === tile_mode.flags)
       cur_flag.clear()
       cur_flag.lineStyle(1, 0x000000)
       cur_flag.beginFill(0x5c99d6, 1)
@@ -256,8 +248,8 @@ export default
           flag[i].lineStyle(1, 0x000000)
           flag[i].beginFill(0x5c99d6, 1)
           flag[i].drawCircle(s*(ix+.5)*tw, s*(iy+.5)*th, s*4)
-          if (this.iflag === null ||
-              tile_flags[this.iflag][i] === false)
+          if (o.iflag === null ||
+              o.flags[o.iflag][i] === false)
             flag[i].visible = false
           flags.addChild(flag[i])
         }
@@ -266,32 +258,22 @@ export default
   },
 
   created(){
-    let data = this.tabs[this.itab].data
-    this.tile_width = data.tile_width
-    this.tile_height = data.tile_height
-    this.im_width = data.im_width
-    this.im_height = data.im_height
-
-    mw = this.im_width
-    mh = this.im_height
-    tw = this.tile_width
-    th = this.tile_height
+    o = this.o
+    mw = o.im_w
+    mh = o.im_h
+    tw = o.tile_w
+    th = o.tile_h
     nx = Math.round(mw/tw)
     ny = Math.round(mh/th)
     isx = 0
     isy = 0
     icx = 0
     icy = 0
-
-    tile_flags = this.tabs[this.itab].data.tile_flags
-    tile_terra = this.tabs[this.itab].data.tile_terra
-    this.$emit('set_ntiles', nx*ny)
   },
 
   mounted(){
     // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
     
-    let { im_data } = this.tabs[this.itab].data
     this.$refs.canvas.style.width = `${Math.round(s*mw)}px`
     this.$refs.canvas.style.height = `${Math.round(s*mh)}px`
 
@@ -302,7 +284,7 @@ export default
       antialias: true,
     })
 
-    let base = PIXI.BaseTexture.fromBuffer(im_data, mw, mh)
+    let base = PIXI.BaseTexture.fromBuffer(o.im_data, mw, mh)
 
     // extract tiles
     tiles = []
@@ -312,7 +294,7 @@ export default
         tiles[i++] = new PIXI.Sprite(new PIXI.Texture(base,
           new PIXI.Rectangle(xi*tw, yi*th, tw, th)))
 
-    // let tex = PIXI.Texture.fromBuffer(im_data, mw, mh)
+    // let tex = PIXI.Texture.fromBuffer(o.im_data, mw, mh)
     let tex = new PIXI.Texture(base)
     im = new PIXI.Sprite(tex)
     im.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?

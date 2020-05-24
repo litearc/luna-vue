@@ -15,7 +15,7 @@
         ui-input.expand(
           small
           right
-          :disabled='ianim === null'
+          :disabled='o.ianim === null'
           type='number'
           placeholder='ms'
           v-model='frame_dur_model'
@@ -45,17 +45,17 @@
         )
   div
     .flex-row.align-bl(
-      v-for='(item,i) in anims'
+      v-for='(item,i) in o.anims'
     )
       faicon.icon.it-icon(
         icon='tag'
-        :class='{selected: ianim == i}'
+        :class='{selected: o.ianim == i}'
         @mousedown='set_ianim(i)'
       )
       ui-input.invisible.mr-4px(
         small
         v-model='item.name'
-        :class='{selected: ianim == i, "expand": true}'
+        :class='{selected: o.ianim == i, "expand": true}'
       )
       ui-tooltip(
         text='Remove'
@@ -72,36 +72,25 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
 let app, app_preview, ianim
+let o
 
 export default
 {
   name: 'tile_anim',
 
-  data(){
-    return {
-      anims: null,
-      use_one_dur: true,
-    }
-  },
-
   props: {
-    ianim: {},
-    itab: {},
-    tile_size: {},
+    o: {},
   },
 
   computed: {
-    ...mapState([
-      'tabs',
-    ]),
     // https://stackoverflow.com/questions/35210901/binding-method-result-to-v-model-with-vue-js
     frame_dur_model: {
       get(){
-        return (this.ianim === null) ? '' : this.anims[this.ianim].frame_dur
+        return (o.ianim === null) ? '' : o.anims[o.ianim].frame_dur
       },
       set(v){
-        if (this.ianim !== null)
-          this.anims[this.ianim].frame_dur = v
+        if (o.ianim !== null)
+          o.anims[o.ianim].frame_dur = v
       },
     },
   },
@@ -110,38 +99,39 @@ export default
     ...mapMutations([
       'push',
       'remove',
+      'set_prop',
     ]),
     on_plus(){
-      this.push([this.anims, {
+      this.push([o.anims, {
         name: 'new anim',
         tiles: [],
         frame_dur: 200,
       }])
-      if (this.anims.length == 1)
-        bus.$emit('set_ianim', 0)
+      if (o.anims.length == 1)
+        this.set_prop([o, 'ianim', 0])
     },
     on_minus(i){
-      if (this.anims.length == 0)
-        bus.$emit('set_ianim', null)
-      else if (this.ianim >= this.anims.length)
-        bus.$emit('set_ianim', this.anims.length-1)
-      this.remove([this.anims, i])
+      if (o.anims.length == 0)
+        this.set_prop([o, 'ianim', null])
+      else if (o.ianim >= o.anims.length)
+        this.set_prop([o, 'ianim', o.anims.length-1])
+      this.remove([o.anims, i])
     },
     set_ianim(i){
-      bus.$emit('set_ianim', i)
+      this.set_prop([o, 'ianim', 1])
     }
   },
 
   created(){
-    this.anims = this.tabs[this.itab].data.tile_anim
-    ianim = (this.anims.length > 0) ? 0 : null
-    bus.$emit('set_ianim', ianim)
+    o = this.o
+    let ianim = (o.anims.length > 0) ? 0 : null
+    this.set_prop([o, 'ianim', ianim])
   },
 
   mounted(){
-    let nanims = (ianim === null) ? 0 : nanims = this.anims[ianim].tiles.length
-    let nx = nanims*this.tile_size.x
-    let ny = this.tile_size.y
+    let nanims = (ianim === null) ? 0 : nanims = o.anims[ianim].tiles.length
+    let nx = nanims*o.tile_w
+    let ny = o.tile_h
     this.$refs.canvas.style.width = `${nx}px`
     this.$refs.canvas.style.height = `${ny}px`
 

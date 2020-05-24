@@ -14,17 +14,17 @@
         )
   div
     .flex-row.align-bl(
-      v-for='(item,i) in flags'
+      v-for='(item,i) in o.flags'
     )
       faicon.icon.it-icon(
         icon='tag'
-        :class='{selected: iflag == i}'
+        :class='{selected: o.iflag == i}'
         @mousedown='set_iflag(i)'
       )
       ui-input#tile-flag.invisible.mr-4px(
         small
         v-model='item.name'
-        :class='{selected: iflag == i, "expand": true}'
+        :class='{selected: o.iflag == i, "expand": true}'
       )
       ui-tooltip(
         text='Remove'
@@ -39,56 +39,45 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { bus } from './editor_tileset.vue'
+let o
 
 export default
 {
   name: 'tile_flags',
 
-  data(){
-    return {
-      flags: null,
-    }
-  },
-
   props: {
-    iflag: {},
-    itab: {},
-    ntiles: {},
-  },
-
-  computed: {
-    ...mapState([
-      'tabs',
-    ]),
+    o: {},
   },
 
   methods: {
     ...mapMutations([
       'push',
       'remove',
+      'set_prop',
     ]),
     on_plus(){
-      this.push([this.flags, {
-        name:'new flag',
-        tiles:Array(this.ntiles).fill(false)
+      let ntiles = Math.round(o.im_w*o.im_h/o.tile_w/o.tile_h)
+      this.push([o.flags, {
+        name: 'new flag',
+        tiles: Array(ntiles).fill(false)
       }])
-      if (this.flags.length == 1)
-        bus.$emit('set_iflag', 0)
+      if (o.flags.length == 1)
+        this.set_prop([o, 'iflag', 0])
     },
     on_minus(i){
-      this.remove([this.flags, i])
-      if (this.flags.length == 0)
-        bus.$emit('set_iflag', null)
-      else if (this.iflag >= this.flags.length)
-        bus.$emit('set_iflag', this.flags.length-1)
+      this.remove([o.flags, i])
+      if (o.flags.length == 0)
+        this.set_prop([o, 'iflag', null])
+      else if (o.iflag >= o.flags.length)
+        this.set_prop([o, 'iflag', o.flags.length-1])
     },
     set_iflag(i){
-      bus.$emit('set_iflag', i)
+      this.set_prop([o, 'iflag', i])
     }
   },
 
   created(){
-    this.flags = this.tabs[this.itab].data.tile_flags
+    o = this.o
   },
 }
 </script>
