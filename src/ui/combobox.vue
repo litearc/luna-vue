@@ -1,14 +1,17 @@
 <template lang='pug'>
 ui-dropdown(
   :items='list'
+  :disabled='disabled'
+  :value='value'
   trigger='click'
+  @input='$emit("input", $event.target.value)'
   @item-selected='on_item_select'
 )
   .dropdown(
     :class='el_class'
     :style='el_style'
   )
-    span.fixed {{ items[isel] }}
+    span.fixed {{ items[value] }}
     .expand
     span.fixed
       faicon.icon(icon='caret-down')
@@ -22,20 +25,25 @@ export default
   data(){
     return{
       list: {},
-      isel: 0,
     }
   },
 
   props: {
+    disabled: { default: false },
     items: {},
     mclass: { default: null },
     mstyle: { default: null },
+    value: {},
   },
 
   computed:
   {
     el_class(){
-      return (this.mclass === null) ? {} : this.mclass
+      let def_class = {
+        disabled: this.disabled,
+      }
+      return (this.mclass === null) ? def_class :
+        Object.assign(def_style, this.mclass)
     },
 
     el_style(){
@@ -56,7 +64,7 @@ export default
   {
     on_item_select(arr){
       this.isel = arr[0]
-      this.$emit('item_selected', this.isel)
+      this.$emit('input', this.isel)
     },
   },
 }
@@ -73,6 +81,6 @@ export default
   flex-direction: row
   align-items: baseline
 
-  &:hover
-    background-color: $cD
+  &:not(.disabled):hover
+    background-color: $cE
 </style>

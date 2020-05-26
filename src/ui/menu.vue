@@ -50,7 +50,7 @@ $menu-min-width: 120px
   padding: 4px 0px 4px 0px
   background-color: $cH
   border-radius: 4px
-  min-width: $menu-min-width
+  /* min-width: $menu-min-width */
   border: 1px solid $c-border
 
   &.is-root

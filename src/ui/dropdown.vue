@@ -1,5 +1,5 @@
 <template lang='pug'>
-span.ui-tooltip
+span
   // the `display: inline-block` is needed for the `trigger` div to be the same
   // size as the slot, but not expand more than that
   // add position: relative?
@@ -41,6 +41,7 @@ export default
   },
 
   props: {
+    disabled: { default: false },
     placement: { default: 'bottom' },
     trigger: { default: 'hover' }, // 'hover' or 'click'
     items: {},
@@ -66,7 +67,7 @@ export default
     },
 
     on_trigger_click(){
-      if (this.trigger == 'click'){
+      if (this.trigger == 'click' && !this.disabled){
         this.enabled = !this.enabled
       }
     },
@@ -102,6 +103,7 @@ export default
 #trigger
   display: inline-block
   position: relative
+  width: 100%
 
 #trigger.enabled.hover:hover #menu
   display: block

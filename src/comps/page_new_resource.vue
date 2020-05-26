@@ -5,7 +5,7 @@
     ui-combobox(
       :items='["Sprite", "Animation", "Tileset", "Map"]'
       mstyle='width: 150px'
-      @item_selected='on_page_select'
+      v-model='ipage'
     )
 
   keep-alive
@@ -59,9 +59,9 @@ export default
 
   methods:
   {
-    on_page_select(i){
-      this.ipage = i
-    },
+    // on_page_select(i){
+    //   this.ipage = i
+    // },
 
     on_click_create(){
       let ed_data = this.$refs.curr_page.editor_data()

@@ -97,6 +97,7 @@ export default
   methods: {
     ...mapMutations([
       'flip',
+      'push',
       'set_prop',
     ]),
 
@@ -121,6 +122,8 @@ export default
           this.set_prop([o.terra[o.iterra].pos, 'y', sel.y])
           break
         case tile_mode.anim:
+          if (o.ianim !== null)
+            this.push([o.anims[o.ianim].tiles, iy*nx+ix])
           break
       }
     },
