@@ -28,7 +28,7 @@ import * as PIXI from 'pixi.js'
 import { tile_mode } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
-let app, im, grid, sel, cur, flags, cur_flag, tiles // pixi graphics
+let app, im, grid, sel, cur, flags, cur_flag // pixi graphics
 let flag = []      // array of flags
 let ix, iy         // current tile mouse is over
 let nx, ny         // number of tiles along x, y
@@ -290,12 +290,13 @@ export default
     let base = PIXI.BaseTexture.fromBuffer(o.im_data, mw, mh)
 
     // extract tiles
-    tiles = []
+    o.g_tiles = [] // so it can be shared
     let i = 0
     for (let xi = 0; xi < nx; xi++)
       for (let yi = 0; yi < ny; yi++)
-        tiles[i++] = new PIXI.Sprite(new PIXI.Texture(base,
-          new PIXI.Rectangle(xi*tw, yi*th, tw, th)))
+        o.g_tiles[i++] = new PIXI.Texture(base,
+          new PIXI.Rectangle(xi*tw, yi*th, tw, th))
+    // app.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
 
     // let tex = PIXI.Texture.fromBuffer(o.im_data, mw, mh)
     let tex = new PIXI.Texture(base)

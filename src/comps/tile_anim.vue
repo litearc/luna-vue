@@ -27,7 +27,8 @@
       .flex-row
         canvas.zero-size.expand(ref='canvas_terra')
       .flex-row.full-w.align-center.mt-8px
-        canvas.no-shrink.block.expand.mr-8px(ref='canvas_tiles')
+        canvas.no-shrink.block.mr-8px(ref='canvas_tiles')
+        .expand
         ui-tooltip(
           text='Remove'
           placement='left'
@@ -107,14 +108,15 @@ export default
           this.o.anims[this.o.ianim].type_id = v
       },
     },
-    ntiles(){
+    nframes(){
       return (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].tiles.length
     }
   },
 
   watch: {
-    ntiles(v){
+    nframes(v){
       console.log('changed number of tiles')
+      console.log(o.g_tiles[0])
     }
   },
 
@@ -156,6 +158,7 @@ export default
     let nanims = (o.ianim === null) ? 0 : o.anims[ianim].tiles.length
     let nx = nanims*o.tile_w
     let ny = o.tile_h
+    nx = 16, ny = 16
     this.$refs.canvas_tiles.style.width = `${nx}px`
     this.$refs.canvas_tiles.style.height = `${ny}px`
     this.$refs.canvas_terra.style.width = `${nx}px`
@@ -176,6 +179,9 @@ export default
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })
+    this.$refs.canvas_tiles.style.width = '16px'
+    this.$refs.canvas_tiles.style.height = '16px'
+    app_tiles.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
 
     let h = this.$refs.right.offsetHeight-1 // not sure why the -1 is needed
     this.$refs.canvas_preview.style.width = `${h}px`
