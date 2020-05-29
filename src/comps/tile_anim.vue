@@ -79,6 +79,7 @@ import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
 let app_tiles, app_preview, app_terra
 let o
+let rerender = false
 
 export default
 {
@@ -117,6 +118,9 @@ export default
     nframes(v){
       console.log('changed number of tiles')
       console.log(o.g_tiles[0])
+      rerender = true
+      app_tiles.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
+      app_preview.renderer.render(app_preview.stage)
     }
   },
 
@@ -181,7 +185,15 @@ export default
     })
     this.$refs.canvas_tiles.style.width = '16px'
     this.$refs.canvas_tiles.style.height = '16px'
-    app_tiles.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
+    let spr = new PIXI.Sprite(o.g_tiles[0])
+    // app_tiles.stage.addChild(spr)
+    // app_tiles.ticker.add((delta) => {
+    //   console.log('ticking...')
+    //   if (rerender){
+    //     app_tiles.stage.addChild(spr)
+    //     rerender = false
+    //   }
+    // })
 
     let h = this.$refs.right.offsetHeight-1 // not sure why the -1 is needed
     this.$refs.canvas_preview.style.width = `${h}px`
