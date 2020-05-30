@@ -113,6 +113,10 @@ $font-size: 12px
   flex-grow: 0
 .no-shrink
   flex-shrink: 0
+.can-grow
+  flex-grow: 1
+.can-shrink
+  flex-shrink: 1
 
 // align-items controls the alignment of items in the cross-axis, so centering
 // items horizontally or vertically depends on whether the flex direction is row
@@ -394,6 +398,9 @@ button
 ::-webkit-scrollbar
   width: 8px
   height: 8px
+.no-scrollbars::-webkit-scrollbar
+  width: 0px
+  height: 0px
 ::-webkit-scrollbar-track
   background: $c-bg-dark
 ::-webkit-scrollbar-thumb

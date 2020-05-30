@@ -96,6 +96,7 @@ export default
 
   methods: {
     ...mapMutations([
+      'insert',
       'flip',
       'push',
       'set_prop',
@@ -123,7 +124,7 @@ export default
           break
         case tile_mode.anim:
           if (o.ianim !== null)
-            this.push([o.anims[o.ianim].tiles, iy*nx+ix])
+            this.insert([o.anims[o.ianim].tiles, o.anim_pos, iy*nx+ix])
           break
       }
     },

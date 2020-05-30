@@ -19,23 +19,34 @@
         v-model='frame_dur_model'
       )
       
-  .flex-row.mt-8px
+  //- .flex-row.mt-8px
+  div.mt-8px
     // make the canvas zero-size so it doesn't expand the flex-row -
     // we use the height of the flex-row to set the canvas dimensions
-    canvas.zero-size.mr-8px(ref='canvas_preview')
-    .expand(ref='right')
-      .flex-row
-        canvas.zero-size.expand(ref='canvas_terra')
-      .flex-row.full-w.align-center.mt-8px
-        canvas.no-shrink.block.mr-8px(ref='canvas_tiles')
+    canvas.border-green.mr-8px(ref='canvas_preview' style='height:20px; width:80px; float:left')
+    .border-blue(ref='right' style='width:calc(100% - 88px); float:right')
+      canvas.full-w.border-red(ref='canvas_terra' style='height:20px')
+      .flex-row.full-w.mt-8px.border-green
+        #container.border-red.no-scrollbars(style='height:20px; overflow-x:scroll; overflow-y:hidden')
+          canvas.border-blue(ref='canvas_tiles' style='width:320px; height:20px')
         .expand
         ui-tooltip(
           text='Remove'
           placement='left'
         )
-          faicon.icon.hover-hl(
+          faicon.icon.hover-hl.ml-8px(
             icon='minus'
+            @click='on_minus'
           )
+      
+
+      //- .flex-row
+      //-   canvas.zero-size.expand(ref='canvas_terra')
+      //- .flex-row.full-w.align-center.mt-8px.border-red
+      //-   .border-blue.expand
+      //-   .border-green.fixed(style='height:10px; width:10px')
+
+  div(style='clear:both')
 
   .flex-row.mt-8px
     .bold.ml-4px Anim
@@ -78,8 +89,8 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
 let app_tiles, app_preview, app_terra
+let tile_sprites = []
 let o
-let rerender = false
 
 export default
 {
@@ -116,11 +127,13 @@ export default
 
   watch: {
     nframes(v){
-      console.log('changed number of tiles')
-      console.log(o.g_tiles[0])
-      rerender = true
-      app_tiles.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
-      app_preview.renderer.render(app_preview.stage)
+      // console.log('changed number of tiles')
+      // console.log(o.g_tiles[0])
+      // app_tiles.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
+      // let i = o.anim_pos
+      // this.insert([tile_sprites, i,
+      //   new PIXI.Sprite(o.g_tiles[o.anims[o.ianim].tiles[i]])])
+      // app_preview.renderer.render(app_preview.stage)
     }
   },
 
@@ -159,52 +172,50 @@ export default
   },
 
   mounted(){
-    let nanims = (o.ianim === null) ? 0 : o.anims[ianim].tiles.length
+    let nanims = (o.ianim === null) ? 0 : o.anims[o.ianim].tiles.length
     let nx = nanims*o.tile_w
     let ny = o.tile_h
     nx = 16, ny = 16
-    this.$refs.canvas_tiles.style.width = `${nx}px`
-    this.$refs.canvas_tiles.style.height = `${ny}px`
-    this.$refs.canvas_terra.style.width = `${nx}px`
-    this.$refs.canvas_terra.style.height = `${ny}px`
+    nx = 340
+    // this.$refs.canvas_tiles.style.width = `${nx}px`
+    // this.$refs.canvas_tiles.style.height = `${ny}px`
+    // this.$refs.canvas_terra.style.width = `${nx}px`
+    // this.$refs.canvas_terra.style.height = `${ny}px`
 
-    app_terra = new PIXI.Application({
-      width: nx,
-      height: ny,
-      view: this.$refs.canvas_terra,
-      antialias: true,
-      backgroundColor: 0x1d1e1f,
-    })
-
-    app_tiles = new PIXI.Application({
-      width: nx,
-      height: ny,
-      view: this.$refs.canvas_tiles,
-      antialias: true,
-      backgroundColor: 0x1d1e1f,
-    })
-    this.$refs.canvas_tiles.style.width = '16px'
-    this.$refs.canvas_tiles.style.height = '16px'
-    let spr = new PIXI.Sprite(o.g_tiles[0])
-    // app_tiles.stage.addChild(spr)
-    // app_tiles.ticker.add((delta) => {
-    //   console.log('ticking...')
-    //   if (rerender){
-    //     app_tiles.stage.addChild(spr)
-    //     rerender = false
-    //   }
+    // app_terra = new PIXI.Application({
+    //   width: nx,
+    //   height: ny,
+    //   view: this.$refs.canvas_terra,
+    //   antialias: true,
+    //   backgroundColor: 0x1d1e1f,
     // })
 
-    let h = this.$refs.right.offsetHeight-1 // not sure why the -1 is needed
-    this.$refs.canvas_preview.style.width = `${h}px`
-    this.$refs.canvas_preview.style.height = `${h}px`
-    app_preview = new PIXI.Application({
-      width: h,
-      height: h,
-      view: this.$refs.canvas_preview,
-      antialias: true,
-      backgroundColor: 0x1d1e1f,
-    })
+    // app_tiles = new PIXI.Application({
+    //   width: nx,
+    //   height: ny,
+    //   view: this.$refs.canvas_tiles,
+    //   antialias: true,
+    //   backgroundColor: 0x1d1e1f,
+    // })
+
+    // o.anim_pos = nanims
+    // for (let i = 0; i < nanims; i++){
+    //   tile_sprites[i] = new PIXI.Sprite(o.g_tiles[o.anims[o.ianim].tiles[i]])
+    //   tile_sprites[i].x = o.tile_w*i
+    //   tile_sprites[i].y = 0
+    //   app_tiles.stage.addChild(tile_sprites[i])
+    // }
+
+    // let h = this.$refs.right.offsetHeight-1 // not sure why the -1 is needed
+    // this.$refs.canvas_preview.style.width = `${h}px`
+    // this.$refs.canvas_preview.style.height = `${h}px`
+    // app_preview = new PIXI.Application({
+    //   width: h,
+    //   height: h,
+    //   view: this.$refs.canvas_preview,
+    //   antialias: true,
+    //   backgroundColor: 0x1d1e1f,
+    // })
   }
 }
 </script>

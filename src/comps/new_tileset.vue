@@ -99,6 +99,7 @@ export default
         iflag: null,
         iterra: null,
         ianim: null,
+        anim_pos: 0,
 
         // PIXI graphics
         g_tiles: Array(ntiles).fill(0),

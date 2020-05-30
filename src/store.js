@@ -36,6 +36,11 @@ export default new Vuex.Store({
       arr.push(item)
     },
 
+    // generic way of inserting an item from an array
+    insert(s, [arr, i, item]){
+      arr.splice(i, 0, item)
+    },
+
     // removes an item from an array or object.
     remove(s, [obj, key]){
       Vue.delete(obj, key)
