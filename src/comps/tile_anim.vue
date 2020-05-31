@@ -43,7 +43,7 @@
         ref='container_tiles'
         style='height: 0px; background-color: #1d1e1f'
       )
-        canvas.border-blue(ref='canvas_tiles')
+        canvas(ref='canvas_tiles')
 
   .flex-row.mt-8px
     .bold.ml-4px Anim
@@ -127,25 +127,19 @@ export default
     nframes(n, prev){
       console.log('nframes changed')
       if (n > prev){ // inserted a tile
-        console.log('added')
         // need to do 3 things:
         // - resize the canvas
         // - insert new sprite (addChildAt)
         // - reposition tiles (from insertion point onwards)
         let itile = o.anims[o.ianim].tiles[o.anim_pos]
-        this.insert([o.anims[o.ianim].g_tiles, o.anim_pos,
-          new PIXI.Sprite(o.g_tiles[itile])
-        ])
-        console.log(`anim pos: ${o.anim_pos}`)
-        let spr = o.anims[o.ianim].g_tiles[o.anim_pos]
-        spr.x = 0
+        let spr = new PIXI.Sprite(o.g_tiles[itile]) // o.anims[o.ianim].g_tiles[o.anim_pos]
+        this.insert([o.anims[o.ianim].g_tiles, o.anim_pos, spr])
+        spr.x = o.anim_pos*o.tile_w
         spr.y = 0
         this.$refs.canvas_tiles.style.width = `${o.tile_w*n}px`
-        console.log(itile)
-        console.log(o.anims[o.ianim].g_tiles)
-        console.log(spr)
-        app_tiles.stage.addChildAt(spr, o.anim_pos)
-        app_tiles.render()
+        this.$refs.canvas_tiles.style.height = `${o.tile_h}px`
+        app_tiles.resize()
+        app_tiles.stage.addChild(spr)
         o.anim_pos++
       }
       else { // removed a tile
@@ -211,6 +205,7 @@ export default
       width: o.tile_w*nanims,
       height: o.tile_h,
       view: this.$refs.canvas_tiles,
+      resizeTo: this.$refs.canvas_tiles,
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })

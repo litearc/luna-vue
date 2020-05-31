@@ -293,8 +293,8 @@ export default
     // extract tiles
     o.g_tiles = [] // so it can be shared
     let i = 0
-    for (let xi = 0; xi < nx; xi++)
-      for (let yi = 0; yi < ny; yi++)
+    for (let yi = 0; yi < ny; yi++)
+      for (let xi = 0; xi < nx; xi++)
         o.g_tiles[i++] = new PIXI.Texture(base,
           new PIXI.Rectangle(xi*tw, yi*th, tw, th))
     // app.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
