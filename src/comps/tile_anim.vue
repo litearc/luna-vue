@@ -37,7 +37,7 @@
         )
           faicon.icon.hover-hl(
             icon='minus'
-            @click='on_minus'
+            @click='on_minus_tiles'
           )
       .expand.overflow-x-scoll.overflow-y-hidden.ws-nowrap(
         ref='container_tiles'
@@ -118,33 +118,22 @@ export default
           this.o.anims[this.o.ianim].type_id = v
       },
     },
-    nframes(){
+    ntiles(){
       return (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].tiles.length
     },
   },
 
   watch: {
-    nframes(n, prev){
-      console.log('nframes changed')
-      if (n > prev){ // inserted a tile
-        // need to do 3 things:
-        // - resize the canvas
-        // - insert new sprite (addChildAt)
-        // - reposition tiles (from insertion point onwards)
+    ntiles(n, prev){
+      if (n > prev){ // inserted a tile (tile removed handled in on_minus_tiles)
         let itile = o.anims[o.ianim].tiles[o.anim_pos]
         let spr = new PIXI.Sprite(o.g_tiles[itile]) // o.anims[o.ianim].g_tiles[o.anim_pos]
+        spr.x = o.anim_pos*o.tile_w, spr.y = 0
         this.insert([o.anims[o.ianim].g_tiles, o.anim_pos, spr])
-        spr.x = o.anim_pos*o.tile_w
-        spr.y = 0
-        this.$refs.canvas_tiles.style.width = `${o.tile_w*n}px`
-        this.$refs.canvas_tiles.style.height = `${o.tile_h}px`
-        app_tiles.resize()
-        app_tiles.stage.addChild(spr)
+        this.upd_canvas_tiles()
         o.anim_pos++
       }
-      else { // removed a tile
-      }
-    }
+    },
   },
 
   methods: {
@@ -154,6 +143,10 @@ export default
       'remove',
       'set_prop',
     ]),
+    clear_app(app){
+      for (let i = app.stage.children.length-1; i >= 0; i--)
+        app.stage.removeChildAt(i)
+    },
     on_plus(){
       this.push([o.anims, {
         name: 'new anim',
@@ -164,16 +157,41 @@ export default
       }])
       if (o.anims.length == 1)
         this.set_prop([o, 'ianim', 0])
+      this.upd_canvas_tiles()
     },
     on_minus(i){
       this.remove([o.anims, i])
-      if (o.anims.length == 0)
+      if (o.anims.length == 0){
         this.set_prop([o, 'ianim', null])
-      else if (o.ianim >= o.anims.length)
+        this.set_prop([o, 'anim_pos', 0])
+      }
+      else if (o.ianim >= o.anims.length){
         this.set_prop([o, 'ianim', o.anims.length-1])
+        this.set_prop([o, 'anim_pos', 0])
+      }
+      this.upd_canvas_tiles()
+    },
+    on_minus_tiles(){
+      let n = this.ntiles
+      if (n === 0) return
+      this.remove([o.anims[o.ianim].tiles, n-1])
+      this.remove([o.anims[o.ianim].g_tiles, n-1])
+      this.upd_canvas_tiles()
     },
     set_ianim(i){
       this.set_prop([o, 'ianim', i])
+      this.set_prop([o, 'anim_pos', this.ntiles])
+      this.upd_canvas_tiles()
+    },
+    upd_canvas_tiles(){
+      let n = (o.ianim === null) ? 0 : this.ntiles
+      this.$refs.canvas_tiles.style.width = `${o.tile_w*n}px`
+      this.$refs.canvas_tiles.style.height = `${o.tile_h}px`
+      this.clear_app(app_tiles)
+      app_tiles.resize()
+      if (o.ianim === null) return
+      for (let i = 0; i < n; i++)
+        app_tiles.stage.addChild(o.anims[o.ianim].g_tiles[i])
     },
   },
 
