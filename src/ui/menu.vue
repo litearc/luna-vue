@@ -1,6 +1,7 @@
 <template lang='pug'>
 .ui-menu(
   :class='{ "is-root": is_root }'
+  style='z-index: 1000'
   )
   .dmenu
     li(v-for='(item,i) in items' :key='i')

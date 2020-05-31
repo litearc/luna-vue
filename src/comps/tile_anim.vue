@@ -19,12 +19,15 @@
         v-model='frame_dur_model'
       )
       
-  .flex-row.mt-8px.border-gold.full-w.pos-relative(ref='canvases' style='height: 120px')
-    canvas(ref='canvas_preview').border-blue.mr-8px.fixed(style='width: 40px; height: 40px')
-    .border-red.expand.pos-absolute(ref='right_part' style='right: 0; left: 48px')
+  .flex-row.mt-8px.full-w.pos-relative(ref='canvases' style='height: 0px')
+    canvas(ref='canvas_preview').mr-8px.fixed(style='width: 0px; height: 0px')
+    .expand.pos-absolute(ref='right_part' style='right: 0; left: 0')
       .span.bold Terra
-      .border-gold.expand.mb-8px.overflow-x-scoll.overflow-y-hidden.ws-nowrap(style='height: 20px')
-        canvas.border-blue(ref='canvas_terra')
+      .expand.mb-8px.overflow-x-scoll.overflow-y-hidden.ws-nowrap(
+        ref='container_terra'
+        style='height: 0px; background-color: #1d1e1f'
+      )
+        canvas(ref='canvas_terra')
       .flex-row.align-bl
         span.bold Tiles
         .expand
@@ -36,7 +39,10 @@
             icon='minus'
             @click='on_minus'
           )
-      .border-gold.expand.overflow-x-scoll.overflow-y-hidden.ws-nowrap(style='height: 20px')
+      .expand.overflow-x-scoll.overflow-y-hidden.ws-nowrap(
+        ref='container_tiles'
+        style='height: 0px; background-color: #1d1e1f'
+      )
         canvas.border-blue(ref='canvas_tiles')
 
   .flex-row.mt-8px
@@ -81,6 +87,7 @@ import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
 let app_tiles, app_preview, app_terra
 let tile_sprites = []
+let terra_sprites = []
 let o
 
 export default
@@ -117,12 +124,38 @@ export default
   },
 
   watch: {
-    nframes(v){
+    nframes(n, prev){
+      console.log('nframes changed')
+      if (n > prev){ // inserted a tile
+        console.log('added')
+        // need to do 3 things:
+        // - resize the canvas
+        // - insert new sprite (addChildAt)
+        // - reposition tiles (from insertion point onwards)
+        let itile = o.anims[o.ianim].tiles[o.anim_pos]
+        this.insert([o.anims[o.ianim].g_tiles, o.anim_pos,
+          new PIXI.Sprite(o.g_tiles[itile])
+        ])
+        console.log(`anim pos: ${o.anim_pos}`)
+        let spr = o.anims[o.ianim].g_tiles[o.anim_pos]
+        spr.x = 0
+        spr.y = 0
+        this.$refs.canvas_tiles.style.width = `${o.tile_w*n}px`
+        console.log(itile)
+        console.log(o.anims[o.ianim].g_tiles)
+        console.log(spr)
+        app_tiles.stage.addChildAt(spr, o.anim_pos)
+        app_tiles.render()
+        o.anim_pos++
+      }
+      else { // removed a tile
+      }
     }
   },
 
   methods: {
     ...mapMutations([
+      'insert',
       'push',
       'remove',
       'set_prop',
@@ -131,6 +164,7 @@ export default
       this.push([o.anims, {
         name: 'new anim',
         tiles: [],
+        g_tiles: [],
         frame_dur: 200,
         type_id: 0,
       }])
@@ -165,11 +199,38 @@ export default
     this.$refs.canvas_tiles.style.height = `${o.tile_h}px`
     this.$refs.canvas_terra.style.width = `${o.tile_w*nterra}px`
     this.$refs.canvas_terra.style.height = `${o.tile_h}px`
+    this.$refs.container_tiles.style.height = `${o.tile_h}px`
+    this.$refs.container_terra.style.height = `${o.tile_h}px`
     let n = this.$refs.right_part.offsetHeight
     this.$refs.canvas_preview.style.width = `${n}px`
     this.$refs.canvas_preview.style.height = `${n}px`
     this.$refs.canvases.style.height = `${n}px`
     this.$refs.right_part.style.left = `${n+8}px`
+
+    app_tiles = new PIXI.Application({
+      width: o.tile_w*nanims,
+      height: o.tile_h,
+      view: this.$refs.canvas_tiles,
+      antialias: true,
+      backgroundColor: 0x1d1e1f,
+    })
+
+    app_terra = new PIXI.Application({
+      width: o.tile_w*nterra,
+      height: o.tile_h,
+      view: this.$refs.canvas_terra,
+      antialias: true,
+      backgroundColor: 0x1d1e1f,
+    })
+
+    app_preview = new PIXI.Application({
+      width: n,
+      height: n,
+      view: this.$refs.canvas_preview,
+      antialias: true,
+      backgroundColor: 0x1d1e1f,
+    })
+
   }
 }
 </script>

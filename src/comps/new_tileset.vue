@@ -102,7 +102,7 @@ export default
         anim_pos: 0,
 
         // PIXI graphics
-        g_tiles: Array(ntiles).fill(0),
+        g_tiles: Array(ntiles).fill(0),  // Textures
       }
     }
   },
