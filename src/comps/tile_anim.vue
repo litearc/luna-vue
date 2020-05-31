@@ -19,13 +19,12 @@
         v-model='frame_dur_model'
       )
       
-  .flex-row.mt-8px.border-gold(style='width:100%; position: relative; height: 120px')
-    .border-blue.mr-8px.fixed(style='width: 40px; height: 40px')
-    .border-red.expand(style='position: absolute; right: 0; left: 48px')
+  .flex-row.mt-8px.border-gold.full-w.pos-relative(ref='canvases' style='height: 120px')
+    canvas(ref='canvas_preview').border-blue.mr-8px.fixed(style='width: 40px; height: 40px')
+    .border-red.expand.pos-absolute(ref='right_part' style='right: 0; left: 48px')
       .span.bold Terra
-      .border-gold.expand.mb-8px.overflow-scroll.ws-nowrap(style='height: 20px')
-        span hello world this is a test to see whether this text will overflow and i can scroll to see more of it
-        //- .border-blue(style='height: 100%; width: 600px')
+      .border-gold.expand.mb-8px.overflow-x-scoll.overflow-y-hidden.ws-nowrap(style='height: 20px')
+        canvas.border-blue(ref='canvas_terra')
       .flex-row.align-bl
         span.bold Tiles
         .expand
@@ -37,9 +36,8 @@
             icon='minus'
             @click='on_minus'
           )
-      .border-gold.expand.overflow-scroll.ws-nowrap(style='height: 20px')
-        span hello world this is a test to see whether this text will overflow and i can scroll to see more of it
-        //- .border-blue(style='height: 100%; width: 600px')
+      .border-gold.expand.overflow-x-scoll.overflow-y-hidden.ws-nowrap(style='height: 20px')
+        canvas.border-blue(ref='canvas_tiles')
 
   .flex-row.mt-8px
     .bold.ml-4px Anim
@@ -158,6 +156,20 @@ export default
   },
 
   mounted(){
+    // the heights of the terra and tiles canvases are the tile heights, which
+    // are used to determine the size of the preview canvas
+
+    let nterra = o.terra.length
+    let nanims = (o.ianim === null) ? 0 : o.anims[o.ianim].tiles.length
+    this.$refs.canvas_tiles.style.width = `${o.tile_w*nanims}px`
+    this.$refs.canvas_tiles.style.height = `${o.tile_h}px`
+    this.$refs.canvas_terra.style.width = `${o.tile_w*nterra}px`
+    this.$refs.canvas_terra.style.height = `${o.tile_h}px`
+    let n = this.$refs.right_part.offsetHeight
+    this.$refs.canvas_preview.style.width = `${n}px`
+    this.$refs.canvas_preview.style.height = `${n}px`
+    this.$refs.canvases.style.height = `${n}px`
+    this.$refs.right_part.style.left = `${n+8}px`
   }
 }
 </script>
