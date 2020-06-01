@@ -5,7 +5,7 @@
       span.bold.mr-8px Type
       ui-combobox.expand(
         :items='["Tiles", "Terra"]'
-        :disabled='o.ianim === null'
+        :disabled='o.ianim === null || ntiles !== 0'
         v-model='tile_type_model'
       )
     .w-1-2.flex-row.align-bl
@@ -88,6 +88,7 @@ import { bus } from './editor_tileset.vue'
 let app_tiles, app_preview, app_terra
 let tile_sprites = []
 let terra_sprites = []
+let telap, iframe // time elapsed (ms) - used for preview animation
 let o
 
 export default
@@ -155,8 +156,10 @@ export default
         frame_dur: 200,
         type_id: 0,
       }])
-      if (o.anims.length == 1)
+      if (o.anims.length == 1){
         this.set_prop([o, 'ianim', 0])
+        telap = 0
+      }
       this.upd_canvas_tiles()
     },
     on_minus(i){
@@ -168,6 +171,7 @@ export default
       else if (o.ianim >= o.anims.length){
         this.set_prop([o, 'ianim', o.anims.length-1])
         this.set_prop([o, 'anim_pos', 0])
+        telap = 0
       }
       this.upd_canvas_tiles()
     },
@@ -177,11 +181,14 @@ export default
       this.remove([o.anims[o.ianim].tiles, n-1])
       this.remove([o.anims[o.ianim].g_tiles, n-1])
       this.upd_canvas_tiles()
+      o.anim_pos--
     },
     set_ianim(i){
+      if (i === o.ianim) return
       this.set_prop([o, 'ianim', i])
       this.set_prop([o, 'anim_pos', this.ntiles])
       this.upd_canvas_tiles()
+      telap = 0
     },
     upd_canvas_tiles(){
       let n = (o.ianim === null) ? 0 : this.ntiles
@@ -242,6 +249,23 @@ export default
       view: this.$refs.canvas_preview,
       antialias: true,
       backgroundColor: 0x1d1e1f,
+    })
+    app_preview.ticker.add(d => {
+      if (this.ntiles === 0){
+        this.clear_app(app_preview)
+        return
+      }
+      telap += app_preview.ticker.elapsedMS
+      let i = Math.floor(telap/o.anims[o.ianim].frame_dur) % this.ntiles
+      if (i !== iframe){
+        iframe = i
+        this.clear_app(app_preview)
+        let itile = o.anims[o.ianim].tiles[iframe]
+        let spr = new PIXI.Sprite(o.g_tiles[itile])
+        spr.width = n, spr.height = n
+        app_preview.stage.addChild(spr)
+        // app_preview.stage.addChild(o.anims[o.ianim].g_tiles[iframe])
+      }
     })
 
   }
