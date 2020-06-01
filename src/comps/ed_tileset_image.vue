@@ -67,6 +67,10 @@ export default
   computed:{
     iflag(){ return this.o.iflag },
     iterra(){ return this.o.iterra },
+    terra_1d_pos(){
+      if (this.o.iterra === null) return null
+      return this.o.terra[this.o.iterra].pos.y * o.im_w + this.o.terra[this.o.iterra].pos.x
+    },
     sec(){ return this.o.sec },
   },
 
@@ -77,12 +81,12 @@ export default
       for (let i = 0; i < ntiles; i++)
         flag[i].visible = (v === null) ? false : o.flags[v][i]
     },
-    iterra(v){
-      let vis = (v !== null)
+    terra_1d_pos(){
+      let vis = (o.iterra !== null)
       sel.visible = vis
       if (!vis) return
-      sel.x = o.terra[v].pos.x
-      sel.y = o.terra[v].pos.y
+      sel.x = o.terra[o.iterra].pos.x
+      sel.y = o.terra[o.iterra].pos.y
     },
     sec(i){
       if (i === tile_mode.props

@@ -2,10 +2,10 @@
 #tile_anim
   .flex-row.mt-8px.align-bl
     .w-1-2.flex-row.align-bl.pr-8px
-      span.bold.mr-8px Type
+      span.bold.mr-8px Cycle
       ui-combobox.expand(
-        :items='["Tiles", "Terra"]'
-        :disabled='o.ianim === null || ntiles !== 0'
+        :items='["Beginning to end", "Back and forth"]'
+        :disabled='o.ianim === null'
         v-model='tile_type_model'
       )
     .w-1-2.flex-row.align-bl
@@ -85,6 +85,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
+import { anim_cycle_types } from '../const.js'
 let app_tiles, app_preview, app_terra
 let tile_sprites = []
 let terra_sprites = []
@@ -106,17 +107,23 @@ export default
         return (this.o.ianim === null) ? '' : this.o.anims[this.o.ianim].frame_dur
       },
       set(v){
-        if (this.o.ianim !== null)
+        if (this.o.ianim !== null){
+          // todo: figure out a good way to validate the value
+          // v = parseInt(v)
+          // if (isNaN(v)) return
+          // if (v < 1) v = 1
+          // this.o.anims[this.o.ianim].frame_dur = String(v)
           this.o.anims[this.o.ianim].frame_dur = v
+        }
       },
     },
     tile_type_model: {
       get(){
-        return (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].type_id
+        return (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].cycle_type
       },
       set(v){
         if (this.o.ianim !== null)
-          this.o.anims[this.o.ianim].type_id = v
+          this.o.anims[this.o.ianim].cycle_type = v
       },
     },
     ntiles(){
@@ -154,7 +161,7 @@ export default
         tiles: [],
         g_tiles: [],
         frame_dur: 200,
-        type_id: 0,
+        cycle_type: anim_cycle_types.beg_to_end,
       }])
       if (o.anims.length == 1){
         this.set_prop([o, 'ianim', 0])
@@ -256,7 +263,17 @@ export default
         return
       }
       telap += app_preview.ticker.elapsedMS
-      let i = Math.floor(telap/o.anims[o.ianim].frame_dur) % this.ntiles
+      let cyc_type = o.anims[o.ianim].cycle_type
+      let i
+      switch (cyc_type){
+        case anim_cycle_types.beg_to_end:
+          i = Math.floor(telap/o.anims[o.ianim].frame_dur) % this.ntiles
+          break
+        case anim_cycle_types.back_and_forth:
+          i = Math.floor(telap/o.anims[o.ianim].frame_dur) % (2*this.ntiles-2)
+          if (i >= this.ntiles) i = (2*this.ntiles-2) - i
+          break
+      }
       if (i !== iframe){
         iframe = i
         this.clear_app(app_preview)

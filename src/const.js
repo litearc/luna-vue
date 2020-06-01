@@ -15,3 +15,9 @@ export const coll_type = {
   all: 1,
   custom: 2,
 }
+
+// animation cycle types
+export const anim_cycle_types = {
+  beg_to_end: 0,
+  back_and_forth: 1,
+}
