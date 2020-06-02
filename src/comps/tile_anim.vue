@@ -85,7 +85,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
-import { anim_cycle_types } from '../const.js'
+import { anim_cycle_type } from '../const.js'
 let app_tiles, app_preview, app_terra
 let tile_sprites = []
 let terra_sprites = []
@@ -161,7 +161,7 @@ export default
         tiles: [],
         g_tiles: [],
         frame_dur: 200,
-        cycle_type: anim_cycle_types.beg_to_end,
+        cycle_type: anim_cycle_type.beg_to_end,
       }])
       if (o.anims.length == 1){
         this.set_prop([o, 'ianim', 0])
@@ -262,26 +262,28 @@ export default
         this.clear_app(app_preview)
         return
       }
+      let i
+      let do_upd = false
+      if (telap === 0) do_upd = true // update after switching anims
       telap += app_preview.ticker.elapsedMS
       let cyc_type = o.anims[o.ianim].cycle_type
-      let i
       switch (cyc_type){
-        case anim_cycle_types.beg_to_end:
+        case anim_cycle_type.beg_to_end:
           i = Math.floor(telap/o.anims[o.ianim].frame_dur) % this.ntiles
           break
-        case anim_cycle_types.back_and_forth:
+        case anim_cycle_type.back_and_forth:
           i = Math.floor(telap/o.anims[o.ianim].frame_dur) % (2*this.ntiles-2)
           if (i >= this.ntiles) i = (2*this.ntiles-2) - i
           break
       }
-      if (i !== iframe){
+      if (!do_upd && i !== iframe) do_upd = true
+      if (do_upd){
         iframe = i
         this.clear_app(app_preview)
         let itile = o.anims[o.ianim].tiles[iframe]
         let spr = new PIXI.Sprite(o.g_tiles[itile])
         spr.width = n, spr.height = n
         app_preview.stage.addChild(spr)
-        // app_preview.stage.addChild(o.anims[o.ianim].g_tiles[iframe])
       }
     })
 

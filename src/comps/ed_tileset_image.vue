@@ -25,7 +25,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-import { tile_mode } from '../const.js'
+import { tile_mode, terra_shape_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
 let app, im, grid, sel, cur, flags, cur_flag // pixi graphics
@@ -71,6 +71,10 @@ export default
       if (this.o.iterra === null) return null
       return this.o.terra[this.o.iterra].pos.y * o.im_w + this.o.terra[this.o.iterra].pos.x
     },
+    terra_shape(){
+      if (this.o.iterra === null) return null
+      return this.o.terra[this.o.iterra].shape
+    },
     sec(){ return this.o.sec },
   },
 
@@ -87,6 +91,9 @@ export default
       if (!vis) return
       sel.x = o.terra[o.iterra].pos.x
       sel.y = o.terra[o.iterra].pos.y
+    },
+    terra_shape(){
+      this.upd_boxes()
     },
     sec(i){
       if (i === tile_mode.props
@@ -121,7 +128,10 @@ export default
           break
         case tile_mode.terra:
           if (o.iterra === null) return
-          icx = ix-1, icy = iy-2
+          if (this.terra_shape === terra_shape_type._4x3)
+            icx = ix-1, icy = iy-2
+          else if (this.terra_shape === terra_shape_type._5x1)
+            icx = ix, icy = iy-2
           sel.x = icx*s*tw, sel.y = icy*s*th
           this.set_prop([o.terra[o.iterra].pos, 'x', sel.x])
           this.set_prop([o.terra[o.iterra].pos, 'y', sel.y])
@@ -147,8 +157,10 @@ export default
           cur.y = s*th*iy
           break
         case tile_mode.terra:
-          cur.x = s*tw*(ix-1)
-          cur.y = s*th*(iy-2)
+          if (this.terra_shape === terra_shape_type._4x3)
+            cur.x = s*tw*(ix-1), cur.y = s*th*(iy-2)
+          else if (this.terra_shape === terra_shape_type._5x1)
+            cur.x = s*tw*ix, cur.y = s*th*(iy-2)
           break
       }
     },
@@ -232,7 +244,10 @@ export default
       }
       if (o.sec == tile_mode.terra){
         sel.x = s*tw*icx, sel.y = s*th*icy
-        w = 3, h = 4
+        if (this.terra_shape === terra_shape_type._4x3)
+          w = 3, h = 4
+        else if (this.terra_shape === terra_shape_type._5x1)
+          w = 1, h = 5
         if (o.iterra === null)
           sel.visible = false, cur.visible = false
       }

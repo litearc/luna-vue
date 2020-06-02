@@ -16,6 +16,8 @@ known bugs / issues:
   code has separate attributes for these: `mclass` and `mstyle`.
   todo: replace these in Vue 3 accordingly.
 
+svgo icon-terra-5x1.svg -o tmp.svg
+
 <template lang='pug'>
 </template>
 

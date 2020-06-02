@@ -17,7 +17,12 @@ export const coll_type = {
 }
 
 // animation cycle types
-export const anim_cycle_types = {
+export const anim_cycle_type = {
   beg_to_end: 0,
   back_and_forth: 1,
+}
+
+export const terra_shape_type = {
+  _4x3: 0,
+  _5x1: 1,
 }
