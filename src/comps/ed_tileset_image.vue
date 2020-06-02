@@ -93,7 +93,15 @@ export default
       sel.y = o.terra[o.iterra].pos.y
     },
     terra_shape(){
-      this.upd_boxes()
+      let w, h
+      if (this.terra_shape === terra_shape_type._4x3)
+        w = 3, h = 4
+      else if (this.terra_shape === terra_shape_type._5x1)
+        w = 1, h = 5
+      sel.clear()
+      cur.clear()
+      draw_box(sel, w*s*tw, h*s*th)
+      draw_box(cur, w*s*tw, h*s*th)
     },
     sec(i){
       if (i === tile_mode.props
