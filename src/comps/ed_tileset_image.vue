@@ -28,8 +28,9 @@ import * as PIXI from 'pixi.js'
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
-let app, im, grid, sel, cur, flags, cur_flag // pixi graphics
-let flag = []      // array of flags
+let app, im, grid, sel, cur, flags, cur_flag, coll // pixi graphics
+let colls = []     // pixi graphics for collisions, each el is { u, ur, r, dr, d, dl, l, ul }
+let flag = []      // array of pixi graphics flags
 let ix, iy         // current tile mouse is over
 let nx, ny         // number of tiles along x, y
 let mw, mh, tw, th // image width / height, tile width / height
@@ -37,6 +38,20 @@ let isx, isy       // sel x and y positions (column, row)
 let icx, icy       // auto-tile top-left position (column, row)
 let s = 1          // scale factor for image
 let o
+
+// for collision arrows
+let a = .15, w = .175 // need: a+w > .5-w
+let coll_coords = [
+  [ {x:.5, y:a},    {x:.5+w, y:a+w},   {x:.5-w, y:a+w}   ],
+  [ {x:1-a, y:a},   {x:1-a, y:a+w},    {x:1-a-w, y:a}    ],
+  [ {x:1-a, y:.5},  {x:1-a-w, y:.5+w}, {x:1-a-w, y:.5-w} ],
+  [ {x:1-a, y:1-a}, {x:1-a-w, y:1-a},  {x:1-a, y:1-a-w}  ],
+  [ {x:.5, y:1-a},  {x:.5-w, y:1-a-w}, {x:.5+w, y:1-a-w} ],
+  [ {x:a, y:1-a},   {x:a, y:1-a-w},    {x:a+w, y:1-a}    ],
+  [ {x:a, y:.5},    {x:a+w, y:.5-w},   {x:a+w, y:.5+w}   ],
+  [ {x:a, y:a},     {x:a+w, y:a},      {x:a, y:a+w}      ],
+]
+let colls_init = false
 
 // draws a box for pixi graphics `g` with width `w`, height `h`
 function draw_box(g, w, h){
@@ -194,7 +209,7 @@ export default
         cur_flag.visible = true
       if ( o.sec == tile_mode.props
         || (o.sec == tile_mode.terra && o.iterra !== null)
-        || (o.sec == tile_mode.anim && o.ianim !== null)
+        || (o.sec == tile_mode.anim && o.ianim !== null && o.anims[o.ianim].block_type !== anim_block_type.terra)
       ) cur.visible = true
     },
 
@@ -236,9 +251,12 @@ export default
     },
 
     upd_all(){
+      // in the update functions, we redraw the graphics instead of simply scaling them because we want to make the
+      // graphics "fill" section larger but keep the borders the same width
       this.upd_grid()
       this.upd_boxes()
       this.upd_flags()
+      this.upd_colls()
     },
 
     upd_boxes(){
@@ -269,6 +287,29 @@ export default
       draw_box(sel, w*s*tw, h*s*th)
       draw_box(cur, w*s*tw, h*s*th)
       cur.alpha = .5
+    },
+
+    upd_colls(){
+      if (colls_init === false){
+        coll.clear()
+        let i = 0
+        for (let yi = 0; yi < ny; yi++)
+          for (let xi = 0; xi < nx; xi++)
+            for (let ic = 0; ic < coll_coords.length; ic++){
+              let x = s*xi*tw, y = s*yi*th
+              colls[i].clear()
+              colls[i].beginFill(0x5c99d6, 1)
+              colls[i].moveTo(x+tw*s*coll_coords[ic][0].x, y+th*s*coll_coords[ic][0].y)
+              colls[i].lineTo(x+tw*s*coll_coords[ic][1].x, y+th*s*coll_coords[ic][1].y)
+              colls[i].lineTo(x+tw*s*coll_coords[ic][2].x, y+th*s*coll_coords[ic][2].y)
+              colls[i].closePath()
+              colls[i].endFill()
+              coll.addChild(colls[i])
+              i++
+            }
+      }
+      else
+        coll.scale = {x:s, y:s}
     },
 
     upd_flags(){
@@ -352,6 +393,14 @@ export default
     for (let i = 0; i < nx*ny; i++)
       flag[i] = new PIXI.Graphics()
     this.upd_flags()
+    coll = new PIXI.Graphics()
+    i = 0
+    for (let yi = 0; yi < ny; yi++)
+      for (let xi = 0; xi < nx; xi++)
+        for (let ic = 0; ic < coll_coords.length; ic++)
+          colls[i++] = new PIXI.Graphics()
+    this.upd_colls()
+    coll.visible = false
 
     app.stage.addChild(im)
     app.stage.addChild(grid)
@@ -359,6 +408,7 @@ export default
     app.stage.addChild(sel)
     app.stage.addChild(flags)
     app.stage.addChild(cur_flag)
+    app.stage.addChild(coll)
   },
 }
 </script>

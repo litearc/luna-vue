@@ -1,5 +1,5 @@
 <template lang='pug'>
-  #tile_coll
+#tile_coll
 </template>
 
 <script>
