@@ -129,19 +129,6 @@ export default
     },
   },
 
-  watch: {
-    ntiles(n, prev){
-      if (n > prev){ // inserted a tile (tile removed handled in on_minus_tiles)
-        let itile = o.anims[o.ianim].tiles[o.anim_pos]
-        let spr = new PIXI.Sprite(o.g_tiles[itile]) // o.anims[o.ianim].g_tiles[o.anim_pos]
-        spr.x = o.anim_pos*o.tile_w, spr.y = 0
-        this.insert([o.anims[o.ianim].g_tiles, o.anim_pos, spr])
-        this.upd_canvas_tiles()
-        o.anim_pos++
-      }
-    },
-  },
-
   methods: {
     ...mapMutations([
       'insert',
@@ -149,6 +136,13 @@ export default
       'remove',
       'set_prop',
     ]),
+    add_tile_anim(i){
+      let spr = new PIXI.Sprite(o.g_tiles[i])
+      spr.x = o.anim_pos*o.tile_w, spr.y = 0
+      this.insert([o.anims[o.ianim].g_tiles, o.anim_pos, spr])
+      this.upd_canvas_tiles()
+      o.anim_pos++
+    },
     clear_app(app){
       for (let i = app.stage.children.length-1; i >= 0; i--)
         app.stage.removeChildAt(i)
@@ -163,6 +157,7 @@ export default
       let iterra = Math.floor(e.offsetX/o.tile_w)
       let itile = o.terra[iterra].pos.y*nx + o.terra[iterra].pos.x
       this.insert([o.anims[o.ianim].tiles, o.anim_pos, itile])
+      this.add_tile_anim(itile)
       // rest is handles by the watcher for `ntiles`
     },
     on_plus(){
@@ -226,6 +221,7 @@ export default
     o = this.o
     let ianim = (o.anims.length > 0) ? 0 : null
     this.set_prop([o, 'ianim', ianim])
+    bus.$on('add_tile_anim', this.add_tile_anim)
   },
 
   mounted(){
@@ -319,6 +315,10 @@ export default
       app_terra.stage.addChild(spr)
     }
   },
+
+  beforeDestroy(){
+    bus.$off('add_tile_anim', this.add_tile_anim)
+  }
 }
 </script>
 

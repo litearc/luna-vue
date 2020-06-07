@@ -18,6 +18,8 @@
 <script>
 import ed_tileset_image from './ed_tileset_image.vue'
 import ed_tileset_sidebar from './ed_tileset_sidebar.vue'
+import Vue from 'vue'
+export const bus = new Vue()
 
 export default
 {

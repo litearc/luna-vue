@@ -150,7 +150,9 @@ export default
             if (block_type !== anim_block_type.not_set && block_type !== anim_block_type.tile)
               return
             this.set_prop([o.anims[o.ianim], 'block_type', anim_block_type.tile])
-            this.insert([o.anims[o.ianim].tiles, o.anim_pos, iy*nx+ix])
+            let i = iy*nx+ix
+            this.insert([o.anims[o.ianim].tiles, o.anim_pos, i])
+            bus.$emit('add_tile_anim', i)
           }
           break
       }
