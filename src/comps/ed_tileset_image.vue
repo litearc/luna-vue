@@ -25,7 +25,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-import { tile_mode, terra_shape_type } from '../const.js'
+import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
 
 let app, im, grid, sel, cur, flags, cur_flag // pixi graphics
@@ -145,8 +145,13 @@ export default
           this.set_prop([o.terra[o.iterra].pos, 'y', icy])
           break
         case tile_mode.anim:
-          if (o.ianim !== null)
+          if (o.ianim !== null){
+            let block_type = o.anims[o.ianim].block_type
+            if (block_type !== anim_block_type.not_set && block_type !== anim_block_type.tile)
+              return
+            this.set_prop([o.anims[o.ianim], 'block_type', anim_block_type.tile])
             this.insert([o.anims[o.ianim].tiles, o.anim_pos, iy*nx+ix])
+          }
           break
       }
     },

@@ -22,7 +22,16 @@ export const anim_cycle_type = {
   back_and_forth: 1,
 }
 
+// anim block types
+export const anim_block_type = {
+  not_set: -1,
+  tile: 0,
+  terra: 1,
+}
+
+// terra shape types
 export const terra_shape_type = {
   _4x3: 0,
   _5x1: 1,
 }
+

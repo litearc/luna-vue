@@ -85,7 +85,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
-import { anim_cycle_type } from '../const.js'
+import { anim_cycle_type, anim_block_type } from '../const.js'
 let app_tiles, app_preview, app_terra
 let telap, iframe // time elapsed (ms) - used for preview animation
 let o
@@ -153,6 +153,18 @@ export default
       for (let i = app.stage.children.length-1; i >= 0; i--)
         app.stage.removeChildAt(i)
     },
+    on_click_terra(e){
+      if (o.ianim === null) return
+      let block_type = o.anims[o.ianim].block_type
+      if (block_type !== anim_block_type.not_set && block_type !== anim_block_type.terra)
+        return
+      this.set_prop([o.anims[o.ianim], 'block_type', anim_block_type.terra])
+      let nx = Math.round(o.im_w/o.tile_w)
+      let iterra = Math.floor(e.offsetX/o.tile_w)
+      let itile = o.terra[iterra].pos.y*nx + o.terra[iterra].pos.x
+      this.insert([o.anims[o.ianim].tiles, o.anim_pos, itile])
+      // rest is handles by the watcher for `ntiles`
+    },
     on_plus(){
       this.push([o.anims, {
         name: 'new anim',
@@ -160,6 +172,7 @@ export default
         g_tiles: [],
         frame_dur: 200,
         cycle_type: anim_cycle_type.beg_to_end,
+        block_type: anim_block_type.not_set,
       }])
       if (o.anims.length == 1){
         this.set_prop([o, 'ianim', 0])
@@ -187,6 +200,8 @@ export default
       this.remove([o.anims[o.ianim].g_tiles, n-1])
       this.upd_canvas_tiles()
       o.anim_pos--
+      if (o.anim_pos === 0)
+        this.set_prop([o.anims[o.ianim], 'block_type', anim_block_type.not_set])
     },
     set_ianim(i){
       if (i === o.ianim) return
@@ -249,15 +264,7 @@ export default
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })
-    // add current terra
-    // let nx = Math.round(o.im_w/o.tile_w)
-    // for (let i = 0; i < o.terra.length; i++){
-    //   let iterra = Math.round(o.terra[i].pos.y/o.tile_h)*nx +
-    //     Math.round(o.terra[i].pos.x/o.tile_w)
-    //   let spr = new PIXI.Sprite(o.g_tiles[iterra])
-    //   spr.x = o.tile_w*i, spr.y = 0
-    //   app_terra.stage.addChild(spr)
-    // }
+    app_terra.view.addEventListener('mousedown', this.on_click_terra)
 
     app_preview = new PIXI.Application({
       width: n,
@@ -312,8 +319,6 @@ export default
       app_terra.stage.addChild(spr)
     }
   },
-  // deactivated(){
-  // },
 }
 </script>
 
