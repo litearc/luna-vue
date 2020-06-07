@@ -87,8 +87,6 @@ import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
 import { anim_cycle_type } from '../const.js'
 let app_tiles, app_preview, app_terra
-let tile_sprites = []
-let terra_sprites = []
 let telap, iframe // time elapsed (ms) - used for preview animation
 let o
 
@@ -241,14 +239,25 @@ export default
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })
+    // todo: add tiles in data
 
     app_terra = new PIXI.Application({
       width: o.tile_w*nterra,
       height: o.tile_h,
       view: this.$refs.canvas_terra,
+      resizeTo: this.$refs.canvas_terra,
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })
+    // add current terra
+    // let nx = Math.round(o.im_w/o.tile_w)
+    // for (let i = 0; i < o.terra.length; i++){
+    //   let iterra = Math.round(o.terra[i].pos.y/o.tile_h)*nx +
+    //     Math.round(o.terra[i].pos.x/o.tile_w)
+    //   let spr = new PIXI.Sprite(o.g_tiles[iterra])
+    //   spr.x = o.tile_w*i, spr.y = 0
+    //   app_terra.stage.addChild(spr)
+    // }
 
     app_preview = new PIXI.Application({
       width: n,
@@ -287,7 +296,24 @@ export default
       }
     })
 
-  }
+  },
+
+  // life-cycle hooks for when dynamic component is activated/deactivated
+  activated(){
+    let nx = Math.round(o.im_w/o.tile_w)
+    this.$refs.canvas_terra.style.width = `${o.tile_w*o.terra.length}px`
+    this.$refs.canvas_terra.style.height = `${o.tile_h}px`
+    this.clear_app(app_terra)
+    app_terra.resize() // weird, this seems to be what's needed to update the renderer
+    for (let i = 0; i < o.terra.length; i++){
+      let iterra = o.terra[i].pos.y*nx + o.terra[i].pos.x
+      let spr = new PIXI.Sprite(o.g_tiles[iterra])
+      spr.x = o.tile_w*i, spr.y = 0
+      app_terra.stage.addChild(spr)
+    }
+  },
+  // deactivated(){
+  // },
 }
 </script>
 

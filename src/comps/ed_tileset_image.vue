@@ -69,7 +69,7 @@ export default
     iterra(){ return this.o.iterra },
     terra_1d_pos(){
       if (this.o.iterra === null) return null
-      return this.o.terra[this.o.iterra].pos.y * o.im_w + this.o.terra[this.o.iterra].pos.x
+      return this.o.terra[this.o.iterra].pos.y * nx + this.o.terra[this.o.iterra].pos.x
     },
     terra_shape(){
       if (this.o.iterra === null) return null
@@ -89,8 +89,8 @@ export default
       let vis = (o.iterra !== null)
       sel.visible = vis
       if (!vis) return
-      sel.x = o.terra[o.iterra].pos.x
-      sel.y = o.terra[o.iterra].pos.y
+      sel.x = s*tw*o.terra[o.iterra].pos.x
+      sel.y = s*th*o.terra[o.iterra].pos.y
     },
     terra_shape(){
       let w, h
@@ -141,8 +141,8 @@ export default
           else if (this.terra_shape === terra_shape_type._5x1)
             icx = ix, icy = iy-2
           sel.x = icx*s*tw, sel.y = icy*s*th
-          this.set_prop([o.terra[o.iterra].pos, 'x', sel.x])
-          this.set_prop([o.terra[o.iterra].pos, 'y', sel.y])
+          this.set_prop([o.terra[o.iterra].pos, 'x', icx])
+          this.set_prop([o.terra[o.iterra].pos, 'y', icy])
           break
         case tile_mode.anim:
           if (o.ianim !== null)
