@@ -41,6 +41,7 @@ let o
 
 // for collision arrows
 let coll_radius = 1.5
+let coll_sq_dim = 2
 let coll_coords = []
 for (let i = 0; i < 8; i++){
   let a = 45*i*Math.PI/180
@@ -175,8 +176,25 @@ export default
           }
           break
         case tile_mode.coll:
-          if (curr_coll !== null){
-            let dir = i2dir[curr_coll%coll_coords.length]
+          if (curr_coll%ncolls === ncolls-1){ // clicked on the square
+            // if any circle is on, turn all off
+            let any_on = false
+            for (let ic = 0; ic < ncolls-1; ic++){
+              if (o.colls[coll_tile][i2dir[ic]] === true){
+                any_on = true
+                break
+              }
+            }
+            let state = !any_on
+            let ii = Math.floor(curr_coll/ncolls)*ncolls
+            for (let ic = 0; ic < ncolls-1; ic++){
+              let dir = i2dir[ic]
+              this.set_prop([o.colls[coll_tile], dir, state])
+              colls[ii+ic].alpha = (o.colls[coll_tile][dir]) ? 1 : .5
+            }
+          }
+          else if (curr_coll !== null){
+            let dir = i2dir[curr_coll%ncolls]
             this.flip([o.colls[coll_tile], dir])
             colls[curr_coll].alpha = (o.colls[coll_tile][dir]) ? 1 : .5
           }
@@ -204,23 +222,30 @@ export default
             cur.x = s*tw*ix, cur.y = s*th*(iy-2)
           break
         case tile_mode.coll:
+          // reset previous tile coll circles
           if (coll_tile !== null){
-            let ii = coll_tile*coll_coords.length
-            for (let ic = 0; ic < coll_coords.length; ic++)
+            let ii = coll_tile*ncolls 
+            for (let ic = 0; ic < ncolls; ic++)
               colls[ii+ic].tint = 0x5c99d6
           }
-          // check if we are hovering over any collision circle
+          // check if we are hovering over any coll graphic
           let xp = e.offsetX%(s*tw)/(s*tw)-.5
             , yp = e.offsetY%(s*th)/(s*th)-.5
           coll_tile = iy*nx+ix
-          let ii = coll_tile*coll_coords.length
+          let ii = coll_tile*ncolls 
           let cr2 = Math.pow(coll_radius/tw,2)
           curr_coll = null
-          for (let ic = 0; ic < coll_coords.length; ic++){
+          // check circles
+          for (let ic = 0; ic < ncolls-1; ic++)
             if ((Math.pow(xp-coll_coords[ic].x,2) + Math.pow(yp-coll_coords[ic].y,2)) <= cr2){
               colls[ii+ic].tint = 0xd6b85c
               curr_coll = ii+ic
+              break
             }
+          // check center square
+          if (Math.abs(xp) <= coll_sq_dim/tw/2 && Math.abs(yp) <= coll_sq_dim/th/2){
+            colls[ii+ncolls-1].tint = 0xd6b85c
+            curr_coll = ii+ncolls-1
           }
           break
       }
@@ -325,19 +350,30 @@ export default
       if (colls_init === false){
         coll.clear()
         let i = 0
-        for (let yi = 0; yi < ny; yi++)
-          for (let xi = 0; xi < nx; xi++)
-            for (let ic = 0; ic < coll_coords.length; ic++){
-              let x = s*(xi+.5)*tw, y = s*(yi+.5)*th
+        for (let yi = 0; yi < ny; yi++){
+          for (let xi = 0; xi < nx; xi++){
+            let x = s*(xi+.5)*tw, y = s*(yi+.5)*th
+            for (let ic = 0; ic < ncolls-1; ic++){
               colls[i].clear()
               colls[i].beginFill(0xffffff, 1)
-              colls[i].drawCircle(x+tw*s*coll_coords[ic].x, y+th*s*coll_coords[ic].y, s*coll_radius)
+              colls[i].drawCircle(x+tw*s*coll_coords[ic].x,
+                y+th*s*coll_coords[ic].y, s*coll_radius)
               colls[i].alpha = .5
               // colls[i].tint = 0xd6b85c
               colls[i].tint = 0x5c99d6
               coll.addChild(colls[i])
               i++
             }
+            colls[i].clear()
+            colls[i].beginFill(0xffffff, 1)
+            colls[i].drawRect(x-s*coll_sq_dim/2, y-s*coll_sq_dim/2,
+              s*coll_sq_dim, s*coll_sq_dim)
+            colls[i].alpha = .5
+            colls[i].tint = 0x5c99d6
+            coll.addChild(colls[i])
+            i++
+          }
+        }
       }
       else
         coll.scale = {x:s, y:s}
@@ -428,7 +464,7 @@ export default
     i = 0
     for (let yi = 0; yi < ny; yi++)
       for (let xi = 0; xi < nx; xi++)
-        for (let ic = 0; ic < coll_coords.length; ic++)
+        for (let ic = 0; ic < ncolls; ic++)
           colls[i++] = new PIXI.Graphics()
     this.upd_colls()
 
