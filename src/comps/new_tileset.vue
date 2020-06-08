@@ -90,8 +90,21 @@ export default
         tileset_props: [ {key:'name', val:''} ],
 
         // these are all "tile" data (omit "tile" in variable names for brevity)
+        // for `props`, cannot do Array(ntiles).fill([]) b/c:
+        // > x = Array(4).fill({y:3})
+        // [ { y: 3 }, { y: 3 }, { y: 3 }, { y: 3 } ]
+        // > x[0].y = 4
+        // 4
+        // > x
+        // [ { y: 4 }, { y: 4 }, { y: 4 }, { y: 4 } ]
         props: Array(ntiles).fill(0).map(x => []),
         flags: [],
+        colls: Array(ntiles).fill(0).map(function(x){
+          return {
+            u:false, ur:false, r:false, dr:false,
+            d:false, dl:false, l:false, ul:false,
+          }
+        }),
         terra: [],
         anims: [],
         sec: tile_mode.props,

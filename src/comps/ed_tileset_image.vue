@@ -40,18 +40,20 @@ let s = 1          // scale factor for image
 let o
 
 // for collision arrows
-let a = .15, w = .175 // need: a+w > .5-w
-let coll_coords = [
-  [ {x:.5, y:a},    {x:.5+w, y:a+w},   {x:.5-w, y:a+w}   ],
-  [ {x:1-a, y:a},   {x:1-a, y:a+w},    {x:1-a-w, y:a}    ],
-  [ {x:1-a, y:.5},  {x:1-a-w, y:.5+w}, {x:1-a-w, y:.5-w} ],
-  [ {x:1-a, y:1-a}, {x:1-a-w, y:1-a},  {x:1-a, y:1-a-w}  ],
-  [ {x:.5, y:1-a},  {x:.5-w, y:1-a-w}, {x:.5+w, y:1-a-w} ],
-  [ {x:a, y:1-a},   {x:a, y:1-a-w},    {x:a+w, y:1-a}    ],
-  [ {x:a, y:.5},    {x:a+w, y:.5-w},   {x:a+w, y:.5+w}   ],
-  [ {x:a, y:a},     {x:a+w, y:a},      {x:a, y:a+w}      ],
-]
+let coll_radius = 1.5
+let coll_coords = []
+for (let i = 0; i < 8; i++){
+  let a = 45*i*Math.PI/180
+  coll_coords[i] = {
+    x: .35*Math.cos(a),
+    y: .35*Math.sin(a),
+  }
+}
+let i2dir = ['r','dr','d','dl','l','ul','u','ur']
 let colls_init = false
+  , coll_tile = null
+  , curr_coll = null
+  , ncolls = coll_coords.length+1
 
 // draws a box for pixi graphics `g` with width `w`, height `h`
 function draw_box(g, w, h){
@@ -119,8 +121,10 @@ export default
       draw_box(cur, w*s*tw, h*s*th)
     },
     sec(i){
-      if (i === tile_mode.props
-       || (i === tile_mode.terra && o.iterra !== null))
+      if ( i === tile_mode.props
+       || (i === tile_mode.terra && o.iterra !== null)
+       ||  i === tile_mode.coll
+      )
         sel.visible = true
       if (i === tile_mode.anim)
         sel.visible = false
@@ -170,12 +174,19 @@ export default
             bus.$emit('add_tile_anim', i)
           }
           break
+        case tile_mode.coll:
+          if (curr_coll !== null){
+            let dir = i2dir[curr_coll%coll_coords.length]
+            this.flip([o.colls[coll_tile], dir])
+            colls[curr_coll].alpha = (o.colls[coll_tile][dir]) ? 1 : .5
+          }
+          break
       }
     },
 
     on_mousemove(e){
       ix = Math.floor(e.offsetX/(s*tw))
-      iy = Math.floor(e.offsetY/(s*tw)) 
+      iy = Math.floor(e.offsetY/(s*th)) 
       switch (this.sec){
         case tile_mode.flags:
           cur_flag.x = s*ix*tw
@@ -191,6 +202,26 @@ export default
             cur.x = s*tw*(ix-1), cur.y = s*th*(iy-2)
           else if (this.terra_shape === terra_shape_type._5x1)
             cur.x = s*tw*ix, cur.y = s*th*(iy-2)
+          break
+        case tile_mode.coll:
+          if (coll_tile !== null){
+            let ii = coll_tile*coll_coords.length
+            for (let ic = 0; ic < coll_coords.length; ic++)
+              colls[ii+ic].tint = 0x5c99d6
+          }
+          // check if we are hovering over any collision circle
+          let xp = e.offsetX%(s*tw)/(s*tw)-.5
+            , yp = e.offsetY%(s*th)/(s*th)-.5
+          coll_tile = iy*nx+ix
+          let ii = coll_tile*coll_coords.length
+          let cr2 = Math.pow(coll_radius/tw,2)
+          curr_coll = null
+          for (let ic = 0; ic < coll_coords.length; ic++){
+            if ((Math.pow(xp-coll_coords[ic].x,2) + Math.pow(yp-coll_coords[ic].y,2)) <= cr2){
+              colls[ii+ic].tint = 0xd6b85c
+              curr_coll = ii+ic
+            }
+          }
           break
       }
     },
@@ -290,20 +321,20 @@ export default
     },
 
     upd_colls(){
+      coll.visible = (o.sec === tile_mode.coll)
       if (colls_init === false){
         coll.clear()
         let i = 0
         for (let yi = 0; yi < ny; yi++)
           for (let xi = 0; xi < nx; xi++)
             for (let ic = 0; ic < coll_coords.length; ic++){
-              let x = s*xi*tw, y = s*yi*th
+              let x = s*(xi+.5)*tw, y = s*(yi+.5)*th
               colls[i].clear()
-              colls[i].beginFill(0x5c99d6, 1)
-              colls[i].moveTo(x+tw*s*coll_coords[ic][0].x, y+th*s*coll_coords[ic][0].y)
-              colls[i].lineTo(x+tw*s*coll_coords[ic][1].x, y+th*s*coll_coords[ic][1].y)
-              colls[i].lineTo(x+tw*s*coll_coords[ic][2].x, y+th*s*coll_coords[ic][2].y)
-              colls[i].closePath()
-              colls[i].endFill()
+              colls[i].beginFill(0xffffff, 1)
+              colls[i].drawCircle(x+tw*s*coll_coords[ic].x, y+th*s*coll_coords[ic].y, s*coll_radius)
+              colls[i].alpha = .5
+              // colls[i].tint = 0xd6b85c
+              colls[i].tint = 0x5c99d6
               coll.addChild(colls[i])
               i++
             }
@@ -400,7 +431,6 @@ export default
         for (let ic = 0; ic < coll_coords.length; ic++)
           colls[i++] = new PIXI.Graphics()
     this.upd_colls()
-    coll.visible = false
 
     app.stage.addChild(im)
     app.stage.addChild(grid)
