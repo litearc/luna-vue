@@ -13,11 +13,25 @@
         @mousedown='on_zoom_in'
       )
     .space
-    ui-tooltip(text='Grid')
-      ui-icon.toolbar-icon(icon='grid' height='12px' text base)
+    ui-tooltip(text='Toggle Grid')
+      ui-icon.toolbar-icon(
+        icon='grid'
+        height='12px'
+        text base
+        @mousedown='toggle_grid'
+      )
+    .space
+    ui-tooltip(text='Toggle Dim')
+      faicon.icon.toolbar-icon(
+        icon='adjust'
+        @mousedown='toggle_dim'
+      )
     .space
     ui-tooltip(text='Save')
-      faicon.icon.toolbar-icon(icon='save')
+      faicon.icon.toolbar-icon(
+        icon='save'
+        @mousedown='on_save'
+      )
   #image-container.expand.flex.overflow-auto
     canvas#canvas.no-shrink.block.margin-auto(ref='canvas')
 </template>
@@ -27,6 +41,10 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
+
+let fs = require('fs')
+let path = require('path')
+let { dialog } = require('electron').remote
 
 let app, im, grid, sel, cur, flags, cur_flag, coll // pixi graphics
 let colls = []     // pixi graphics for collisions, each el is { u, ur, r, dr, d, dl, l, ul }
@@ -121,7 +139,7 @@ export default
       draw_box(sel, w*s*tw, h*s*th)
       draw_box(cur, w*s*tw, h*s*th)
     },
-    sec(i){
+    sec(i, iprev){
       if ( i === tile_mode.props
        || (i === tile_mode.terra && o.iterra !== null)
        ||  i === tile_mode.coll
@@ -129,7 +147,11 @@ export default
         sel.visible = true
       if (i === tile_mode.anim)
         sel.visible = false
-      this.upd_all()
+      this.upd_boxes()
+      if (i === tile_mode.flags || iprev === tile_mode.flags)
+        this.upd_flags()
+      if (i === tile_mode.coll || iprev === tile_mode.coll)
+        this.upd_colls()
     }
   },
 
@@ -269,6 +291,23 @@ export default
       ) cur.visible = true
     },
 
+    on_save(){
+      if (o.file === null){
+        let p = path.dirname(o.fpath)
+        dialog.showSaveDialog({
+          defaultPath: p,
+        }).then(({canceled, filePath}) => {
+          // console.log(`canceled: ${canceled}`)
+          // console.log(`fpath: ${filePath[0]}`)
+          // console.log(filePath)
+          if (!canceled){
+            // save JSON file with data
+            fs.writeFileSync(filePath, JSON.stringify(o))
+          }
+        })
+      }
+    },
+
     on_zoom_out(){
       if (s <= .25) return // min zoom
       s /= 2
@@ -295,6 +334,13 @@ export default
       this.upd_all()
     },
 
+    toggle_dim(){
+      im.tint = (im.tint === 0xffffff) ? 0x888888 : 0xffffff
+    },
+    toggle_grid(){
+      grid.visible = !grid.visible
+    },
+
     upd_grid(){
       grid.clear()
       grid.position.set(0, 0)
@@ -303,7 +349,7 @@ export default
         grid.moveTo(s*tw*i, 0).lineTo(s*tw*i, s*mh+1)
       for (let i = 1; i < ny; i++)
         grid.moveTo(0, s*th*i).lineTo(s*mw+1, s*th*i)
-      grid.alpha = .1
+      grid.alpha = .15
     },
 
     upd_all(){

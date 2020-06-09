@@ -82,6 +82,8 @@ export default
         (this.tile_width*this.tile_height))
 
       return {
+        file: null,
+        fpath: this.fpath,
         tile_w : this.tile_width,
         tile_h : this.tile_height,
         im_w : this.im_width,

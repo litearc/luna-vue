@@ -6,8 +6,6 @@ import { i8_to_f32 } from '../js/util'
 
 export default
 {
-  name: 'new_sprite',
-
   data(){
     return {
       fpath: '',

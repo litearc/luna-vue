@@ -5,6 +5,7 @@ svg(
   :height='height'
   :style='svg_style'
   @click='$emit("click")'
+  @mousedown='$emit("mousedown")'
 )
   path(v-for='path in paths[icon]' :d='path' fill='currentColor')
 </template>
