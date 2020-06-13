@@ -139,7 +139,7 @@ export default
     add_tile_anim(i){
       let spr = new PIXI.Sprite(o.g_tiles[i])
       spr.x = o.anim_pos*o.tile_w, spr.y = 0
-      this.insert([o.anims[o.ianim].g_tiles, o.anim_pos, spr])
+      this.insert([o.g_anim_tiles[o.ianim], o.anim_pos, spr])
       this.upd_canvas_tiles()
       o.anim_pos++
     },
@@ -164,11 +164,11 @@ export default
       this.push([o.anims, {
         name: 'new anim',
         tiles: [],
-        g_tiles: [],
         frame_dur: 200,
         cycle_type: anim_cycle_type.beg_to_end,
         block_type: anim_block_type.not_set,
       }])
+      this.push([o.g_anim_tiles, []])
       if (o.anims.length == 1){
         this.set_prop([o, 'ianim', 0])
         telap = 0
@@ -192,7 +192,7 @@ export default
       let n = this.ntiles
       if (n === 0) return
       this.remove([o.anims[o.ianim].tiles, n-1])
-      this.remove([o.anims[o.ianim].g_tiles, n-1])
+      this.remove([o.g_anim_tiles[o.ianim], n-1])
       this.upd_canvas_tiles()
       o.anim_pos--
       if (o.anim_pos === 0)
@@ -213,7 +213,7 @@ export default
       app_tiles.resize()
       if (o.ianim === null) return
       for (let i = 0; i < n; i++)
-        app_tiles.stage.addChild(o.anims[o.ianim].g_tiles[i])
+        app_tiles.stage.addChild(o.g_anim_tiles[o.ianim][i])
     },
   },
 

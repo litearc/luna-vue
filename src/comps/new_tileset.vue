@@ -63,6 +63,27 @@
 import image_sel_mixin from '../mixins/image_sel'
 import { tile_mode } from '../const.js'
 
+// returns json
+export function get_json(o){
+  return JSON.stringify({
+    file: o.file,
+    fpath: o.fpath,
+    tile_w: o.tile_w,
+    tile_h: o.tile_h,
+    im_w: o.im_w,
+    im_h: o.im_h,
+    tileset_props: o.tileset_props,
+    props: o.props,
+    flags: o.flags,
+    colls: o.colls,
+    terra: o.terra,
+    anims: o.anims,
+    zoom: o.zoom,
+    grid: o.grid,
+    dim: o.dim,
+  })
+}
+
 export default
 {
   name: 'new_tileset',
@@ -118,6 +139,12 @@ export default
 
         // PIXI graphics
         g_tiles: Array(ntiles).fill(0),  // Textures
+        g_anim_tiles: [],
+
+        // editor options
+        zoom: 1.0,
+        grid: true,
+        dim: true,
       }
     }
   },

@@ -41,6 +41,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
+import { get_json } from './new_tileset.vue'
 
 let fs = require('fs')
 let path = require('path')
@@ -293,16 +294,12 @@ export default
 
     on_save(){
       if (o.file === null){
-        let p = path.dirname(o.fpath)
         dialog.showSaveDialog({
-          defaultPath: p,
+          defaultPath: path.dirname(o.fpath),
         }).then(({canceled, filePath}) => {
-          // console.log(`canceled: ${canceled}`)
-          // console.log(`fpath: ${filePath[0]}`)
-          // console.log(filePath)
           if (!canceled){
-            // save JSON file with data
-            fs.writeFileSync(filePath, JSON.stringify(o))
+            console.log('writing json file')
+            fs.writeFileSync(filePath, get_json(o))
           }
         })
       }
@@ -313,6 +310,7 @@ export default
       s /= 2
       if (s >= 1)
         s = Math.round(s)
+      o.zoom = s
       this.resize_image()
     },
     on_zoom_in(){
@@ -320,6 +318,7 @@ export default
       s *= 2
       if (s >= 1)
         s = Math.round(s)
+      o.zoom = s
       this.resize_image()
     },
 
@@ -336,9 +335,11 @@ export default
 
     toggle_dim(){
       im.tint = (im.tint === 0xffffff) ? 0x888888 : 0xffffff
+      o.dim = (im.tint !== 0xffffff)
     },
     toggle_grid(){
       grid.visible = !grid.visible
+      o.grid = grid.visible
     },
 
     upd_grid(){
@@ -399,17 +400,18 @@ export default
         for (let yi = 0; yi < ny; yi++){
           for (let xi = 0; xi < nx; xi++){
             let x = s*(xi+.5)*tw, y = s*(yi+.5)*th
+            // draw circles for collisions for different directions
             for (let ic = 0; ic < ncolls-1; ic++){
               colls[i].clear()
               colls[i].beginFill(0xffffff, 1)
               colls[i].drawCircle(x+tw*s*coll_coords[ic].x,
                 y+th*s*coll_coords[ic].y, s*coll_radius)
-              colls[i].alpha = .5
-              // colls[i].tint = 0xd6b85c
+              colls[i].alpha = (o.colls[yi*nx+xi][i2dir[ic]]) ? 1.0 : .5
               colls[i].tint = 0x5c99d6
               coll.addChild(colls[i])
               i++
             }
+            // draw the center square
             colls[i].clear()
             colls[i].beginFill(0xffffff, 1)
             colls[i].drawRect(x-s*coll_sq_dim/2, y-s*coll_sq_dim/2,
