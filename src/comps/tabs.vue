@@ -24,6 +24,7 @@
         v-if='curr_editor.type === "none"'
         :is='tab_comp[itab]'
         @create_page='on_create_page'
+        @cancelled='on_tab_closed'
         style='width: 320px; height: 240px'
       )
       component(
@@ -71,9 +72,6 @@ export default
   },
 
   props: {
-    // if the value of a given index in the tab array is `null`, display the
-    // "new resource" page to load appropriate data
-    tab_data: { default: ()=>[ null ] },
   },
 
   computed: {
@@ -132,6 +130,8 @@ export default
     },
 
     on_tab_closed(i){
+      if (i === undefined)
+        i = this.itab
       if (i <= this.itab)
         this.itab = Math.max(this.itab-1, 0)
 
@@ -143,8 +143,15 @@ export default
   }, // methods
 
   created(){
-    this.push([this.tabs, { name: 'Untitled', type: 'none', data: {} }])
-    this.push([this.tab_comp, _.cloneDeep(page_new_resource)])
+    if (this.itab > this.tabs.length-1){
+      // user clicked "new file"
+      this.push([this.tabs, { name: 'Untitled', type: 'none', data: {} }])
+      this.push([this.tab_comp, _.cloneDeep(page_new_resource)])
+    }
+    else {
+      // user opened a file
+      this.push([this.tab_comp, _.cloneDeep(this.editor[this.tabs[this.itab].type])])
+    }
   },
 
   mounted(){

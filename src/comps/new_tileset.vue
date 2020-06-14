@@ -66,6 +66,7 @@ import { tile_mode } from '../const.js'
 // returns json
 export function get_json(o){
   return JSON.stringify({
+    type: 'tileset',
     file: o.file,
     fpath: o.fpath,
     tile_w: o.tile_w,
@@ -78,6 +79,12 @@ export function get_json(o){
     colls: o.colls,
     terra: o.terra,
     anims: o.anims,
+    sec: tile_mode.props,
+    itile: 0, // currently selected tile
+    iflag: null,
+    iterra: null,
+    ianim: null,
+    anim_pos: 0,
     zoom: o.zoom,
     grid: o.grid,
     dim: o.dim,
@@ -103,8 +110,8 @@ export default
         (this.tile_width*this.tile_height))
 
       return {
-        file: null,
-        fpath: this.fpath,
+        file: null, // JSON file opened (if opened)
+        fpath: this.fpath, // image file (e.g. .png) opened
         tile_w : this.tile_width,
         tile_h : this.tile_height,
         im_w : this.im_width,

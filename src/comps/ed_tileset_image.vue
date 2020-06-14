@@ -489,14 +489,22 @@ export default
           new PIXI.Rectangle(xi*tw, yi*th, tw, th))
     // app.stage.addChild(new PIXI.Sprite(o.g_tiles[0]))
 
+    // add g_anim_tiles
+    o.g_anim_tiles = []
+    for (let ia = 0; ia < o.anims.length; ia++){
+      o.g_anim_tiles[ia] = []
+      for (let it = 0; it < o.anims[ia].tiles.length; it++){
+        let i = o.anims[ia].tiles[it]
+        let spr = new PIXI.Sprite(o.g_tiles[i])
+        spr.x = it*o.tile_w, spr.y = 0
+        this.insert([o.g_anim_tiles[ia], it, spr])
+      }
+    }
+
     // let tex = PIXI.Texture.fromBuffer(o.im_data, mw, mh)
     let tex = new PIXI.Texture(base)
     im = new PIXI.Sprite(tex)
     im.scale = {x:s, y:s} // does this need to be a PIXI.ObservablePoint?
-    app.view.addEventListener('mousedown', this.on_click)
-    app.view.addEventListener('mousemove', this.on_mousemove)
-    app.view.addEventListener('mouseout', this.on_mouseout)
-    app.view.addEventListener('mouseenter', this.on_mouseenter)
 
     grid = new PIXI.Graphics()
     this.upd_grid()
@@ -515,6 +523,11 @@ export default
         for (let ic = 0; ic < ncolls; ic++)
           colls[i++] = new PIXI.Graphics()
     this.upd_colls()
+
+    app.view.addEventListener('mousedown', this.on_click)
+    app.view.addEventListener('mousemove', this.on_mousemove)
+    app.view.addEventListener('mouseout', this.on_mouseout)
+    app.view.addEventListener('mouseenter', this.on_mouseenter)
 
     app.stage.addChild(im)
     app.stage.addChild(grid)

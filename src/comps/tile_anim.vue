@@ -219,8 +219,6 @@ export default
 
   created(){
     o = this.o
-    let ianim = (o.anims.length > 0) ? 0 : null
-    this.set_prop([o, 'ianim', ianim])
     bus.$on('add_tile_anim', this.add_tile_anim)
   },
 

@@ -3,10 +3,12 @@
   page-intro(
     v-if='page == "intro"'
     @new_file_selected='page = "tabs"'
+    @open_tab='page = "tabs"'
   )
   tabs(
     v-if='page == "tabs"'
     @all_tabs_closed='page = "intro"'
+    @cancelled='page = "intro"'
   )
 </template>
 
