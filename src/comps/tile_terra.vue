@@ -61,7 +61,6 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { bus } from './editor_tileset.vue'
 import { coll_type, terra_shape_type } from '../const.js'
-let o
 
 export default
 {
@@ -85,29 +84,25 @@ export default
       'set_prop',
     ]),
     on_plus(){
-      this.push([o.terra, {
+      this.push([this.o.terra, {
         name:'new terra',
         pos: {x:0, y:0},
         coll: coll_type.none,
         shape: terra_shape_type._4x3,
       }])
-      if (o.terra.length == 1)
-        this.set_prop([o, 'iterra', 0])
+      if (this.o.terra.length == 1)
+        this.set_prop([this.o, 'iterra', 0])
     },
     on_minus(i){
-      this.remove([o.terra, i])
-      if (o.terra.length == 0)
-        this.set_prop([o, 'iterra', null])
-      else if (o.iterra >= o.terra.length)
-        this.set_prop([o, 'iterra', o.terra.length-1])
+      this.remove([this.o.terra, i])
+      if (this.o.terra.length == 0)
+        this.set_prop([this.o, 'iterra', null])
+      else if (this.o.iterra >= this.o.terra.length)
+        this.set_prop([this.o, 'iterra', this.o.terra.length-1])
     },
     set_iterra(i){
-      this.set_prop([o, 'iterra', i])
+      this.set_prop([this.o, 'iterra', i])
     }
-  },
-
-  created(){
-    o = this.o
   },
 }
 </script>

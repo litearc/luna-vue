@@ -77,7 +77,6 @@ let tile_comps = [
   tile_terra,
   tile_anim,
 ]
-let o
 
 export default
 {
@@ -109,20 +108,19 @@ export default
       'set_prop',
     ]),
     add_tileset_prop(){
-      this.push([o.tileset_props, {key:'', val:''}])
+      this.push([this.o.tileset_props, {key:'', val:''}])
     },
     remove_tileset_prop(i){
-      this.remove([o.tileset_props, i])
+      this.remove([this.o.tileset_props, i])
     },
     set_tile_sec(i){
-      this.set_prop([o, 'sec', i])
+      this.set_prop([this.o, 'sec', i])
       this.curr_tile_comp = tile_comps[i]
     },
   },
 
   created(){
-    o = this.o
-    this.curr_tile_comp = tile_comps[o.sec]
+    this.curr_tile_comp = tile_comps[this.o.sec]
   }
 }
 </script>

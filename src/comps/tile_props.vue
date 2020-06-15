@@ -28,7 +28,6 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { bus } from './editor_tileset.vue'
-let o
 
 export default
 {
@@ -44,15 +43,11 @@ export default
       'remove',
     ]),
     on_plus(){
-      this.push([o.props[o.itile], {key:'', val:''}])
+      this.push([this.o.props[this.o.itile], {key:'', val:''}])
     },
     on_minus(i){
-      this.remove([o.props[o.itile], i])
+      this.remove([this.o.props[this.o.itile], i])
     },
-  },
-
-  created(){
-    o = this.o
   },
 }
 </script>
