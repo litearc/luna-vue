@@ -80,32 +80,6 @@ export default
   data(){
     return {
       // pub: process.env.BASE_URL,
-      app      : null,
-      im       : null,
-      grid     : null,
-      sel      : null,
-      cur      : null,
-      flags    : null,
-      cur_flag : null,
-      coll     : null,
-      colls    : [],
-      flag     : [],
-      ix       : null,
-      iy       : null,
-      nx       : null,
-      ny       : null,
-      mw       : null,
-      mh       : null,
-      tw       : null,
-      th       : null,
-      isx      : null,
-      isy      : null,
-      icx      : null,
-      icy      : null,
-      s        : 1,
-      colls_init: false,
-      coll_tile: null,
-      curr_coll: null,
     }
   },
 
@@ -466,16 +440,35 @@ export default
   },
 
   created(){
-    this.mw = this.o.im_w
-    this.mh = this.o.im_h
-    this.tw = this.o.tile_w
-    this.th = this.o.tile_h
-    this.nx = Math.round(this.mw/this.tw)
-    this.ny = Math.round(this.mh/this.th)
-    this.isx = 0
-    this.isy = 0
-    this.icx = 0
-    this.icy = 0
+    this.mw         = this.o.im_w
+    this.mh         = this.o.im_h
+    this.tw         = this.o.tile_w
+    this.th         = this.o.tile_h
+    this.nx         = Math.round(this.mw/this.tw)
+    this.ny         = Math.round(this.mh/this.th)
+    this.isx        = 0
+    this.isy        = 0
+    this.icx        = 0
+    this.icy        = 0
+    this.s          = 1
+    this.app        = null
+    this.im         = null
+    this.app        = null
+    this.im         = null
+    this.grid       = null
+    this.sel        = null
+    this.cur        = null
+    this.flags      = null
+    this.cur_flag   = null
+    this.coll       = null
+    this.colls      = []
+    this.flag       = []
+    this.ix         = null
+    this.iy         = null
+    this.colls_init = false
+    this.coll_tile  = null
+    this.curr_coll  = null
+
   },
 
   mounted(){

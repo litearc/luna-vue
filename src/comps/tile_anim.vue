@@ -91,16 +91,6 @@ export default
 {
   name: 'tile_anim',
 
-  data(){
-    return {
-      app_tiles: null,
-      app_preview: null,
-      app_terra: null,
-      telap: 0,
-      iframe: 0,
-    }
-  },
-
   props: {
     o: {},
   },
@@ -226,6 +216,11 @@ export default
 
   created(){
     bus.$on('add_tile_anim', this.add_tile_anim)
+    this.app_tiles   = null
+    this.app_preview = null
+    this.app_terra   = null
+    this.telap       = 0
+    this.iframe      = 0
   },
 
   mounted(){
