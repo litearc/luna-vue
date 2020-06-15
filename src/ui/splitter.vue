@@ -95,6 +95,7 @@ export default
       let min = Math.max(min1, min2)
       let max = Math.min(max1, max2)
       if (max < min){ // no acceptable position for splitter
+        console.log(`${min1} ${max1} ${min2} ${max2}`)
         console.log('no acceptable position for splitter found');
         return null
       } 
@@ -184,17 +185,19 @@ export default
           break
       }
     }
+  },
 
+  activated(){
     on('mousemove', this.on_mousemove)
     on('mouseup', this.on_mouseup)
     on('mousedown', this.on_mousedown)
   },
 
-  destroyed(){
+  deactivated(){
     off('mousemove', this.on_mousemove)
     off('mouseup', this.on_mouseup)
     off('mousedown', this.on_mousedown)
-  }
+  },
 }
 </script>
 

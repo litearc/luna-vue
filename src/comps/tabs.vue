@@ -42,7 +42,9 @@ import editor_sprite from './editor_sprite.vue'
 import editor_tileset from './editor_tileset.vue'
 import page_new_resource from './page_new_resource.vue'
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import { load_tileset_file } from './page_intro.vue'
 
+let { dialog } = require('electron').remote
 let _ = require('lodash')
 
 export default
@@ -123,6 +125,14 @@ export default
     },
 
     on_open_file(){
+      dialog.showOpenDialog({
+      }).then( async ({canceled, filePaths}) => {
+        if (!canceled){
+          let o = await load_tileset_file(filePaths[0])
+          this.push([this.tabs, { name: 'Untitled', type: o.type, data: o }])
+          this.push([this.tab_comp, _.cloneDeep(this.editor[this.tabs[this.itab].type])])
+        }
+      })
     },
 
     on_tab_changed(i){

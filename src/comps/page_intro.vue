@@ -29,7 +29,7 @@ let { dialog } = require('electron').remote
 import { load_image } from '../js/image'
 import { i8_to_f32 } from '../js/util'
 
-async function load_tileset_file(fp){
+export async function load_tileset_file(fp){
   let o = JSON.parse(fs.readFileSync(fp, 'utf8'))
   // im_data is not stored in the json file, so load it from image
   let {w, h, data} = await load_image(o.fpath)
@@ -58,7 +58,7 @@ export default
       }).then( async ({canceled, filePaths}) => {
         if (!canceled){
           let o = await load_tileset_file(filePaths[0])
-          this.push([this.tabs, { name: 'Untitled', type: 'tileset', data: o }])
+          this.push([this.tabs, { name: 'Untitled', type: o.type, data: o }])
           this.$emit('open_tab')
         }
       })
