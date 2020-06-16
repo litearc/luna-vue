@@ -216,8 +216,8 @@ export default
     },
 
     on_mousemove(e){
-      this.ix = Math.floor(e.offsetX/(this.s*this.tw))
-      this.iy = Math.floor(e.offsetY/(this.s*this.th)) 
+      this.ix = Math.max(Math.min(Math.floor(e.offsetX/(this.s*this.tw)), this.nx-1), 0)
+      this.iy = Math.max(Math.min(Math.floor(e.offsetY/(this.s*this.th)), this.ny-1), 0)
       switch (this.sec){
         case tile_mode.flags:
           this.cur_flag.x = this.s*this.ix*this.tw
@@ -239,7 +239,7 @@ export default
           if (this.coll_tile !== null){
             let ii = this.coll_tile*ncolls 
             for (let ic = 0; ic < ncolls; ic++)
-              this.colls[ii+ic].tint = 0x5c99d6 // TODO: this sometimes causes a bug
+              this.colls[ii+ic].tint = 0x5c99d6
           }
           // check if we are hovering over any coll graphic
           let xp = e.offsetX%(this.s*this.tw)/(this.s*this.tw)-.5

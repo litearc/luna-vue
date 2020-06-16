@@ -155,7 +155,7 @@ export default
         return
       this.set_prop([this.o.anims[this.o.ianim], 'block_type', anim_block_type.terra])
       let nx = Math.round(this.o.im_w/this.o.tile_w)
-      let iterra = Math.floor(e.offsetX/this.o.tile_w)
+      let iterra = Math.max(Math.min(Math.floor(e.offsetX/this.o.tile_w), this.o.terra.length-1), 0)
       let itile = this.o.terra[iterra].pos.y*nx + this.o.terra[iterra].pos.x
       this.insert([this.o.anims[this.o.ianim].tiles, this.o.anim_pos, itile])
       this.add_tile_anim(itile)
