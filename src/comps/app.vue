@@ -16,6 +16,11 @@
 import page_intro from './page_intro.vue'
 import tabs from './tabs.vue'
 
+// this is a global object imported by various
+export const o = {
+  tabs: [],
+}
+
 export default {
   name: 'app',
 

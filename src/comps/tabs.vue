@@ -46,6 +46,7 @@ import { load_tileset_file } from './page_intro.vue'
 
 let { dialog } = require('electron').remote
 let _ = require('lodash')
+import { o } from './app.vue'
 
 export default
 {
@@ -53,8 +54,6 @@ export default
 
   data(){
     return {
-      itab: 0, // index of currently active tab
-
       // an array that stores, for each tab, a component options object for the
       // current editor (or new resource page). these objects are cloned from
       // the base objects from the 'import' statements above - otherwise the
@@ -78,6 +77,7 @@ export default
 
   computed: {
     ...mapState([
+      'itab',
       'tabs',
     ]),
     curr_editor(){
@@ -101,6 +101,7 @@ export default
     ...mapMutations([
       'push',
       'remove',
+      'set',
       'set_prop',
     ]),
 
@@ -112,6 +113,7 @@ export default
         type: page_name,
         data: ed_data,
       }])
+      o.tabs[this.itab] = {}
     },
 
     on_new_file(){
@@ -128,22 +130,23 @@ export default
       dialog.showOpenDialog({
       }).then( async ({canceled, filePaths}) => {
         if (!canceled){
-          let o = await load_tileset_file(filePaths[0])
-          this.push([this.tabs, { name: 'Untitled', type: o.type, data: o }])
+          let d = await load_tileset_file(filePaths[0])
+          this.push([this.tabs, { name: 'Untitled', type: d.type, data: d }])
           this.push([this.tab_comp, _.cloneDeep(this.editor[this.tabs[this.itab].type])])
+          o.tabs.push({})
         }
       })
     },
 
     on_tab_changed(i){
-      this.itab = i
+      this.set(['itab', i])
     },
 
     on_tab_closed(i){
       if (i === undefined)
         i = this.itab
       if (i <= this.itab)
-        this.itab = Math.max(this.itab-1, 0)
+        this.set(['itab', Math.max(this.itab-1, 0)])
 
       this.remove([this.tabs, i])
       this.remove([this.tab_comp, i])
@@ -157,10 +160,12 @@ export default
       // user clicked "new file"
       this.push([this.tabs, { name: 'Untitled', type: 'none', data: {} }])
       this.push([this.tab_comp, _.cloneDeep(page_new_resource)])
+      o.tabs.push({})
     }
     else {
       // user opened a file
       this.push([this.tab_comp, _.cloneDeep(this.editor[this.tabs[this.itab].type])])
+      o.tabs.push({})
     }
   },
 

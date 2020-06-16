@@ -42,6 +42,7 @@ import * as PIXI from 'pixi.js'
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { bus } from './editor_tileset.vue'
 import { get_json } from './new_tileset.vue'
+import { o } from './app.vue'
 
 let fs = require('fs')
 let path = require('path')
@@ -88,6 +89,9 @@ export default
   },
 
   computed:{
+    ...mapState([
+      'itab',
+    ]),
     iflag(){ return this.o.iflag },
     iterra(){ return this.o.iterra },
     terra_1d_pos(){
@@ -235,7 +239,7 @@ export default
           if (this.coll_tile !== null){
             let ii = this.coll_tile*ncolls 
             for (let ic = 0; ic < ncolls; ic++)
-              this.colls[ii+ic].tint = 0x5c99d6
+              this.colls[ii+ic].tint = 0x5c99d6 // TODO: this sometimes causes a bug
           }
           // check if we are hovering over any coll graphic
           let xp = e.offsetX%(this.s*this.tw)/(this.s*this.tw)-.5
@@ -488,23 +492,23 @@ export default
     let base = PIXI.BaseTexture.fromBuffer(this.o.im_data, this.mw, this.mh)
 
     // extract tiles
-    this.o.g_tiles = [] // so it can be shared
+    o.tabs[this.itab].g_tiles = [] // so it can be shared
     let i = 0
     for (let yi = 0; yi < this.ny; yi++)
       for (let xi = 0; xi < this.nx; xi++)
-        this.o.g_tiles[i++] = new PIXI.Texture(base,
+        o.tabs[this.itab].g_tiles[i++] = new PIXI.Texture(base,
           new PIXI.Rectangle(xi*this.tw, yi*this.th, this.tw, this.th))
     // this.app.stage.addChild(new PIXI.Sprite(this.o.g_tiles[0]))
 
     // add g_anim_tiles
-    this.o.g_anim_tiles = []
+    o.tabs[this.itab].g_anim_tiles = []
     for (let ia = 0; ia < this.o.anims.length; ia++){
-      this.o.g_anim_tiles[ia] = []
+      o.tabs[this.itab].g_anim_tiles[ia] = []
       for (let it = 0; it < this.o.anims[ia].tiles.length; it++){
         let i = this.o.anims[ia].tiles[it]
-        let spr = new PIXI.Sprite(this.o.g_tiles[i])
+        let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[i])
         spr.x = it*this.o.tile_w, spr.y = 0
-        this.insert([this.o.g_anim_tiles[ia], it, spr])
+        this.insert([o.tabs[this.itab].g_anim_tiles[ia], it, spr])
       }
     }
 

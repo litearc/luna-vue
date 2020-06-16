@@ -86,6 +86,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { bus } from './editor_tileset.vue'
 import { anim_cycle_type, anim_block_type } from '../const.js'
+import { o } from './app.vue'
 
 export default
 {
@@ -96,6 +97,9 @@ export default
   },
 
   computed: {
+    ...mapState([
+      'itab',
+    ]),
     // https://stackoverflow.com/questions/35210901/binding-method-result-to-v-model-with-vue-js
     frame_dur_model: {
       get(){
@@ -134,9 +138,9 @@ export default
       'set_prop',
     ]),
     add_tile_anim(i){
-      let spr = new PIXI.Sprite(this.o.g_tiles[i])
+      let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[i])
       spr.x = this.o.anim_pos*this.o.tile_w, spr.y = 0
-      this.insert([this.o.g_anim_tiles[this.o.ianim], this.o.anim_pos, spr])
+      this.insert([o.tabs[this.itab].g_anim_tiles[this.o.ianim], this.o.anim_pos, spr])
       this.upd_canvas_tiles()
       this.o.anim_pos++
     },
@@ -165,7 +169,7 @@ export default
         cycle_type: anim_cycle_type.beg_to_end,
         block_type: anim_block_type.not_set,
       }])
-      this.push([this.o.g_anim_tiles, []])
+      this.push([o.tabs[this.itab].g_anim_tiles, []])
       if (this.o.anims.length == 1){
         this.set_prop([this.o, 'ianim', 0])
         this.telap = 0
@@ -189,7 +193,7 @@ export default
       let n = this.ntiles
       if (n === 0) return
       this.remove([this.o.anims[this.o.ianim].tiles, n-1])
-      this.remove([this.o.g_anim_tiles[this.o.ianim], n-1])
+      this.remove([o.tabs[this.itab].g_anim_tiles[this.o.ianim], n-1])
       this.upd_canvas_tiles()
       this.o.anim_pos--
       if (this.o.anim_pos === 0)
@@ -210,7 +214,7 @@ export default
       this.app_tiles.resize()
       if (this.o.ianim === null) return
       for (let i = 0; i < n; i++)
-        this.app_tiles.stage.addChild(this.o.g_anim_tiles[this.o.ianim][i])
+        this.app_tiles.stage.addChild(o.tabs[this.itab].g_anim_tiles[this.o.ianim][i])
     },
   },
 
@@ -292,7 +296,7 @@ export default
         this.iframe = i
         this.clear_app(this.app_preview)
         let itile = this.o.anims[this.o.ianim].tiles[this.iframe]
-        let spr = new PIXI.Sprite(this.o.g_tiles[itile])
+        let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[itile])
         spr.width = n, spr.height = n
         this.app_preview.stage.addChild(spr)
       }
@@ -309,7 +313,7 @@ export default
     this.app_terra.resize() // weird, this seems to be what's needed to update the renderer
     for (let i = 0; i < this.o.terra.length; i++){
       let iterra = this.o.terra[i].pos.y*nx + this.o.terra[i].pos.x
-      let spr = new PIXI.Sprite(this.o.g_tiles[iterra])
+      let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[iterra])
       spr.x = this.o.tile_w*i, spr.y = 0
       this.app_terra.stage.addChild(spr)
     }

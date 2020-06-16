@@ -144,9 +144,9 @@ export default
         ianim: null,
         anim_pos: 0,
 
-        // PIXI graphics
-        g_tiles: Array(ntiles).fill(0),  // Textures
-        g_anim_tiles: [],
+        // PIXI graphics - todo: these don't need to be reactive
+        // g_tiles: Array(ntiles).fill(0),  // Textures
+        // g_anim_tiles: [],
 
         // editor options
         zoom: 1.0,

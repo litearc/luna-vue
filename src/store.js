@@ -12,6 +12,9 @@ export default new Vuex.Store({
     // type is 'none', the 'new resource' page is shown. the 'name' is displayed
     // in the tab.
     tabs: [],
+
+    // currently active tab
+    itab: 0,
   },
 
   mutations:
