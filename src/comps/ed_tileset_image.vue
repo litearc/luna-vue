@@ -289,7 +289,13 @@ export default
         }).then(({canceled, filePath}) => {
           if (!canceled){
             console.log('writing json file')
-            fs.writeFileSync(filePath, get_json(this.o))
+            try {
+              fs.writeFileSync(filePath, get_json(this.o))
+              this.$message({message: 'Saved tileset file', type: 'success'})
+            }
+            catch(err) {
+              this.$message({message: 'Error tileset file', type: 'failure'})
+            }
           }
         })
       }
@@ -454,7 +460,7 @@ export default
     this.isy        = 0
     this.icx        = 0
     this.icy        = 0
-    this.s          = 1
+    this.s          = 1 // scale (zoom)
     this.app        = null
     this.im         = null
     this.app        = null
@@ -498,7 +504,6 @@ export default
       for (let xi = 0; xi < this.nx; xi++)
         o.tabs[this.itab].g_tiles[i++] = new PIXI.Texture(base,
           new PIXI.Rectangle(xi*this.tw, yi*this.th, this.tw, this.th))
-    // this.app.stage.addChild(new PIXI.Sprite(this.o.g_tiles[0]))
 
     // add g_anim_tiles
     o.tabs[this.itab].g_anim_tiles = []

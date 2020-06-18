@@ -19,11 +19,11 @@ export default
   computed:
   {
     im_width_text(){
-      if (this.imwidth === null) return ''
+      if (this.im_width === null) return ''
       return this.im_width
     },
     im_height_text(){
-      if (this.imheight === null) return ''
+      if (this.im_height === null) return ''
       return this.im_height
     },
   },

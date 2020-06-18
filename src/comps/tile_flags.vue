@@ -55,7 +55,7 @@ export default
       'set_prop',
     ]),
     on_plus(){
-      let ntiles = Math.round(this.o.im_w*o.im_h/o.tile_w/o.tile_h)
+      let ntiles = Math.round(this.o.im_w*this.o.im_h/this.o.tile_w/this.o.tile_h)
       this.push([this.o.flags, {
         name: 'new flag',
         tiles: Array(ntiles).fill(false)
@@ -67,8 +67,8 @@ export default
       this.remove([this.o.flags, i])
       if (this.o.flags.length == 0)
         this.set_prop([this.o, 'iflag', null])
-      else if (this.o.iflag >= o.flags.length)
-        this.set_prop([this.o, 'iflag', o.flags.length-1])
+      else if (this.o.iflag >= this.o.flags.length)
+        this.set_prop([this.o, 'iflag', this.o.flags.length-1])
     },
     set_iflag(i){
       this.set_prop([this.o, 'iflag', i])

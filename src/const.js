@@ -35,3 +35,8 @@ export const terra_shape_type = {
   _5x1: 1,
 }
 
+export const map_mode = {
+  point: 0,
+  rect: 1,
+  fill: 2,
+}

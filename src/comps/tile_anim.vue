@@ -159,7 +159,7 @@ export default
       let itile = this.o.terra[iterra].pos.y*nx + this.o.terra[iterra].pos.x
       this.insert([this.o.anims[this.o.ianim].tiles, this.o.anim_pos, itile])
       this.add_tile_anim(itile)
-      // rest is handles by the watcher for `ntiles`
+      // rest is handled by the watcher for `ntiles`
     },
     on_plus(){
       this.push([this.o.anims, {

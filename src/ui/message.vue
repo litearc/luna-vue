@@ -8,13 +8,13 @@ transition(
     :style='style'
     v-show='visible'
   )
-    .flex-row.align-bl
+    .flex-row
       faicon.icon.fixed(
         v-if='type !== ""'
         :class='get_color()'
         :icon='get_icon()'
       )
-      span.fixed {{ this.message }}
+      span.fixed.ml-8px.pos-relative.-t-2px.-mb-2px {{ this.message }}
 </template>
 
 <script>
