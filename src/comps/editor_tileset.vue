@@ -2,7 +2,7 @@
 #editor_tileset
   ui-splitter#splitter(
     min2='400px'
-    max2='500px'
+    max2='520px'
     mode='B'
   )
     ed-tileset-image(

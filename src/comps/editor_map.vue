@@ -1,7 +1,7 @@
 <template lang='pug'>
   ui-splitter#splitter(
     min2='400px'
-    max2='500px'
+    max2='520px'
     mode='B'
   )
     ed-map-image(

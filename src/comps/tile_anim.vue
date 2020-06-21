@@ -138,9 +138,9 @@ export default
       'set_prop',
     ]),
     add_tile_anim(i){
-      let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[i])
+      let spr = new PIXI.Sprite(o.tabs[this.itab_].g_tiles[i])
       spr.x = this.o.anim_pos*this.o.tile_w, spr.y = 0
-      this.insert([o.tabs[this.itab].g_anim_tiles[this.o.ianim], this.o.anim_pos, spr])
+      this.insert([o.tabs[this.itab_].g_anim_tiles[this.o.ianim], this.o.anim_pos, spr])
       this.upd_canvas_tiles()
       this.o.anim_pos++
     },
@@ -169,7 +169,7 @@ export default
         cycle_type: anim_cycle_type.beg_to_end,
         block_type: anim_block_type.not_set,
       }])
-      this.push([o.tabs[this.itab].g_anim_tiles, []])
+      this.push([o.tabs[this.itab_].g_anim_tiles, []])
       if (this.o.anims.length == 1){
         this.set_prop([this.o, 'ianim', 0])
         this.telap = 0
@@ -193,7 +193,7 @@ export default
       let n = this.ntiles
       if (n === 0) return
       this.remove([this.o.anims[this.o.ianim].tiles, n-1])
-      this.remove([o.tabs[this.itab].g_anim_tiles[this.o.ianim], n-1])
+      this.remove([o.tabs[this.itab_].g_anim_tiles[this.o.ianim], n-1])
       this.upd_canvas_tiles()
       this.o.anim_pos--
       if (this.o.anim_pos === 0)
@@ -214,7 +214,7 @@ export default
       this.app_tiles.resize()
       if (this.o.ianim === null) return
       for (let i = 0; i < n; i++)
-        this.app_tiles.stage.addChild(o.tabs[this.itab].g_anim_tiles[this.o.ianim][i])
+        this.app_tiles.stage.addChild(o.tabs[this.itab_].g_anim_tiles[this.o.ianim][i])
     },
   },
 
@@ -225,6 +225,7 @@ export default
     this.app_terra   = null
     this.telap       = 0
     this.iframe      = 0
+    this.itab_       = this.itab
   },
 
   mounted(){
@@ -253,7 +254,7 @@ export default
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })
-    // todo: add tiles in data
+    this.upd_canvas_tiles()
 
     this.app_terra = new PIXI.Application({
       width: this.o.tile_w*nterra,
@@ -296,7 +297,7 @@ export default
         this.iframe = i
         this.clear_app(this.app_preview)
         let itile = this.o.anims[this.o.ianim].tiles[this.iframe]
-        let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[itile])
+        let spr = new PIXI.Sprite(o.tabs[this.itab_].g_tiles[itile])
         spr.width = n, spr.height = n
         this.app_preview.stage.addChild(spr)
       }
@@ -306,6 +307,7 @@ export default
 
   // life-cycle hooks for when dynamic component is activated/deactivated
   activated(){
+    this.app_preview.ticker.start()
     let nx = Math.round(this.o.im_w/this.o.tile_w)
     this.$refs.canvas_terra.style.width = `${this.o.tile_w*this.o.terra.length}px`
     this.$refs.canvas_terra.style.height = `${this.o.tile_h}px`
@@ -313,13 +315,17 @@ export default
     this.app_terra.resize() // weird, this seems to be what's needed to update the renderer
     for (let i = 0; i < this.o.terra.length; i++){
       let iterra = this.o.terra[i].pos.y*nx + this.o.terra[i].pos.x
-      let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[iterra])
+      let spr = new PIXI.Sprite(o.tabs[this.itab_].g_tiles[iterra])
       spr.x = this.o.tile_w*i, spr.y = 0
       this.app_terra.stage.addChild(spr)
     }
   },
+  deactivated(){
+    this.app_preview.ticker.stop()
+  },
 
   beforeDestroy(){
+    this.app_terra.view.removeEventListener('mousedown', this.on_click_terra)
     bus.$off('add_tile_anim', this.add_tile_anim)
   }
 }

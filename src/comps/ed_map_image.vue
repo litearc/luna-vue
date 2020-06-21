@@ -107,7 +107,6 @@ export default
   },
 
   mounted(){
-    console.log(this.o)
     let nx = this.map_w * this.tw
       , ny = this.map_h * this.th
     this.$refs.canvas.style.width = `${Math.round(this.s*nx)}px`

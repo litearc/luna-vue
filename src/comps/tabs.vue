@@ -43,10 +43,34 @@ import editor_tileset from './editor_tileset.vue'
 import page_new_resource from './page_new_resource.vue'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { load_tileset_file } from './page_intro.vue'
+import * as PIXI from 'pixi.js'
 
 let { dialog } = require('electron').remote
 let _ = require('lodash')
 import { o } from './app.vue'
+
+export function set_g_tiles(itab, base, nx, ny, tw, th){
+  o.tabs[itab].g_tiles = [] // so it can be shared
+  let i = 0
+  for (let yi = 0; yi < ny; yi++)
+    for (let xi = 0; xi < nx; xi++)
+      o.tabs[itab].g_tiles[i++] = new PIXI.Texture(base,
+        new PIXI.Rectangle(xi*tw, yi*th, tw, th))
+}
+
+export function set_g_anim_tiles(itab, anims, tw){
+  o.tabs[itab].g_anim_tiles = []
+  for (let ia = 0; ia < anims.length; ia++){
+    o.tabs[itab].g_anim_tiles[ia] = []
+    for (let it = 0; it < anims[ia].tiles.length; it++){
+      let i = anims[ia].tiles[it]
+      let spr = new PIXI.Sprite(o.tabs[itab].g_tiles[i])
+      spr.x = it*tw, spr.y = 0
+      o.tabs[itab].g_anim_tiles[ia].splice(it, 0, spr)
+      // this.insert([o.tabs[itab].g_anim_tiles[ia], it, spr])
+    }
+  }
+}
 
 export default
 {

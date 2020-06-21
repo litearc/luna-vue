@@ -81,9 +81,9 @@ export function get_json(o){
     anims: o.anims,
     sec: tile_mode.props,
     itile: 0, // currently selected tile
-    iflag: null,
-    iterra: null,
-    ianim: null,
+    iflag: (o.flags.length > 0) ? 0 : null,
+    iterra: (o.terra.length > 0) ? 0 : null,
+    ianim: (o.anims.length > 0) ? 0 : null,
     anim_pos: 0,
     zoom: o.zoom,
     grid: o.grid,

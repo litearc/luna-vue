@@ -40,6 +40,8 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
+import { draw_box, draw_grid } from '../js/image.js'
+import { set_g_tiles, set_g_anim_tiles } from './tabs.vue'
 import { bus } from './editor_tileset.vue'
 import { get_json } from './new_tileset.vue'
 import { o } from './app.vue'
@@ -61,18 +63,6 @@ for (let i = 0; i < 8; i++){
 }
 let i2dir = ['r','dr','d','dl','l','ul','u','ur']
 let ncolls = coll_coords.length+1
-
-// draws a box for pixi graphics `g` with width `w`, height `h`
-function draw_box(g, w, h){
-  g.clear()
-  g.lineStyle(4, 0x000000)
-  g.beginFill(0xffffff, 0)
-  g.drawRect(0, 0, w, h)
-  g.lineStyle(2, 0x5c99d6)
-  g.beginFill(0xffffff, 0)
-  g.drawRect(0, 0, w, h)
-  g.endFill()
-}
 
 export default
 {
@@ -340,14 +330,7 @@ export default
     },
 
     upd_grid(){
-      this.grid.clear()
-      this.grid.position.set(0, 0)
-      this.grid.lineStyle(1, 0xffffff)
-      for (let i = 1; i < this.nx; i++)
-        this.grid.moveTo(this.s*this.tw*i, 0).lineTo(this.s*this.tw*i, this.s*this.mh+1)
-      for (let i = 1; i < this.ny; i++)
-        this.grid.moveTo(0, this.s*this.th*i).lineTo(this.s*this.mw+1, this.s*this.th*i)
-      this.grid.alpha = .15
+      draw_grid(this.grid, this.s*this.mw, this.s*this.mh, this.s*this.tw, this.s*this.th)
     },
 
     upd_all(){
@@ -440,9 +423,7 @@ export default
           this.flag[i].lineStyle(1, 0x000000)
           this.flag[i].beginFill(0x5c99d6, 1)
           this.flag[i].drawCircle(this.s*(ix+.5)*this.tw, this.s*(iy+.5)*this.th, this.s*4)
-          if (this.o.iflag === null ||
-              this.o.flags[this.o.iflag][i] === false)
-            this.flag[i].visible = false
+          this.flag[i].visible = (this.o.iflag === null) ? false : this.o.flags[this.o.iflag][i]
           this.flags.addChild(this.flag[i])
         }
       }
@@ -479,43 +460,9 @@ export default
     this.coll_tile  = null
     this.curr_coll  = null
 
-  },
-
-  mounted(){
-    // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
-    
-    this.$refs.canvas.style.width = `${Math.round(this.s*this.mw)}px`
-    this.$refs.canvas.style.height = `${Math.round(this.s*this.mh)}px`
-
-    this.app = new PIXI.Application({
-      width: this.s*this.mw,
-      height: this.s*this.mh,
-      view: this.$refs.canvas,
-      resizeTo: this.$refs.canvas,
-      antialias: true,
-    })
-
     let base = PIXI.BaseTexture.fromBuffer(this.o.im_data, this.mw, this.mh)
-
-    // extract tiles
-    o.tabs[this.itab].g_tiles = [] // so it can be shared
-    let i = 0
-    for (let yi = 0; yi < this.ny; yi++)
-      for (let xi = 0; xi < this.nx; xi++)
-        o.tabs[this.itab].g_tiles[i++] = new PIXI.Texture(base,
-          new PIXI.Rectangle(xi*this.tw, yi*this.th, this.tw, this.th))
-
-    // add g_anim_tiles
-    o.tabs[this.itab].g_anim_tiles = []
-    for (let ia = 0; ia < this.o.anims.length; ia++){
-      o.tabs[this.itab].g_anim_tiles[ia] = []
-      for (let it = 0; it < this.o.anims[ia].tiles.length; it++){
-        let i = this.o.anims[ia].tiles[it]
-        let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[i])
-        spr.x = it*this.o.tile_w, spr.y = 0
-        this.insert([o.tabs[this.itab].g_anim_tiles[ia], it, spr])
-      }
-    }
+    set_g_tiles(this.itab, base, this.nx, this.ny, this.tw, this.th)
+    set_g_anim_tiles(this.itab, this.o.anims, this.tw)
 
     // let tex = PIXI.Texture.fromBuffer(this.o.im_data, this.mw, mh)
     let tex = new PIXI.Texture(base)
@@ -533,12 +480,27 @@ export default
       this.flag[i] = new PIXI.Graphics()
     this.upd_flags()
     this.coll = new PIXI.Graphics()
-    i = 0
+    let i = 0
     for (let yi = 0; yi < this.ny; yi++)
       for (let xi = 0; xi < this.nx; xi++)
         for (let ic = 0; ic < ncolls; ic++)
           this.colls[i++] = new PIXI.Graphics()
     this.upd_colls()
+  },
+
+  mounted(){
+    // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
+    
+    this.$refs.canvas.style.width = `${Math.round(this.s*this.mw)}px`
+    this.$refs.canvas.style.height = `${Math.round(this.s*this.mh)}px`
+
+    this.app = new PIXI.Application({
+      width: this.s*this.mw,
+      height: this.s*this.mh,
+      view: this.$refs.canvas,
+      resizeTo: this.$refs.canvas,
+      antialias: true,
+    })
 
     this.app.stage.addChild(this.im)
     this.app.stage.addChild(this.grid)
