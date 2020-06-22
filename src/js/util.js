@@ -6,3 +6,7 @@ export function i8_to_f32(buf){
     arr[i] = buf[i]/255
   return arr
 }
+
+export function clamp(v, vmin, vmax){
+  return Math.min(Math.max(v, vmin), vmax)
+}

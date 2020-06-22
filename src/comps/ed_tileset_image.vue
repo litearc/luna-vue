@@ -50,6 +50,7 @@ import * as PIXI from 'pixi.js'
 
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { draw_box, draw_grid } from '../js/image.js'
+import { clamp } from '../js/util.js'
 
 import { o } from './app.vue'
 import { bus } from './editor_tileset.vue'
@@ -95,6 +96,7 @@ export default
       'itab',
     ]),
 
+    ianim(){ return this.o.ianim },
     iflag(){ return this.o.iflag },
     iterra(){ return this.o.iterra },
     sec(){ return this.o.sec },
@@ -103,14 +105,11 @@ export default
     smh(){ return this.s*this.mh },
     stw(){ return this.s*this.tw },
     sth(){ return this.s*this.th },
-    scx(){ return this.s*this.icx },
-    scy(){ return this.s*this.icy },
-    ssx(){ return this.s*this.isx },
-    ssy(){ return this.s*this.isy },
     
     terra_1d_pos(){
       if (this.o.iterra === null) return null
-      return this.o.terra[this.o.iterra].pos.y * this.nx + this.o.terra[this.o.iterra].pos.x
+      return this.o.terra[this.o.iterra].pos.y * this.nx +
+        this.o.terra[this.o.iterra].pos.x
     },
     
     terra_shape(){
@@ -120,12 +119,22 @@ export default
   }, // computed
 
   watch: {
+    // when the current index e.g. ianim, iflag, ... changes, set the current
+    // anims, e.g. canims, ... we don't use a computed property because that
+    // would make it reactive (I think) and reduce performance.
+    ianim(v){
+      this.canims = this.o.anims[this.ianim]
+    },
     // when the currently selected flag changes, update the visibility of all
     // flag markers shown on the tileset image.
     iflag(v){
+      this.cflags = this.o.flags[v]
       let ntiles = this.nx*this.ny
       for (let i = 0; i < ntiles; i++)
         this.flag[i].visible = (v === null) ? false : this.o.flags[v][i]
+    },
+    iterra(v){
+      this.cterra = this.o.terra[this.iterra]
     },
 
     // when the position of the currently selected terra changes, move the terra
@@ -134,8 +143,8 @@ export default
       let vis = (this.o.iterra !== null)
       this.sel.visible = vis
       if (!vis) return
-      this.sel.x = this.s*this.tw*this.o.terra[this.o.iterra].pos.x
-      this.sel.y = this.s*this.th*this.o.terra[this.o.iterra].pos.y
+      this.sel.x = this.stw*this.cterra.pos.x
+      this.sel.y = this.sth*this.cterra.pos.y
     },
 
     // when the shape of the currently selected terra changes, reshape the
@@ -148,8 +157,8 @@ export default
         w = 1, h = 5
       this.sel.clear()
       this.cur.clear()
-      draw_box(this.sel, w*this.s*this.tw, h*this.s*this.th)
-      draw_box(this.cur, w*this.s*this.tw, h*this.s*this.th)
+      draw_box(this.sel, w*this.stw, h*this.sth)
+      draw_box(this.cur, w*this.stw, h*this.sth)
     },
 
     // when the current tileset section changes, update the necessary graphics.
@@ -193,8 +202,8 @@ export default
         case tile_mode.props:
           this.isx = this.ix
           this.isy = this.iy
-          this.sel.x = this.isx*this.s*this.tw
-          this.sel.y = this.isy*this.s*this.th
+          this.sel.x = this.isx*this.stw
+          this.sel.y = this.isy*this.sth
           this.set_prop([this.o, 'itile', this.isy*this.nx+this.isx])
           break
 
@@ -208,8 +217,8 @@ export default
           else if (this.terra_shape === terra_shape_type._5x1)
             this.icx = this.ix,
             this.icy = this.iy-2
-          this.sel.x = this.icx*this.s*this.tw
-          this.sel.y = this.icy*this.s*this.th
+          this.sel.x = this.icx*this.stw
+          this.sel.y = this.icy*this.sth
           this.set_prop([this.o.terra[this.o.iterra].pos, 'x', this.icx])
           this.set_prop([this.o.terra[this.o.iterra].pos, 'y', this.icy])
           break
@@ -218,12 +227,13 @@ export default
         // current tile to the anim.
         case tile_mode.anim:
           if (this.o.ianim !== null){
-            let block_type = this.o.anims[this.o.ianim].block_type
-            if (block_type !== anim_block_type.not_set && block_type !== anim_block_type.tile)
+            let block_type = this.canims.block_type
+            if (block_type !== anim_block_type.not_set &&
+                block_type !== anim_block_type.tile)
               return
-            this.set_prop([this.o.anims[this.o.ianim], 'block_type', anim_block_type.tile])
+            this.set_prop([this.canims, 'block_type', anim_block_type.tile])
             let i = this.iy*this.nx+this.ix
-            this.insert([this.o.anims[this.o.ianim].tiles, this.o.anim_pos, i])
+            this.insert([this.canims.tiles, this.o.anim_pos, i])
             bus.$emit('add_tile_anim', i)
           }
           break
@@ -233,11 +243,12 @@ export default
         // otherwise turn all circles on.
         case tile_mode.coll:
           // clicked on the square
+          let ccolls = this.o.colls[this.coll_tile]
           if (this.curr_coll%ncolls === ncolls-1){
             // if any circle is on, turn all off
             let any_on = false
             for (let ic = 0; ic < ncolls-1; ic++){
-              if (this.o.colls[this.coll_tile][i2dir[ic]] === true){
+              if (ccolls[i2dir[ic]] === true){
                 any_on = true
                 break
               }
@@ -246,47 +257,47 @@ export default
             let ii = Math.floor(this.curr_coll/ncolls)*ncolls
             for (let ic = 0; ic < ncolls-1; ic++){
               let dir = i2dir[ic]
-              this.set_prop([this.o.colls[this.coll_tile], dir, state])
-              this.colls[ii+ic].alpha = (this.o.colls[this.coll_tile][dir]) ? 1 : .5
+              this.set_prop([ccolls, dir, state])
+              this.colls[ii+ic].alpha = (ccolls[dir]) ? 1 : .5
             }
           }
           // toggle circle
           else if (this.curr_coll !== null){
             let dir = i2dir[this.curr_coll%ncolls]
-            this.flip([this.o.colls[this.coll_tile], dir])
-            this.colls[this.curr_coll].alpha = (this.o.colls[this.coll_tile][dir]) ? 1 : .5
+            this.flip([ccolls, dir])
+            this.colls[this.curr_coll].alpha = (ccolls[dir]) ? 1 : .5
           }
           break
       }
     }, // on_click
 
     on_mousemove(e){
-      this.ix = Math.max(Math.min(Math.floor(e.offsetX/(this.s*this.tw)), this.nx-1), 0)
-      this.iy = Math.max(Math.min(Math.floor(e.offsetY/(this.s*this.th)), this.ny-1), 0)
+      this.ix = clamp(Math.floor(e.offsetX/this.stw), 0, this.nx-1)
+      this.iy = clamp(Math.floor(e.offsetY/this.sth), 0, this.ny-1)
 
       switch (this.sec){
         // flags: move current flag cursor to the current tile.
         case tile_mode.flags:
-          this.cur_flag.x = this.s*this.ix*this.tw
-          this.cur_flag.y = this.s*this.iy*this.th
+          this.cur_flag.x = this.stw*this.ix
+          this.cur_flag.y = this.sth*this.iy
           break
 
         // props, anim: move cursor to the current tile.
         case tile_mode.props:
         case tile_mode.anim:
-          this.cur.x = this.s*this.tw*this.ix
-          this.cur.y = this.s*this.th*this.iy
+          this.cur.x = this.stw*this.ix
+          this.cur.y = this.sth*this.iy
           break
 
         // terra: move cursor to the proper tile. the cursor is centered around
         // the mouse position, so we account for the size/shape of the cursor.
         case tile_mode.terra:
           if (this.terra_shape === terra_shape_type._4x3)
-            this.cur.x = this.s*this.tw*(this.ix-1),
-            this.cur.y = this.s*this.th*(this.iy-2)
+            this.cur.x = this.stw*(this.ix-1),
+            this.cur.y = this.sth*(this.iy-2)
           else if (this.terra_shape === terra_shape_type._5x1)
-            this.cur.x = this.s*this.tw*this.ix,
-            this.cur.y = this.s*this.th*(this.iy-2)
+            this.cur.x = this.stw*this.ix,
+            this.cur.y = this.sth*(this.iy-2)
           break
 
         case tile_mode.coll:
@@ -298,15 +309,15 @@ export default
           }
           // check if we are hovering over any coll graphic.
           // first, get normalized (x, y) position (b/w -.5 and +.5) within current tile.
-          let xp = e.offsetX%(this.s*this.tw)/(this.s*this.tw)-.5 
-            , yp = e.offsetY%(this.s*this.th)/(this.s*this.th)-.5
+          let xp = e.offsetX%this.stw/this.stw-.5 
+            , yp = e.offsetY%this.sth/this.sth-.5
           this.coll_tile = this.iy*this.nx+this.ix
           let ii = this.coll_tile*ncolls 
           let cr2 = Math.pow(coll_radius/this.tw,2)
           this.curr_coll = null
           // check if mouse is over any of the circles.
           for (let ic = 0; ic < ncolls-1; ic++)
-            if ((Math.pow(xp-coll_coords[ic].x,2) + Math.pow(yp-coll_coords[ic].y,2)) <= cr2){
+            if (Math.pow(xp-coll_coords[ic].x,2) + Math.pow(yp-coll_coords[ic].y,2) <= cr2){
               this.colls[ii+ic].tint = 0xd6b85c
               this.curr_coll = ii+ic
               break
@@ -335,7 +346,8 @@ export default
         this.cur_flag.visible = true
       if ( this.o.sec == tile_mode.props
         || (this.o.sec == tile_mode.terra && this.o.iterra !== null)
-        || (this.o.sec == tile_mode.anim && this.o.ianim !== null && this.o.anims[this.o.ianim].block_type !== anim_block_type.terra)
+        || (this.o.sec == tile_mode.anim && this.o.ianim !== null &&
+            this.canims.block_type !== anim_block_type.terra)
       ) this.cur.visible = true
     },
 
@@ -382,8 +394,8 @@ export default
     // resize tileset image (used by zoom in/out functions).
     resize_image(){
       let id = this.$refs.canvas
-      let npx = Math.round(this.s*this.mw)
-      let npy = Math.round(this.s*this.mh)
+      let npx = Math.round(this.smw)
+      let npy = Math.round(this.smh)
       id.width = npx
       id.height = npy
       id.style.width = `${npx}px`
@@ -406,7 +418,7 @@ export default
 
     // draw grid over tileset image.
     upd_grid(){
-      draw_grid(this.grid, this.s*this.mw, this.s*this.mh, this.s*this.tw, this.s*this.th)
+      draw_grid(this.grid, this.smw, this.smh, this.stw, this.sth)
     },
 
     // update/draw all graphics.
@@ -429,20 +441,20 @@ export default
         return
       let w, h
       if (this.o.sec == tile_mode.props){
-        this.sel.x = this.s*this.tw*this.isx
-        this.sel.y = this.s*this.th*this.isy
+        this.sel.x = this.stw*this.isx
+        this.sel.y = this.sth*this.isy
         w = 1, h = 1
       }
       if (this.o.sec == tile_mode.anim){
-        this.sel.x = this.s*this.tw*this.isx
-        this.sel.y = this.s*this.th*this.isy
+        this.sel.x = this.stw*this.isx
+        this.sel.y = this.sth*this.isy
         w = 1, h = 1
         if (this.o.ianim === null)
           this.sel.visible = false, this.cur.visible = false
       }
       if (this.o.sec == tile_mode.terra){
-        this.sel.x = this.s*this.tw*this.icx
-        this.sel.y = this.s*this.th*this.icy
+        this.sel.x = this.stw*this.icx
+        this.sel.y = this.sth*this.icy
         if (this.terra_shape === terra_shape_type._4x3)
           w = 3, h = 4
         else if (this.terra_shape === terra_shape_type._5x1)
@@ -451,8 +463,8 @@ export default
           this.sel.visible = false,
           this.cur.visible = false
       }
-      draw_box(this.sel, w*this.s*this.tw, h*this.s*this.th)
-      draw_box(this.cur, w*this.s*this.tw, h*this.s*this.th)
+      draw_box(this.sel, w*this.stw, h*this.sth)
+      draw_box(this.cur, w*this.stw, h*this.sth)
       this.cur.alpha = .5
     },
 
@@ -468,13 +480,13 @@ export default
         let i = 0
         for (let yi = 0; yi < this.ny; yi++){
           for (let xi = 0; xi < this.nx; xi++){
-            let x = this.s*(xi+.5)*this.tw, y = this.s*(yi+.5)*this.th
+            let x = this.stw*(xi+.5), y = this.sth*(yi+.5)
             // draw circles for collisions for different directions
             for (let ic = 0; ic < ncolls-1; ic++){
               this.colls[i].clear()
               this.colls[i].beginFill(0xffffff, 1)
-              this.colls[i].drawCircle(x+this.tw*this.s*coll_coords[ic].x,
-                y+this.th*this.s*coll_coords[ic].y, this.s*coll_radius)
+              this.colls[i].drawCircle(x+this.stw*coll_coords[ic].x,
+                y+this.sth*coll_coords[ic].y, this.s*coll_radius)
               this.colls[i].alpha = (this.o.colls[yi*this.nx+xi][i2dir[ic]]) ? 1.0 : .5
               this.colls[i].tint = 0x5c99d6
               this.coll.addChild(this.colls[i])
@@ -502,7 +514,7 @@ export default
       this.cur_flag.clear()
       this.cur_flag.lineStyle(1, 0x000000)
       this.cur_flag.beginFill(0x5c99d6, 1)
-      this.cur_flag.drawCircle(this.s*.5*this.tw, this.s*.5*this.th, this.s*4)
+      this.cur_flag.drawCircle(this.stw*.5, this.sth*.5, this.s*4)
       this.cur_flag.alpha = .5
       this.cur_flag.visible = false
       for (let ix = 0; ix < this.nx; ix++){
@@ -511,8 +523,8 @@ export default
           this.flag[i].clear()
           this.flag[i].lineStyle(1, 0x000000)
           this.flag[i].beginFill(0x5c99d6, 1)
-          this.flag[i].drawCircle(this.s*(ix+.5)*this.tw, this.s*(iy+.5)*this.th, this.s*4)
-          this.flag[i].visible = (this.o.iflag === null) ? false : this.o.flags[this.o.iflag][i]
+          this.flag[i].drawCircle(this.stw*(ix+.5), this.sth*(iy+.5), this.s*4)
+          this.flag[i].visible = (this.iflag === null) ? false : this.cflags[i]
           this.flags.addChild(this.flag[i])
         }
       }
@@ -526,10 +538,16 @@ export default
     this.th         = this.o.tile_h
     this.nx         = Math.round(this.mw/this.tw)
     this.ny         = Math.round(this.mh/this.th)
+
+    this.canims     = this.o.anims[this.o.ianim]
+    this.cflags     = this.o.flags[this.o.iflag]
+    this.cterra     = this.o.terra[this.o.iterra]
+
     this.isx        = 0
     this.isy        = 0
     this.icx        = 0
     this.icy        = 0
+
     this.app        = null
     this.im         = null
     this.app        = null
@@ -542,6 +560,7 @@ export default
     this.coll       = null
     this.colls      = []
     this.flag       = []
+
     this.ix         = null
     this.iy         = null
     this.colls_init = false
