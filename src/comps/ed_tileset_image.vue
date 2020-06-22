@@ -645,4 +645,3 @@ export default
   .space
     width: 8px
 </style>
-

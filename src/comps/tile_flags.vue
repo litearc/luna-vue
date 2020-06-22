@@ -1,5 +1,6 @@
 <template lang='pug'>
 #tile_flags
+  // header section
   .flex-row.mt-8px
     .bold.ml-4px Flag
     .expand
@@ -12,6 +13,8 @@
           icon='plus'
           @click='on_plus'
         )
+
+  // list of flags
   div
     .flex-row.align-bl(
       v-for='(item,i) in o.flags'
@@ -54,6 +57,8 @@ export default
       'remove',
       'set_prop',
     ]),
+
+    // add flag
     on_plus(){
       let ntiles = Math.round(this.o.im_w*this.o.im_h/this.o.tile_w/this.o.tile_h)
       this.push([this.o.flags, {
@@ -63,6 +68,8 @@ export default
       if (this.o.flags.length == 1)
         this.set_prop([this.o, 'iflag', 0])
     },
+
+    // remove flag
     on_minus(i){
       this.remove([this.o.flags, i])
       if (this.o.flags.length == 0)
@@ -70,6 +77,8 @@ export default
       else if (this.o.iflag >= this.o.flags.length)
         this.set_prop([this.o, 'iflag', this.o.flags.length-1])
     },
+
+    // set flag
     set_iflag(i){
       this.set_prop([this.o, 'iflag', i])
     }
@@ -83,4 +92,3 @@ export default
 .selected:not(:focus)
   color: $c-blue
 </style>
-

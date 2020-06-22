@@ -1,5 +1,6 @@
 <template lang='pug'>
 #tile_tiles.key-value-grid
+  // header section
   .bold.ml-4px Key
   .bold.ml-4px Value
   ui-tooltip(
@@ -11,6 +12,8 @@
         icon='plus'
         @click='on_plus'
       )
+
+  // list of props
   template(v-for='(item,i) in o.props[o.itile]')
     ui-input(v-model='item.key' small)
     ui-input(v-model='item.val' small)
@@ -42,9 +45,13 @@ export default
       'push',
       'remove',
     ]),
+
+    // add prop to current tile.
     on_plus(){
       this.push([this.o.props[this.o.itile], {key:'', val:''}])
     },
+
+    // remove prop to current tile.
     on_minus(i){
       this.remove([this.o.props[this.o.itile], i])
     },

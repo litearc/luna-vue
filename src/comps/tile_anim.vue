@@ -1,6 +1,9 @@
+// the animation section of the tileset sidebar.
+
 <template lang='pug'>
 #tile_anim
   .flex-row.mt-8px.align-bl
+    // the text + combobox for how the animation cycles (beginning to end, back and forth)
     .w-1-2.flex-row.align-bl.pr-8px
       span.bold.mr-8px Cycle
       ui-combobox.expand(
@@ -8,6 +11,7 @@
         :disabled='o.ianim === null'
         v-model='tile_type_model'
       )
+    // the text + input to set the frame duration
     .w-1-2.flex-row.align-bl
       span.bold.ws-nowrap.mr-8px.ml-4px Frame duration
       ui-input.expand(
@@ -19,15 +23,18 @@
         v-model='frame_dur_model'
       )
       
+  // canvases (animation preview, terra list, tiles list)
   .flex-row.mt-8px.full-w.pos-relative(ref='canvases' style='height: 0px')
     canvas(ref='canvas_preview').mr-8px.fixed(style='width: 0px; height: 0px')
     .expand.pos-absolute(ref='right_part' style='right: 0; left: 0')
+      // terra text + canvas
       .span.bold Terra
       .expand.mb-8px.overflow-x-scoll.overflow-y-hidden.ws-nowrap(
         ref='container_terra'
         style='height: 0px; background-color: #1d1e1f'
       )
         canvas(ref='canvas_terra')
+      // tiles text + minus button
       .flex-row.align-bl
         span.bold Tiles
         .expand
@@ -39,12 +46,14 @@
             icon='minus'
             @click='on_minus_tiles'
           )
+      // tiles canvas
       .expand.overflow-x-scoll.overflow-y-hidden.ws-nowrap(
         ref='container_tiles'
         style='height: 0px; background-color: #1d1e1f'
       )
         canvas(ref='canvas_tiles')
 
+  // anims list
   .flex-row.mt-8px
     .bold.ml-4px Anim
     .expand
@@ -84,9 +93,12 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
-import { bus } from './editor_tileset.vue'
+
 import { anim_cycle_type, anim_block_type } from '../const.js'
+import { clamp } from '../js/util.js'
+
 import { o } from './app.vue'
+import { bus } from './editor_tileset.vue'
 
 export default
 {
@@ -94,12 +106,13 @@ export default
 
   props: {
     o: {},
-  },
+  }, // props
 
   computed: {
     ...mapState([
       'itab',
     ]),
+
     // https://stackoverflow.com/questions/35210901/binding-method-result-to-v-model-with-vue-js
     frame_dur_model: {
       get(){
@@ -116,6 +129,7 @@ export default
         }
       },
     },
+
     tile_type_model: {
       get(){
         return (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].cycle_type
@@ -125,10 +139,15 @@ export default
           this.o.anims[this.o.ianim].cycle_type = v
       },
     },
+
     ntiles(){
       return (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].tiles.length
     },
-  },
+  }, // computed
+
+  watch: {
+    'o.ianim' : function(){ this.canims = this.o.anims[this.o.ianim] }
+  }, // watch
 
   methods: {
     ...mapMutations([
@@ -137,6 +156,8 @@ export default
       'remove',
       'set_prop',
     ]),
+
+    // adds new tile to the canvas.
     add_tile_anim(i){
       let spr = new PIXI.Sprite(o.tabs[this.itab_].g_tiles[i])
       spr.x = this.o.anim_pos*this.o.tile_w, spr.y = 0
@@ -144,23 +165,29 @@ export default
       this.upd_canvas_tiles()
       this.o.anim_pos++
     },
+
+    // removes all children from an app.
     clear_app(app){
       for (let i = app.stage.children.length-1; i >= 0; i--)
         app.stage.removeChildAt(i)
     },
+
+    // adds a new terra to list of tiles.
     on_click_terra(e){
       if (this.o.ianim === null) return
-      let block_type = this.o.anims[this.o.ianim].block_type
+      let block_type = this.canims.block_type
+      // if the current block type is not terra, return
       if (block_type !== anim_block_type.not_set && block_type !== anim_block_type.terra)
         return
-      this.set_prop([this.o.anims[this.o.ianim], 'block_type', anim_block_type.terra])
+      this.set_prop([this.canims, 'block_type', anim_block_type.terra])
       let nx = Math.round(this.o.im_w/this.o.tile_w)
-      let iterra = Math.max(Math.min(Math.floor(e.offsetX/this.o.tile_w), this.o.terra.length-1), 0)
+      let terra = clamp(Math.floor(e.offsetX/this.o.tile_w), 0, this.o.terra.length-1)
       let itile = this.o.terra[iterra].pos.y*nx + this.o.terra[iterra].pos.x
-      this.insert([this.o.anims[this.o.ianim].tiles, this.o.anim_pos, itile])
+      this.insert([this.canims.tiles, this.o.anim_pos, itile])
       this.add_tile_anim(itile)
-      // rest is handled by the watcher for `ntiles`
     },
+
+    // add an anim - if it's the first one, set the anim index to that.
     on_plus(){
       this.push([this.o.anims, {
         name: 'new anim',
@@ -176,6 +203,8 @@ export default
       }
       this.upd_canvas_tiles()
     },
+
+    // remove an anim and update the anim index if necessary.
     on_minus(i){
       this.remove([this.o.anims, i])
       if (this.o.anims.length == 0){
@@ -189,6 +218,8 @@ export default
       }
       this.upd_canvas_tiles()
     },
+
+    // remove a tile from the animation list.
     on_minus_tiles(){
       let n = this.ntiles
       if (n === 0) return
@@ -197,8 +228,10 @@ export default
       this.upd_canvas_tiles()
       this.o.anim_pos--
       if (this.o.anim_pos === 0)
-        this.set_prop([this.o.anims[this.o.ianim], 'block_type', anim_block_type.not_set])
+        this.set_prop([this.canims, 'block_type', anim_block_type.not_set])
     },
+
+    // set current animation index.
     set_ianim(i){
       if (i === this.o.ianim) return
       this.set_prop([this.o, 'ianim', i])
@@ -206,6 +239,8 @@ export default
       this.upd_canvas_tiles()
       this.telap = 0
     },
+
+    // resets the tiles canvas so that it is in sync with the tiles data.
     upd_canvas_tiles(){
       let n = (this.o.ianim === null) ? 0 : this.ntiles
       this.$refs.canvas_tiles.style.width = `${this.o.tile_w*n}px`
@@ -216,7 +251,7 @@ export default
       for (let i = 0; i < n; i++)
         this.app_tiles.stage.addChild(o.tabs[this.itab_].g_anim_tiles[this.o.ianim][i])
     },
-  },
+  }, // methods
 
   created(){
     bus.$on('add_tile_anim', this.add_tile_anim)
@@ -225,15 +260,19 @@ export default
     this.app_terra   = null
     this.telap       = 0
     this.iframe      = 0
+    // store the index of the tab when this tab is created. we don't want to
+    // refer to this.itab in the animation ticker loop since it will produce
+    // errors when you switch tabs.
     this.itab_       = this.itab
-  },
+    this.canims      = this.o.anims[this.o.ianim]
+  }, // created
 
   mounted(){
     // the heights of the terra and tiles canvases are the tile heights, which
     // are used to determine the size of the preview canvas
 
     let nterra = this.o.terra.length
-    let nanims = (this.o.ianim === null) ? 0 : this.o.anims[this.o.ianim].tiles.length
+    let nanims = (this.o.ianim === null) ? 0 : this.canims.tiles.length
     this.$refs.canvas_tiles.style.width = `${this.o.tile_w*nanims}px`
     this.$refs.canvas_tiles.style.height = `${this.o.tile_h}px`
     this.$refs.canvas_terra.style.width = `${this.o.tile_w*nterra}px`
@@ -273,6 +312,8 @@ export default
       antialias: true,
       backgroundColor: 0x1d1e1f,
     })
+
+    // animate the animation canvas.
     this.app_preview.ticker.add(d => {
       if (this.ntiles === 0){
         this.clear_app(this.app_preview)
@@ -282,13 +323,14 @@ export default
       let do_upd = false
       if (this.telap === 0) do_upd = true // update after switching anims
       this.telap += this.app_preview.ticker.elapsedMS
-      let cyc_type = this.o.anims[this.o.ianim].cycle_type
+      let cyc_type = this.canims.cycle_type
+      // set the index of current frame depending on the animation type.
       switch (cyc_type){
         case anim_cycle_type.beg_to_end:
-          i = Math.floor(this.telap/this.o.anims[this.o.ianim].frame_dur) % this.ntiles
+          i = Math.floor(this.telap/this.canims.frame_dur) % this.ntiles
           break
         case anim_cycle_type.back_and_forth:
-          i = Math.floor(this.telap/this.o.anims[this.o.ianim].frame_dur) % (2*this.ntiles-2)
+          i = Math.floor(this.telap/this.canims.frame_dur) % (2*this.ntiles-2)
           if (i >= this.ntiles) i = (2*this.ntiles-2) - i
           break
       }
@@ -296,16 +338,18 @@ export default
       if (do_upd){
         this.iframe = i
         this.clear_app(this.app_preview)
-        let itile = this.o.anims[this.o.ianim].tiles[this.iframe]
+        let itile = this.canims.tiles[this.iframe]
         let spr = new PIXI.Sprite(o.tabs[this.itab_].g_tiles[itile])
         spr.width = n, spr.height = n
         this.app_preview.stage.addChild(spr)
       }
     })
 
-  },
+  }, // mounted
 
-  // life-cycle hooks for when dynamic component is activated/deactivated
+  // life-cycle hooks for when dynamic component is activated/deactivated.
+  // syncs terra canvas with terra data (since user may have changed terra data
+  // when switching to a different tileset mode.
   activated(){
     this.app_preview.ticker.start()
     let nx = Math.round(this.o.im_w/this.o.tile_w)
@@ -319,15 +363,14 @@ export default
       spr.x = this.o.tile_w*i, spr.y = 0
       this.app_terra.stage.addChild(spr)
     }
-  },
+  }, // activated
   deactivated(){
     this.app_preview.ticker.stop()
-  },
-
+  }, // deactivated
   beforeDestroy(){
     this.app_terra.view.removeEventListener('mousedown', this.on_click_terra)
     bus.$off('add_tile_anim', this.add_tile_anim)
-  }
+  } // beforeDestroy
 }
 </script>
 
@@ -337,4 +380,3 @@ export default
 .selected:not(:focus)
   color: $c-blue
 </style>
-

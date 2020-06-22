@@ -205,4 +205,3 @@ export default
   height: 24px
   background-color: $cB
 </style>
-

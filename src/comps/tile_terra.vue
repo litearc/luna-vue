@@ -1,5 +1,6 @@
 <template lang='pug'>
 #tile_terra
+  // header section
   .bold Terra
   .bold Collision
   .bold Shape
@@ -12,7 +13,10 @@
         icon='plus'
         @click='on_plus'
       )
+
+  // list of terra
   template(v-for='(item,i) in o.terra')
+    // tag + name (input)
     .flex-row.align-bl
       faicon.icon.it-icon(
         icon='tag'
@@ -24,6 +28,7 @@
         v-model='item.name'
         :class='{selected: o.iterra == i, "expand": true}'
       )
+    // icons to set collision type
     .flex-row.align-bl
       faicon.icon.icon-w.hover-hl.mr-4px(
         :class='{inactive: item.coll !== coll_type.none}'
@@ -35,6 +40,7 @@
         :icon='["far", "times-circle"]'
         @click='set_prop([item, "coll", coll_type.all])'
       )
+    // icons to set terra shape
     .flex-row.align-bl
       ui-icon.icon.icon-w.hover-hl(
         icon='terra4x3' height='12px' text base
@@ -46,6 +52,7 @@
         :class='{inactive: item.shape !== terra_shape_type._5x1}'
         @click='set_prop([item, "shape", terra_shape_type._5x1])'
       )
+    // remove terra icon
     ui-tooltip(
       text='Remove'
       placement='left'
@@ -71,11 +78,11 @@ export default
       coll_type,
       terra_shape_type,
     }
-  },
+  }, // data
 
   props: {
     o: {},
-  },
+  }, // props
 
   methods: {
     ...mapMutations([
@@ -83,6 +90,8 @@ export default
       'remove',
       'set_prop',
     ]),
+
+    // add terra
     on_plus(){
       this.push([this.o.terra, {
         name:'new terra',
@@ -93,6 +102,8 @@ export default
       if (this.o.terra.length == 1)
         this.set_prop([this.o, 'iterra', 0])
     },
+
+    // remove terra
     on_minus(i){
       this.remove([this.o.terra, i])
       if (this.o.terra.length == 0)
@@ -100,9 +111,11 @@ export default
       else if (this.o.iterra >= this.o.terra.length)
         this.set_prop([this.o, 'iterra', this.o.terra.length-1])
     },
+
+    // set terra index
     set_iterra(i){
       this.set_prop([this.o, 'iterra', i])
-    }
+    },
   },
 }
 </script>
@@ -118,5 +131,6 @@ export default
   grid-row-gap: 0px
   align-items: center
 
+.selected:not(:focus)
+  color: $c-blue
 </style>
-

@@ -12,4 +12,3 @@ export default
 <style scoped lang='sass'>
 @import ../theme
 </style>
-

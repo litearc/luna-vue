@@ -133,4 +133,3 @@ export default
   font-weight: bold
   text-align: center
 </style>
-
