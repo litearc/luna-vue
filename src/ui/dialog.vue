@@ -17,7 +17,7 @@
       .fixed.pg(style='margin-bottom: 8px') {{ message }}
       .flex-row.align-bl
         .expand
-        button.fixed(
+        button.dialog-button.fixed(
           v-for='(opt, i) in options'
           :key='i'
           :class='{ highlighted: highlight === i }'
@@ -99,4 +99,7 @@ export default
 
 .dialog-fade-enter, .dialog-fade-leave-to
   opacity: 0
+
+.dialog-button ~ .dialog-button
+  margin-left: 8px
 </style>

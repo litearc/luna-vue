@@ -1,5 +1,11 @@
+// this is the main part of the tileset editor, which shows the tileset image.
+// it communicates a lot with the sidebar component `ed_tileset_sidebar`, and
+// allows the user to set various tileset/tile properties by clicking on tiles.
+
 <template lang='pug'>
 #el_tileset_image.full.flex-col
+  // toolbar at the top - contains options to zoom in/out the tileset image,
+  // toggle the grid, dim the image, save the tileset, ...
   #toolbar.center
     ui-tooltip(text='Zoom Out')
       faicon.icon.toolbar-icon(
@@ -32,6 +38,8 @@
         icon='save'
         @mousedown='on_save'
       )
+
+  // container and canvas used to render the tileset image
   #image-container.expand.flex.overflow-auto
     canvas#canvas.no-shrink.block.margin-auto(ref='canvas')
 </template>
@@ -39,21 +47,24 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
+
 import { anim_block_type, tile_mode, terra_shape_type } from '../const.js'
 import { draw_box, draw_grid } from '../js/image.js'
-import { set_g_tiles, set_g_anim_tiles } from './tabs.vue'
+
+import { o } from './app.vue'
 import { bus } from './editor_tileset.vue'
 import { get_json } from './new_tileset.vue'
-import { o } from './app.vue'
+import { set_g_anim_tiles, set_g_tiles } from './tabs.vue'
 
 let fs = require('fs')
 let path = require('path')
 let { dialog } = require('electron').remote
 
-// for collision arrows
-let coll_radius = 1.5
-let coll_sq_dim = 2
-let coll_coords = []
+// this is used for the collision circles. these are `const` so it's not a
+// problem that they aren't component data.
+const coll_radius = 1.5
+const coll_sq_dim = 2
+const coll_coords = []
 for (let i = 0; i < 8; i++){
   let a = 45*i*Math.PI/180
   coll_coords[i] = {
@@ -61,8 +72,8 @@ for (let i = 0; i < 8; i++){
     y: .35*Math.sin(a),
   }
 }
-let i2dir = ['r','dr','d','dl','l','ul','u','ur']
-let ncolls = coll_coords.length+1
+const i2dir = ['r','dr','d','dl','l','ul','u','ur']
+const ncolls = coll_coords.length+1
 
 export default
 {
@@ -71,37 +82,54 @@ export default
   data(){
     return {
       // pub: process.env.BASE_URL,
+      s : 1 // scale (zoom)
     }
-  },
+  }, // data
 
   props: {
     o: {},
-  },
+  }, // props
 
   computed:{
     ...mapState([
       'itab',
     ]),
+
     iflag(){ return this.o.iflag },
     iterra(){ return this.o.iterra },
+    sec(){ return this.o.sec },
+
+    smw(){ return this.s*this.mw },
+    smh(){ return this.s*this.mh },
+    stw(){ return this.s*this.tw },
+    sth(){ return this.s*this.th },
+    scx(){ return this.s*this.icx },
+    scy(){ return this.s*this.icy },
+    ssx(){ return this.s*this.isx },
+    ssy(){ return this.s*this.isy },
+    
     terra_1d_pos(){
       if (this.o.iterra === null) return null
       return this.o.terra[this.o.iterra].pos.y * this.nx + this.o.terra[this.o.iterra].pos.x
     },
+    
     terra_shape(){
       if (this.o.iterra === null) return null
       return this.o.terra[this.o.iterra].shape
     },
-    sec(){ return this.o.sec },
-  },
+  }, // computed
 
   watch: {
+    // when the currently selected flag changes, update the visibility of all
+    // flag markers shown on the tileset image.
     iflag(v){
-      // update flags for all tiles
       let ntiles = this.nx*this.ny
       for (let i = 0; i < ntiles; i++)
         this.flag[i].visible = (v === null) ? false : this.o.flags[v][i]
     },
+
+    // when the position of the currently selected terra changes, move the terra
+    // marker (rectangle covering the terra's tiles) to the correct position.
     terra_1d_pos(){
       let vis = (this.o.iterra !== null)
       this.sel.visible = vis
@@ -109,6 +137,9 @@ export default
       this.sel.x = this.s*this.tw*this.o.terra[this.o.iterra].pos.x
       this.sel.y = this.s*this.th*this.o.terra[this.o.iterra].pos.y
     },
+
+    // when the shape of the currently selected terra changes, reshape the
+    // terra to the new shape.
     terra_shape(){
       let w, h
       if (this.terra_shape === terra_shape_type._4x3)
@@ -120,6 +151,8 @@ export default
       draw_box(this.sel, w*this.s*this.tw, h*this.s*this.th)
       draw_box(this.cur, w*this.s*this.tw, h*this.s*this.th)
     },
+
+    // when the current tileset section changes, update the necessary graphics.
     sec(i, iprev){
       if ( i === tile_mode.props
        || (i === tile_mode.terra && this.o.iterra !== null)
@@ -133,8 +166,8 @@ export default
         this.upd_flags()
       if (i === tile_mode.coll || iprev === tile_mode.coll)
         this.upd_colls()
-    }
-  },
+    },
+  }, // watch
 
   methods: {
     ...mapMutations([
@@ -144,29 +177,45 @@ export default
       'set_prop',
     ]),
 
+    // handle the click events for the different tileset sections.
     on_click(e){
       switch (this.o.sec){
+        // flags: toggle the flag for the current tile the mouse is over.
         case tile_mode.flags:
           if (this.o.iflag === null) return
           let i = this.iy*this.nx+this.ix
           this.flip([this.o.flags[this.o.iflag], i])
           this.flag[i].visible = this.o.flags[this.o.iflag][i]
           return
+
+        // props: move the selection to the current tile, and
+        // set the current tile to the one the mouse is over.
         case tile_mode.props:
-          this.isx = this.ix, this.isy = this.iy
-          this.sel.x = this.isx*this.s*this.tw, this.sel.y = this.isy*this.s*this.th
+          this.isx = this.ix
+          this.isy = this.iy
+          this.sel.x = this.isx*this.s*this.tw
+          this.sel.y = this.isy*this.s*this.th
           this.set_prop([this.o, 'itile', this.isy*this.nx+this.isx])
           break
+
+        // terra: move the selection and cursor to the current tile, and
+        // set the position of the current terra to the current tile.
         case tile_mode.terra:
           if (this.o.iterra === null) return
           if (this.terra_shape === terra_shape_type._4x3)
-            this.icx = this.ix-1, this.icy = this.iy-2
+            this.icx = this.ix-1,
+            this.icy = this.iy-2
           else if (this.terra_shape === terra_shape_type._5x1)
-            this.icx = this.ix, this.icy = this.iy-2
-          this.sel.x = this.icx*this.s*this.tw, this.sel.y = this.icy*this.s*this.th
+            this.icx = this.ix,
+            this.icy = this.iy-2
+          this.sel.x = this.icx*this.s*this.tw
+          this.sel.y = this.icy*this.s*this.th
           this.set_prop([this.o.terra[this.o.iterra].pos, 'x', this.icx])
           this.set_prop([this.o.terra[this.o.iterra].pos, 'y', this.icy])
           break
+
+        // anim: if the currently selected anim is of type "tile", add the
+        // current tile to the anim.
         case tile_mode.anim:
           if (this.o.ianim !== null){
             let block_type = this.o.anims[this.o.ianim].block_type
@@ -178,8 +227,13 @@ export default
             bus.$emit('add_tile_anim', i)
           }
           break
+
+        // coll: if clicked on one of the circles, toggle the circle.
+        // if clicked on the square, if any circle is on, turn all circles off,
+        // otherwise turn all circles on.
         case tile_mode.coll:
-          if (this.curr_coll%ncolls === ncolls-1){ // clicked on the square
+          // clicked on the square
+          if (this.curr_coll%ncolls === ncolls-1){
             // if any circle is on, turn all off
             let any_on = false
             for (let ic = 0; ic < ncolls-1; ic++){
@@ -188,7 +242,7 @@ export default
                 break
               }
             }
-            let state = !any_on
+            let state = !any_on // set all circles to this state
             let ii = Math.floor(this.curr_coll/ncolls)*ncolls
             for (let ic = 0; ic < ncolls-1; ic++){
               let dir = i2dir[ic]
@@ -196,6 +250,7 @@ export default
               this.colls[ii+ic].alpha = (this.o.colls[this.coll_tile][dir]) ? 1 : .5
             }
           }
+          // toggle circle
           else if (this.curr_coll !== null){
             let dir = i2dir[this.curr_coll%ncolls]
             this.flip([this.o.colls[this.coll_tile], dir])
@@ -203,27 +258,37 @@ export default
           }
           break
       }
-    },
+    }, // on_click
 
     on_mousemove(e){
       this.ix = Math.max(Math.min(Math.floor(e.offsetX/(this.s*this.tw)), this.nx-1), 0)
       this.iy = Math.max(Math.min(Math.floor(e.offsetY/(this.s*this.th)), this.ny-1), 0)
+
       switch (this.sec){
+        // flags: move current flag cursor to the current tile.
         case tile_mode.flags:
           this.cur_flag.x = this.s*this.ix*this.tw
           this.cur_flag.y = this.s*this.iy*this.th
           break
+
+        // props, anim: move cursor to the current tile.
         case tile_mode.props:
         case tile_mode.anim:
           this.cur.x = this.s*this.tw*this.ix
           this.cur.y = this.s*this.th*this.iy
           break
+
+        // terra: move cursor to the proper tile. the cursor is centered around
+        // the mouse position, so we account for the size/shape of the cursor.
         case tile_mode.terra:
           if (this.terra_shape === terra_shape_type._4x3)
-            this.cur.x = this.s*this.tw*(this.ix-1), this.cur.y = this.s*this.th*(this.iy-2)
+            this.cur.x = this.s*this.tw*(this.ix-1),
+            this.cur.y = this.s*this.th*(this.iy-2)
           else if (this.terra_shape === terra_shape_type._5x1)
-            this.cur.x = this.s*this.tw*this.ix, this.cur.y = this.s*this.th*(this.iy-2)
+            this.cur.x = this.s*this.tw*this.ix,
+            this.cur.y = this.s*this.th*(this.iy-2)
           break
+
         case tile_mode.coll:
           // reset previous tile coll circles
           if (this.coll_tile !== null){
@@ -231,30 +296,31 @@ export default
             for (let ic = 0; ic < ncolls; ic++)
               this.colls[ii+ic].tint = 0x5c99d6
           }
-          // check if we are hovering over any coll graphic
-          let xp = e.offsetX%(this.s*this.tw)/(this.s*this.tw)-.5
+          // check if we are hovering over any coll graphic.
+          // first, get normalized (x, y) position (b/w -.5 and +.5) within current tile.
+          let xp = e.offsetX%(this.s*this.tw)/(this.s*this.tw)-.5 
             , yp = e.offsetY%(this.s*this.th)/(this.s*this.th)-.5
           this.coll_tile = this.iy*this.nx+this.ix
           let ii = this.coll_tile*ncolls 
           let cr2 = Math.pow(coll_radius/this.tw,2)
           this.curr_coll = null
-          // check circles
+          // check if mouse is over any of the circles.
           for (let ic = 0; ic < ncolls-1; ic++)
             if ((Math.pow(xp-coll_coords[ic].x,2) + Math.pow(yp-coll_coords[ic].y,2)) <= cr2){
               this.colls[ii+ic].tint = 0xd6b85c
               this.curr_coll = ii+ic
               break
             }
-          // check center square
+          // check if mouse is over center square.
           if (Math.abs(xp) <= coll_sq_dim/this.tw/2 && Math.abs(yp) <= coll_sq_dim/this.th/2){
             this.colls[ii+ncolls-1].tint = 0xd6b85c
             this.curr_coll = ii+ncolls-1
           }
           break
       }
-    },
+    }, // on_mousemove
 
-    // make cursor disappear when mouse exits canvas
+    // make cursor disappear when mouse exits canvas...
     on_mouseout(){
       if (this.o.sec == tile_mode.flags)
         this.cur_flag.visible = false
@@ -263,6 +329,7 @@ export default
         || this.o.sec == tile_mode.anim
       ) this.cur.visible = false
     },
+    // ...and reappear when mouse enters canvas.
     on_mouseenter(){
       if (this.o.sec == tile_mode.flags && this.o.iflag !== null)
         this.cur_flag.visible = true
@@ -272,6 +339,7 @@ export default
       ) this.cur.visible = true
     },
 
+    // show save dialog.
     on_save(){
       if (this.o.file === null){
         dialog.showSaveDialog({
@@ -291,16 +359,19 @@ export default
       }
     },
 
+    // zoom out tileset image.
     on_zoom_out(){
-      if (this.s <= .25) return // min zoom
+      if (this.s <= .25) return // min zoom is 1/4.
       this.s /= 2
       if (this.s >= 1)
         this.s = Math.round(this.s)
       this.o.zoom = this.s
       this.resize_image()
     },
+
+    // zoom in tileset image.
     on_zoom_in(){
-      if (this.s >= 4) return // max zoom
+      if (this.s >= 4) return // max zoom is 4.
       this.s *= 2
       if (this.s >= 1)
         this.s = Math.round(this.s)
@@ -308,8 +379,9 @@ export default
       this.resize_image()
     },
 
+    // resize tileset image (used by zoom in/out functions).
     resize_image(){
-      let id = this.$refs.canvas //document.getElementById('canvas')
+      let id = this.$refs.canvas
       let npx = Math.round(this.s*this.mw)
       let npy = Math.round(this.s*this.mh)
       id.width = npx
@@ -320,28 +392,36 @@ export default
       this.upd_all()
     },
 
+    // toggle dim on tileset image.
     toggle_dim(){
       this.im.tint = (this.im.tint === 0xffffff) ? 0x888888 : 0xffffff
       this.o.dim = (this.im.tint !== 0xffffff)
     },
+
+    // toggle grid over tileset image.
     toggle_grid(){
       this.grid.visible = !this.grid.visible
       this.o.grid = this.grid.visible
     },
 
+    // draw grid over tileset image.
     upd_grid(){
       draw_grid(this.grid, this.s*this.mw, this.s*this.mh, this.s*this.tw, this.s*this.th)
     },
 
+    // update/draw all graphics.
     upd_all(){
-      // in the update functions, we redraw the graphics instead of simply scaling them because we want to make the
-      // graphics "fill" section larger but keep the borders the same width
+      // in the update functions, we redraw the graphics instead of simply
+      // scaling them because we want to make the graphics "fill" section larger
+      // but keep the borders the same width
       this.upd_grid()
       this.upd_boxes()
       this.upd_flags()
       this.upd_colls()
     },
 
+    // update the selection and cursor boxes - these depend on which tileset
+    // mode is currently active.
     upd_boxes(){
       this.sel.clear()
       this.cur.clear()
@@ -349,29 +429,37 @@ export default
         return
       let w, h
       if (this.o.sec == tile_mode.props){
-        this.sel.x = this.s*this.tw*this.isx, this.sel.y = this.s*this.th*this.isy
+        this.sel.x = this.s*this.tw*this.isx
+        this.sel.y = this.s*this.th*this.isy
         w = 1, h = 1
       }
       if (this.o.sec == tile_mode.anim){
-        this.sel.x = this.s*this.tw*this.isx, this.sel.y = this.s*this.th*this.isy
+        this.sel.x = this.s*this.tw*this.isx
+        this.sel.y = this.s*this.th*this.isy
         w = 1, h = 1
         if (this.o.ianim === null)
           this.sel.visible = false, this.cur.visible = false
       }
       if (this.o.sec == tile_mode.terra){
-        this.sel.x = this.s*this.tw*this.icx, this.sel.y = this.s*this.th*this.icy
+        this.sel.x = this.s*this.tw*this.icx
+        this.sel.y = this.s*this.th*this.icy
         if (this.terra_shape === terra_shape_type._4x3)
           w = 3, h = 4
         else if (this.terra_shape === terra_shape_type._5x1)
           w = 1, h = 5
         if (this.o.iterra === null)
-          this.sel.visible = false, this.cur.visible = false
+          this.sel.visible = false,
+          this.cur.visible = false
       }
       draw_box(this.sel, w*this.s*this.tw, h*this.s*this.th)
       draw_box(this.cur, w*this.s*this.tw, h*this.s*this.th)
       this.cur.alpha = .5
     },
 
+    // draw collision circles/square - unlink some of the other graphics, which
+    // have both a fill and an edge, these only have a fill, so we can scale
+    // simply scale them and they will still look correct (which is good because
+    // redrawing all these is slow).
     upd_colls(){
       this.coll.visible = (this.o.sec === tile_mode.coll)
       if (this.colls_init === false){
@@ -408,6 +496,7 @@ export default
         this.coll.scale = {x:this.s, y:this.s}
     },
 
+    // draw all flag indicators.
     upd_flags(){
       this.flags.visible = (this.o.sec === tile_mode.flags)
       this.cur_flag.clear()
@@ -428,7 +517,7 @@ export default
         }
       }
     },
-  },
+  }, // methods
 
   created(){
     this.mw         = this.o.im_w
@@ -441,7 +530,6 @@ export default
     this.isy        = 0
     this.icx        = 0
     this.icy        = 0
-    this.s          = 1 // scale (zoom)
     this.app        = null
     this.im         = null
     this.app        = null
@@ -460,6 +548,7 @@ export default
     this.coll_tile  = null
     this.curr_coll  = null
 
+    // load image data and parse tiles.
     let base = PIXI.BaseTexture.fromBuffer(this.o.im_data, this.mw, this.mh)
     set_g_tiles(this.itab, base, this.nx, this.ny, this.tw, this.th)
     set_g_anim_tiles(this.itab, this.o.anims, this.tw)
@@ -467,7 +556,7 @@ export default
     // let tex = PIXI.Texture.fromBuffer(this.o.im_data, this.mw, mh)
     let tex = new PIXI.Texture(base)
     this.im = new PIXI.Sprite(tex)
-    this.im.scale = {x:this.s, y:this.s} // does this need to be a PIXI.ObservablePoint?
+    this.im.scale = {x:this.s, y:this.s}
 
     this.grid = new PIXI.Graphics()
     this.upd_grid()
@@ -486,7 +575,7 @@ export default
         for (let ic = 0; ic < ncolls; ic++)
           this.colls[i++] = new PIXI.Graphics()
     this.upd_colls()
-  },
+  }, // created
 
   mounted(){
     // let tex = PIXI.Texture.from(`${this.pub}hummingbird.png`)
@@ -509,21 +598,21 @@ export default
     this.app.stage.addChild(this.flags)
     this.app.stage.addChild(this.cur_flag)
     this.app.stage.addChild(this.coll)
-  },
+  }, // mounted
 
   activated(){
     this.app.view.addEventListener('mousedown', this.on_click)
     this.app.view.addEventListener('mousemove', this.on_mousemove)
     this.app.view.addEventListener('mouseout', this.on_mouseout)
     this.app.view.addEventListener('mouseenter', this.on_mouseenter)
-  },
+  }, // activated
 
   deactivated(){
     this.app.view.removeEventListener('mousedown', this.on_click)
     this.app.view.removeEventListener('mousemove', this.on_mousemove)
     this.app.view.removeEventListener('mouseout', this.on_mouseout)
     this.app.view.removeEventListener('mouseenter', this.on_mouseenter)
-  },
+  }, // deactivated
 }
 </script>
 
