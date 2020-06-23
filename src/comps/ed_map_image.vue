@@ -1,5 +1,7 @@
 <template lang='pug'>
 #el_tileset_image.full.flex-col
+  // toolbar at the top - contains options to select the editing tool,
+  // zoom options, ...
   #toolbar.center
     ui-tooltip(text='Point Tool')
       faicon.icon.toolbar-icon(
@@ -47,16 +49,26 @@
         icon='save'
         @mousedown='on_save'
       )
+
+  // container and canvas used to render the map
   #image-container.expand.flex.overflow-auto
-    canvas#canvas.no-shrink.block.margin-auto(ref='canvas')
+    canvas#canvas.no-shrink.block.margin-auto(
+      ref='canvas'
+      @mousedown='on_mousedown'
+      @mousemove='on_mousemove'
+      @mouseout='on_mouseout'
+      @mouseenter='on_mouseenter'
+    )
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
+
 import { map_mode } from '../const.js'
-import { bus } from './editor_tileset.vue'
 import { o } from './app.vue'
+import { bus } from './editor_tileset.vue'
+import { set_g_tiles } from './tabs.vue'
 
 export default
 {
@@ -65,12 +77,13 @@ export default
   data(){
     return {
       map_mode,
+      s : 1, // scale (zoom)
     }
-  },
+  }, // data
 
   props: {
     o: {},
-  },
+  }, // props
 
   computed: {
     ...mapState([
@@ -79,15 +92,28 @@ export default
     ntiles(){
       return this.tiles.length
     },
-  },
+  }, // computed
 
   methods: {
     ...mapMutations([
       'set_prop',
     ]),
+
+    on_mousedown(){
+    },
+
+    on_mousemove(){
+    },
+
+    on_mouseout(){
+    },
+
+    on_mouseenter(){
+    },
+
     on_save(){
     },
-  },
+  }, // methods
 
   created(){
     // tileset
@@ -101,10 +127,10 @@ export default
     // map
     this.map_w = this.o.map_w // # tiles along x
     this.map_h = this.o.map_h
-    this.s = 1 // scale (zoom)
 
+    this.itab_ = this.itab
     this.tiles = Array(this.map_w*this.map_h).fill(-1) // uninitialized
-  },
+  }, // created
 
   mounted(){
     let nx = this.map_w * this.tw
@@ -123,15 +149,8 @@ export default
 
     // todo: this is copied from ed_tileset_image - maybe move to separate function?
     let base = PIXI.BaseTexture.fromBuffer(this.o.ts.im_data, this.ts_im_w, this.ts_im_h)
-
-    // extract tiles
-    o.tabs[this.itab].g_tiles = [] // so it can be shared
-    let i = 0
-    for (let iy = 0; iy < this.ny; iy++)
-      for (let ix = 0; ix < this.nx; ix++)
-        o.tabs[this.itab].g_tiles[i++] = new PIXI.Texture(base,
-          new PIXI.Rectangle(ix*this.tw, iy*this.th, this.tw, this.th))
-  },
+    set_g_tiles(this.itab, base, this.nx, this.ny, this.tw, this.th)
+  }, // mounted
 }
 </script>
 

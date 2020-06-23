@@ -41,7 +41,13 @@
 
   // container and canvas used to render the tileset image
   #image-container.expand.flex.overflow-auto
-    canvas#canvas.no-shrink.block.margin-auto(ref='canvas')
+    canvas#canvas.no-shrink.block.margin-auto(
+      ref='canvas'
+      @mousedown='on_mousedown'
+      @mousemove='on_mousemove'
+      @mouseout='on_mouseout'
+      @mouseenter='on_mouseenter'
+    )
 </template>
 
 <script>
@@ -187,7 +193,7 @@ export default
     ]),
 
     // handle the click events for the different tileset sections.
-    on_click(e){
+    on_mousedown(e){
       switch (this.o.sec){
         // flags: toggle the flag for the current tile the mouse is over.
         case tile_mode.flags:
@@ -269,7 +275,7 @@ export default
           }
           break
       }
-    }, // on_click
+    }, // on_mousedown
 
     on_mousemove(e){
       this.ix = clamp(Math.floor(e.offsetX/this.stw), 0, this.nx-1)
@@ -543,6 +549,7 @@ export default
     this.cflags     = this.o.flags[this.o.iflag]
     this.cterra     = this.o.terra[this.o.iterra]
 
+    // selection and cursor (x, y) positions
     this.isx        = 0
     this.isy        = 0
     this.icx        = 0
@@ -618,20 +625,6 @@ export default
     this.app.stage.addChild(this.cur_flag)
     this.app.stage.addChild(this.coll)
   }, // mounted
-
-  activated(){
-    this.app.view.addEventListener('mousedown', this.on_click)
-    this.app.view.addEventListener('mousemove', this.on_mousemove)
-    this.app.view.addEventListener('mouseout', this.on_mouseout)
-    this.app.view.addEventListener('mouseenter', this.on_mouseenter)
-  }, // activated
-
-  deactivated(){
-    this.app.view.removeEventListener('mousedown', this.on_click)
-    this.app.view.removeEventListener('mousemove', this.on_mousemove)
-    this.app.view.removeEventListener('mouseout', this.on_mouseout)
-    this.app.view.removeEventListener('mouseenter', this.on_mouseenter)
-  }, // deactivated
 }
 </script>
 
