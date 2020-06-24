@@ -113,6 +113,11 @@ export default
 
     on_save(){
     },
+
+    on_sel_tiles_changed(){
+      console.log('sel tiles changed')
+      this.sel_tiles.texture = o.tabs[this.itab_].g_sel_tiles
+    },
   }, // methods
 
   created(){
@@ -150,7 +155,20 @@ export default
     // todo: this is copied from ed_tileset_image - maybe move to separate function?
     let base = PIXI.BaseTexture.fromBuffer(this.o.ts.im_data, this.ts_im_w, this.ts_im_h)
     set_g_tiles(this.itab, base, this.nx, this.ny, this.tw, this.th)
+
+    this.sel_tiles = new PIXI.Sprite(o.tabs[this.itab].g_tiles[0])
+    this.app.stage.addChild(this.sel_tiles)
+    this.sel_tiles.x = 0
+    this.sel_tiles.y = 0
   }, // mounted
+
+  // activated(){
+  //   bus.$on('sel_tiles_changed', this.on_sel_tiles_changed)
+  // }, // activated
+  //
+  // deactivated(){
+  //   bus.$off('sel_tiles_changed', this.on_sel_tiles_changed)
+  // }, // deactivated
 }
 </script>
 

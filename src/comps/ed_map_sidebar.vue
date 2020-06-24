@@ -36,6 +36,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 
 import { o } from './app.vue'
+import { bus } from './editor_tileset.vue'
 import { draw_box, draw_grid } from '../js/image.js'
 import { set_g_tiles, set_g_anim_tiles } from './tabs.vue'
 import { clamp } from '../js/util.js'
@@ -78,6 +79,10 @@ export default
   }, // computed
 
   watch: {
+    // todo: right now, this calls `upd_cursor` whenever the cursor changes,
+    // which does some unnecessary updates - we can improve performance by
+    // updating certain things only on mouseup.
+    // todo: vue 2 can't watch multiple variables and one callback (vue 3 can)
     sw(v){ if (this.curr_canvas === canvas.tileset) this.upd_cursor() },
     sh(v){ if (this.curr_canvas === canvas.tileset) this.upd_cursor() },
   },
@@ -96,6 +101,7 @@ export default
       this.set_ixy(e)
       this.mousedown = true
       this.sel_type = canvas.tileset
+      this.upd_g_sel_tiles()
     },
     on_mouseup_tileset(e){
       this.mousedown = false
@@ -106,6 +112,8 @@ export default
     on_mousemove_tileset(e){
       if (this.mousedown){
         let [ix, iy] = this.get_ixy(e)
+        if (this.ix1 !== ix || this.iy1 !== iy)
+          this.upd_g_sel_tiles()
         this.ix1 = ix
         this.iy1 = iy
       }
@@ -152,7 +160,7 @@ export default
       draw_box(this.sel, this.sw*this.stw, this.sh*this.sth)
       this.sel.x = this.stw*this.isx
       this.sel.y = this.sth*this.isy
-
+      
       switch (this.curr_canvas){
         case canvas.tileset:
           this.app_tileset.stage.addChild(this.sel)
@@ -165,6 +173,14 @@ export default
           break
       }
     },
+
+    upd_g_sel_tiles(){
+      console.log('updating g_sel_tiles')
+      // store the texture of the selected tiles
+      o.tabs[this.itab_].g_sel_tiles = new PIXI.Texture(o.tabs[this.itab_].base_tex,
+          new PIXI.Rectangle(this.sel.x, this.sel.y, this.sw*this.stw, this.sh*this.sth))
+      // bus.$emit('sel_tiles_changed')
+    },
   }, // methods
 
   created(){
@@ -175,8 +191,9 @@ export default
     this.tnx = Math.round(this.ts_im_w/this.tw)
     this.tny = Math.round(this.ts_im_h/this.th)
 
-    this.base = PIXI.BaseTexture.fromBuffer(this.o.ts.im_data, this.ts_im_w, this.ts_im_h)
-    let tex = new PIXI.Texture(this.base)
+    this.itab_ = this.itab
+    o.tabs[this.itab].base_tex = PIXI.BaseTexture.fromBuffer(this.o.ts.im_data, this.ts_im_w, this.ts_im_h)
+    let tex = new PIXI.Texture(o.tabs[this.itab].base_tex)
     this.im_tileset = new PIXI.Sprite(tex)
 
     this.grid = new PIXI.Graphics()
@@ -233,7 +250,7 @@ export default
     })
 
     // for some reason, if I add this in `created`, g_tiles length is 0 here
-    set_g_tiles(this.itab, this.base, this.tnx, this.tny, this.tw, this.th)
+    set_g_tiles(this.itab, o.tabs[this.itab].base_tex, this.tnx, this.tny, this.tw, this.th)
     set_g_anim_tiles(this.itab, this.o.ts.anims, this.tw)
 
     for (let i = 0; i < this.o.ts.terra.length; i++){
