@@ -112,10 +112,10 @@ export default
     on_mousemove_tileset(e){
       if (this.mousedown){
         let [ix, iy] = this.get_ixy(e)
-        if (this.ix1 !== ix || this.iy1 !== iy)
-          this.upd_g_sel_tiles()
+        let upd = (this.ix1 !== ix || this.iy1 !== iy)
         this.ix1 = ix
         this.iy1 = iy
+        if (upd) this.upd_g_sel_tiles()
       }
     },
 
@@ -175,7 +175,6 @@ export default
     },
 
     upd_g_sel_tiles(){
-      console.log('updating g_sel_tiles')
       // store the texture of the selected tiles
       o.tabs[this.itab_].g_sel_tiles = new PIXI.Texture(o.tabs[this.itab_].base_tex,
           new PIXI.Rectangle(this.sel.x, this.sel.y, this.sw*this.stw, this.sh*this.sth))
@@ -192,7 +191,6 @@ export default
     this.tny = Math.round(this.ts_im_h/this.th)
 
     this.itab_ = this.itab
-    o.tabs[this.itab].base_tex = PIXI.BaseTexture.fromBuffer(this.o.ts.im_data, this.ts_im_w, this.ts_im_h)
     let tex = new PIXI.Texture(o.tabs[this.itab].base_tex)
     this.im_tileset = new PIXI.Sprite(tex)
 
@@ -249,10 +247,6 @@ export default
       antialias: true,
     })
 
-    // for some reason, if I add this in `created`, g_tiles length is 0 here
-    set_g_tiles(this.itab, o.tabs[this.itab].base_tex, this.tnx, this.tny, this.tw, this.th)
-    set_g_anim_tiles(this.itab, this.o.ts.anims, this.tw)
-
     for (let i = 0; i < this.o.ts.terra.length; i++){
       let iterra = this.o.ts.terra[i].pos.y*this.tnx + this.o.ts.terra[i].pos.x
       let spr = new PIXI.Sprite(o.tabs[this.itab].g_tiles[iterra])
@@ -270,6 +264,7 @@ export default
     this.sel = new PIXI.Graphics()
     draw_box(this.sel, this.stw, this.sth)
     this.app_tileset.stage.addChild(this.sel)
+    this.upd_g_sel_tiles()
   }, // mounted
 }
 </script>

@@ -50,6 +50,7 @@ let _ = require('lodash')
 import { o } from './app.vue'
 
 export function set_g_tiles(itab, base, nx, ny, tw, th){
+  console.log('setting g tiles')
   o.tabs[itab].g_tiles = [] // so it can be shared
   let i = 0
   for (let yi = 0; yi < ny; yi++)

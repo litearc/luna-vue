@@ -65,6 +65,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import * as PIXI from 'pixi.js'
 
+import { clamp } from '../js/util.js'
 import { map_mode } from '../const.js'
 import { o } from './app.vue'
 import { bus } from './editor_tileset.vue'
@@ -89,6 +90,8 @@ export default
     ...mapState([
       'itab',
     ]),
+    stw(){ return this.s*this.tw },
+    sth(){ return this.s*this.th },
     ntiles(){
       return this.tiles.length
     },
@@ -99,24 +102,27 @@ export default
       'set_prop',
     ]),
 
-    on_mousedown(){
+    on_mousedown(e){
     },
 
-    on_mousemove(){
+    on_mousemove(e){
+      if (!this.sel_tiles.visible) this.sel_tiles.visible = true
+      this.ix = clamp(Math.floor(e.offsetX/this.stw), 0, this.map_w-1)
+      this.iy = clamp(Math.floor(e.offsetY/this.sth), 0, this.map_h-1)
+      this.sel_tiles.x = this.ix*this.stw
+      this.sel_tiles.y = this.iy*this.sth
     },
 
-    on_mouseout(){
+    on_mouseout(e){
+      this.sel_tiles.visible = false
     },
 
-    on_mouseenter(){
+    on_mouseenter(e){
+      this.sel_tiles.texture = o.tabs[this.itab_].g_sel_tiles
+      this.sel_tiles.visible = true
     },
 
     on_save(){
-    },
-
-    on_sel_tiles_changed(){
-      console.log('sel tiles changed')
-      this.sel_tiles.texture = o.tabs[this.itab_].g_sel_tiles
     },
   }, // methods
 
@@ -152,14 +158,12 @@ export default
       antialias: true,
     })
 
-    // todo: this is copied from ed_tileset_image - maybe move to separate function?
-    let base = PIXI.BaseTexture.fromBuffer(this.o.ts.im_data, this.ts_im_w, this.ts_im_h)
-    set_g_tiles(this.itab, base, this.nx, this.ny, this.tw, this.th)
-
     this.sel_tiles = new PIXI.Sprite(o.tabs[this.itab].g_tiles[0])
+    this.sel_tiles.alpha = .5
     this.app.stage.addChild(this.sel_tiles)
     this.sel_tiles.x = 0
     this.sel_tiles.y = 0
+    this.sel_tiles.visible = false
   }, // mounted
 
   // activated(){
