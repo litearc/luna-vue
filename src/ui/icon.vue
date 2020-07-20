@@ -6,8 +6,9 @@ svg(
   :style='svg_style'
   @click='$emit("click")'
   @mousedown='$emit("mousedown")'
+  fill='currentColor'
 )
-  path(v-for='path in paths[icon]' :d='path' fill='currentColor')
+  path(v-for='path in paths[icon]' :d='path')
 </template>
 
 <script>
